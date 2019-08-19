@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" html-identify="CC">
+
+<head>
+    <meta charset="UTF-8" />
+    <style type="text/css" media="screen">
+        @import "home.css";
+    </style>
+</head>
+
+<body>
+    <Column>
+        <Container style="margin-top:10; margin-left: 10; margin-right: 10; " cc:for="{{list}}"> 
+            <RaisedButton style="color: white;">
+                <Row>
+                    <container id="container">
+                        <Image style="width: 50px; height:100px"
+                            src="http://pic.baike.soso.com/p/20130828/20130828161137-1346445960.jpg" />
+                    </container>
+                    <Expanded>
+                        <Column>
+                            <text id="text">{{item.title}}</text>
+                            <text id="text">{{item.content}}</text>
+                            <text id="text">{{item.detail}}</text>
+                        </Column>
+                    </Expanded>
+                </Row>
+            </RaisedButton>
+
+        </Container>
+    </Column>
+</body>
+
+</html>

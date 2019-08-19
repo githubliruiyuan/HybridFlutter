@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+
+body {
+	  background-image: -webkit-gradient(
+		    linear,
+		    left top,
+		    left bottom,
+		    color-stop(0, #622E6B),
+		    color-stop(1, #D82CDE)
+	  );
+	  background-image: -o-linear-gradient(bottom, #622E6B 0%, #D82CDE 100%);
+	  background-image: -moz-linear-gradient(bottom, #622E6B 0%, #D82CDE 100%);
+	  background-image: -webkit-linear-gradient(bottom, #622E6B 0%, #D82CDE 100%);
+	  background-image: -ms-linear-gradient(bottom, #622E6B 0%, #D82CDE 100%);
+	  background-image: linear-gradient(to bottom, #622E6B 0%, #D82CDE 100%);
+	  height: 100%;
+	  margin: 0;
+	  background-repeat: no-repeat;
+	  background-attachment: fixed;
+    font-size: 15px;
+}
+
+#app {
+    color: #fefefe;
+    width: 70%;
+    margin: 0 auto;
+
+    h1 {
+        font-size: 6rem;
+        margin-bottom: 1rem;
+        text-align: center;
+    }
+
+    h5 {
+        text-align: center;
+    }
+
+    h1, h2, h3, h4, h5 {
+	      font-weight: normal;
+	      font-family: "Lobster", sans-serif;
+    }
+
+    h2 + div {
+        margin: 0 auto;
+        font-size: 1.3rem;
+        padding-left: 1.1rem;
+        font-family: 'Raleway', sans-serif;
+    }
+
+    ul {
+        li {
+            margin-bottom: .5rem;
+        }
+
+        a {
+            font-weight: bold;
+            color: #fefefe;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+

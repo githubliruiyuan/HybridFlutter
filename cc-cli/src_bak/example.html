@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" html-identify="CC">
+
+<head>
+    <meta charset="UTF-8" />
+    <style type="text/css" media="screen">
+        @import "example.css";
+    </style>
+</head>
+
+<body>
+    <Column>
+        <Row>
+            <Container style="width: 100px; height:100px; margin-right: 15px;"> 
+                <RaisedButton style="color: {{btnColor}};" onclick="onclick">
+                    <text style="font-size: 14px;color: white;">click</text> 
+                </RaisedButton>
+            </Container>
+            <Visibility visible="{{list.length > 0}}"> 
+                <Container style="width: 100px; height:100px; color: blue; margin-right: 15px;">
+                    <text style="font-size: 14px;color: white;">{{item2}}</text>
+                </Container>
+                <Container style="width: 100px; height:100px; color: lightgray; margin-right: 15px;">
+                    <text style="font-size: 14px;color: white;">xxxx</text> 
+                </Container>
+            </Visibility>
+        </Row>
+        <Row cc:for="{{list}}">
+            <Container style="width: 100px; height:100px; color: {{colors[index]}}; margin-right: 15px;"
+                cc:for="{{item}}" cc:for-item="it" cc:for-index="idx">
+                <text style="font-size: 14px;color: white;">{{'id:' + idx + ' text:' + it}}</text>  
+            </Container>
+        </Row>
+    </Column>
+</body>
+</html>

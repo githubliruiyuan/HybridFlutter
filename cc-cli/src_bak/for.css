@@ -1,0 +1,11 @@
+/* for */
+.container {
+    width: 100px; 
+    height:100px; 
+    color: blue;
+}
+
+.text {
+    font-size: 14px;
+    color: white;
+}
