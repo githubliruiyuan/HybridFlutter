@@ -78,7 +78,7 @@ class UIFactory {
   Future<Widget> createView(
       Map<String, dynamic> data, Map<String, dynamic> styles) async {
     var component = await _createComponentTree(null, data, styles);
-    return _createChild(component);
+    return _createWidget(component);
   }
 
   Future<dynamic> _createComponentTree(Component parent,
@@ -135,36 +135,53 @@ class UIFactory {
     }
   }
 
-  Widget _createColumn(Map<String, Property> properties, List<Widget> children) {
+  Widget _createColumn(
+      Map<String, Property> properties, List<Widget> children) {
     return Column(
         mainAxisAlignment: MMainAxisAlignment.parse(
-            properties["mainAxisAlignment"],
+            properties["main-axis-alignment"],
             defaultValue: MainAxisAlignment.start),
-        mainAxisSize: MMainAxisSize.parse(
-            properties["mainAxisSize"],
+        mainAxisSize: MMainAxisSize.parse(properties["main-axis-size"],
             defaultValue: MainAxisSize.max),
         crossAxisAlignment: MCrossAxisAlignment.parse(
-            properties["crossAxisAlignment"],
+            properties["cross-axis-alignment"],
             defaultValue: CrossAxisAlignment.center),
-        textDirection: MTextDirection.parse(
-            properties["textDirection"]),
+        textDirection: MTextDirection.parse(properties["text-direction"]),
         verticalDirection: MVerticalDirection.parse(
-            properties["verticalDirection"],
+            properties["vertical-direction"],
             defaultValue: VerticalDirection.down),
-        textBaseline: MTextBaseline.parse(properties["textBaseline"]),
-        children: children
-    );
+        textBaseline: MTextBaseline.parse(properties["text-baseline"]),
+        children: children);
+  }
+
+  Widget _createRow(Map<String, Property> properties, List<Widget> children) {
+    return Row(
+      mainAxisAlignment: MMainAxisAlignment.parse(
+          properties["main-axis-alignment"],
+          defaultValue: MainAxisAlignment.start),
+      mainAxisSize: MMainAxisSize.parse(properties["main-axis-size"],
+          defaultValue: MainAxisSize.max),
+      crossAxisAlignment: MCrossAxisAlignment.parse(
+          properties["cross-axis-alignment"],
+          defaultValue: CrossAxisAlignment.center),
+      textDirection: MTextDirection.parse(properties["text-direction"]),
+      verticalDirection: MVerticalDirection.parse(
+          properties["vertical-direction"],
+          defaultValue: VerticalDirection.down),
+      textBaseline: MTextBaseline.parse(properties["text-baseline"]),
+      children: children);
+  }
+
+  Widget _createSingleChildScrollView(
+      Map<String, Property> properties, Widget child) {
+    return SingleChildScrollView(
+        scrollDirection: MAxis.parse(properties["scrollDirection"],
+            defaultValue: Axis.vertical),
+        child: child);
   }
 
 //  Widget _createNestedScrollView(Map<String, Property> properties, Widget child) {
 //    return NestedScrollView(
-////      controller: mxj2d(bo, jsonMap["controller"]),
-//      scrollDirection: MAxis.parse(properties["scrollDirection"], defaultValue:Axis.vertical),
-////      reverse: mxj2d(bo, jsonMap["reverse"], defaultValue:false),
-////      physics: mxj2d(bo, jsonMap["physics"]),
-//      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-//        return toListT<Widget>(mxj2d(bo, jsonMap["children"], context:context));
-//      },
 //      body: child,
 //    );
 //  }
@@ -175,34 +192,17 @@ class UIFactory {
 
     //处理背景
     Color color = dealColor(properties['color']);
-
-    //处理margin
-    var marginLeft = properties['margin-left'];
-    var marginTop = properties['margin-top'];
-    var marginRight = properties['margin-right'];
-    var marginBottom = properties['margin-bottom'];
-    EdgeInsets margin;
-    if (marginLeft != null ||
-        marginTop != null ||
-        marginRight != null ||
-        marginBottom != null) {
-      margin = EdgeInsets.fromLTRB(
-          dealDoubleDefZero(marginLeft),
-          dealDoubleDefZero(marginTop),
-          dealDoubleDefZero(marginRight),
-          dealDoubleDefZero(marginBottom));
-    }
-
-    if (null != properties['margin']) {
-      margin = EdgeInsets.all(dealDoubleDefZero(properties['margin']));
-    }
+    var alignment = MAlignment.parse(properties['alignment'],
+        defaultValue: Alignment.topLeft);
 
     return Container(
+        alignment: alignment,
         color: color,
         width: width,
         height: height,
-        child: child,
-        margin: margin);
+        margin: MMargin.parse(properties),
+        padding: MPadding.parse(properties),
+        child: child);
   }
 
   Widget _createVisibility(
@@ -221,8 +221,8 @@ class UIFactory {
 
   Widget _createFractionallySizedBox(
       Map<String, Property> properties, Widget child) {
-    var widthFactor = dealDoubleDefZero(properties['widthFactor']);
-    var heightFactor = dealDoubleDefZero(properties['heightFactor']);
+    var widthFactor = dealDoubleDefZero(properties['width-factor']);
+    var heightFactor = dealDoubleDefZero(properties['height-factor']);
     print("widthFactor = " +
         widthFactor.toString() +
         " heightFactor = " +
@@ -231,22 +231,27 @@ class UIFactory {
         child: child, widthFactor: widthFactor, heightFactor: heightFactor);
   }
 
+  Widget _createClipOval(Map<String, Property> properties, Widget child) {
+    return ClipOval(child: child);
+  }
+
   Widget _createRaisedButton(Map<String, Property> properties,
       Map<String, dynamic> events, Widget child) {
     //处理背景
     Color color = dealColor(properties['color']);
-    Color textColor = dealColor(properties['textColor']);
-    Color disabledTextColor = dealColor(properties['disabledTextColor']);
-    Color disabledColor = dealColor(properties['disabledColor']);
-    Color focusColor = dealColor(properties['focusColor']);
-    Color hoverColor = dealColor(properties['hoverColor']);
-    Color highlightColor = dealColor(properties['highlightColor']);
-    Color splashColor = dealColor(properties['splashColor']);
+    Color textColor = dealColor(properties['text-color']);
+    Color disabledTextColor = dealColor(properties['disabled-text-color']);
+    Color disabledColor = dealColor(properties['disabled-color']);
+    Color focusColor = dealColor(properties['focus-color']);
+    Color hoverColor = dealColor(properties['hover-color']);
+    Color highlightColor = dealColor(properties['highlight-color']);
+    Color splashColor = dealColor(properties['splash-color']);
     return RaisedButton(
       onPressed: () {
         print("onclick");
         if (null != events['onclick']) {
-          onclickEvent(_methodChannel, _pageId, "11111", properties, events);
+          onclickEvent(_methodChannel, _pageId, this.hashCode.toString(),
+              properties, events);
         }
       },
       textColor: textColor,
@@ -264,7 +269,7 @@ class UIFactory {
   Widget _createText(Map<String, Property> properties, String text) {
     var fontSize = dealFontSize(properties['font-size']);
     Color color = dealColor(properties['color']);
-    Color backgroundColor = dealColor(properties['backgroundColor']);
+    Color backgroundColor = dealColor(properties['background-color']);
     var inherit = dealBoolDefNull(properties['inherit']);
     if (null == inherit) {
       inherit = true;
@@ -334,12 +339,12 @@ class UIFactory {
       return children;
     }
     component.children?.forEach((it) {
-      children.add(_createChild(it));
+      children.add(_createWidget(it));
     });
     return children;
   }
 
-  Widget _createChild(Component component) {
+  Widget _createWidget(Component component) {
     print("createChild tag ${component.tag}");
 
     var children = _getChildren(component);
@@ -353,12 +358,20 @@ class UIFactory {
         widget = _createColumn(component.properties, children);
         break;
       case "row":
-        widget = Row(children: children);
+        widget = _createRow(component.properties, children);
         break;
-//      case "NestedScrollView":
+      case "singlechildscrollview":
+        var child = _getFirstChild(children);
+        widget = _createSingleChildScrollView(component.properties, child);
+        break;
+//      case "nestedscrollview":
 //        var child = _getFirstChild(children);
 //        widget = _createNestedScrollView(component.properties, child);
 //        break;
+      case "clipoval":
+        var child = _getFirstChild(children);
+        widget = _createClipOval(component.properties, child);
+        break;
       case "container":
         var child = _getFirstChild(children);
         widget = _createContainer(component.properties, child);

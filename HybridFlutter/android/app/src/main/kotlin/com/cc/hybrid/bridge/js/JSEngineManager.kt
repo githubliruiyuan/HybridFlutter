@@ -51,6 +51,18 @@ object JSEngineManager {
                     JSNetwork().request(data!!)
                     p0 as Any
                 }, "request")
+
+                cc.registerJavaMethod(JavaCallback { p0, p1 ->
+                    val data = p1?.getObject(0)
+                    LoadingUtil.showLoading(data)
+                    p0 as Any
+                }, "showLoading")
+
+                cc.registerJavaMethod(JavaCallback { p0, p1 ->
+                    LoadingUtil.hideLoading()
+                    p0 as Any
+                }, "hideLoading")
+
                 realPageObject.setPrototype(cc)
                 realPageObject.add("cc", cc)
 

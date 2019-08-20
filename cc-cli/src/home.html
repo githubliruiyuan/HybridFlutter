@@ -9,26 +9,26 @@
 </head>
 
 <body>
-    <Column>
-        <Container style="margin-top:10; margin-left: 10; margin-right: 10; " cc:for="{{list}}"> 
-            <RaisedButton style="color: white;">
-                <Row>
-                    <container id="container">
-                        <Image style="width: 50px; height:100px"
-                            src="http://pic.baike.soso.com/p/20130828/20130828161137-1346445960.jpg" />
-                    </container>
-                    <Expanded>
-                        <Column>
-                            <text id="text">{{item.title}}</text>
-                            <text id="text">{{item.content}}</text>
-                            <text id="text">{{item.detail}}</text>
-                        </Column>
-                    </Expanded>
-                </Row>
-            </RaisedButton>
-
-        </Container>
-    </Column>
+    <singlechildscrollview> 
+        <column>
+            <container id="btn-container" cc:for="{{list}}"> 
+                <raisedbutton id="raisedbutton">
+                    <row>
+                        <container id="image-container">
+                            <image src="{{item.images.medium}}" />  
+                        </container>
+                        <expanded>
+                            <column id="column-text">
+                                <text id="text-title">{{item.title}}</text>
+                                <text id="text-publisher">{{item.publisher}}</text> 
+                                <text id="text-summary">{{item.summary.substring(0, 20) + '...'}}</text>    
+                            </column>
+                        </expanded>
+                    </row>
+                </raisedbutton>
+            </container>
+        </column>
+    </singlechildscrollview>
 </body>
 
 </html>
