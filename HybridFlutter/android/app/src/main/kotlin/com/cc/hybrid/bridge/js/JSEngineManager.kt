@@ -8,6 +8,7 @@ import com.eclipsesource.v8.V8Object
 import com.cc.hybrid.Logger
 import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.v8.V8Manager
+import org.json.JSONObject
 import java.util.*
 
 object JSEngineManager {
@@ -55,6 +56,20 @@ object JSEngineManager {
                     }
                     p0 as Any
                 }, "setNavigationBarTitle")
+                cc.registerJavaMethod(JavaCallback { p0, p1 ->
+                    val data = p1?.getObject(0)
+                    if (null != data) {
+                        val jsonObject = JSONObject()
+                        data.keys.forEach {
+                            jsonObject.put(it, data.get(it))
+                        }
+                        val msg = Message.obtain()
+                        msg.what = EventManager.TYPE_NAVIGATE_TO
+                        msg.obj = jsonObject.toString()
+                        EventManager.instance.handler?.sendMessage(msg)
+                    }
+                    p0 as Any
+                }, "navigateTo")
                 cc.registerJavaMethod(JavaCallback { p0, p1 ->
                     val data = p1?.getObject(0)
                     data?.add("requestId", UUID.randomUUID().toString())

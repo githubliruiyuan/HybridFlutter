@@ -39,7 +39,8 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
             Methods.ON_LOAD -> {
                 if (methodCall.hasArgument("pageId")) {
                     val pageId = methodCall.argument<String>("pageId")
-                    JSEngineManager.callMethodInPage(pageId!!, Methods.ON_LOAD)
+                    val args = methodCall.argument<String>("args")
+                    JSEngineManager.callMethodInPage(pageId!!, Methods.ON_LOAD, args)
                     result.success("success")
                 }
             }

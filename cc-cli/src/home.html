@@ -10,9 +10,9 @@
 
 <body>
     <singlechildscrollview> 
-        <column>
+        <column>  
             <container id="btn-container" cc:for="{{list}}"> 
-                <raisedbutton id="raisedbutton">
+                <raisedbutton id="raisedbutton" onclick="onItemClick">
                     <row>
                         <container id="image-container">
                             <image src="{{item.images.medium}}" />  

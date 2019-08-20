@@ -79,6 +79,10 @@ class MainActivity : FlutterActivity() {
                     val title = msg.obj.toString()
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_TITLE, title)
                 }
+                EventManager.TYPE_NAVIGATE_TO -> {
+                    val json = msg.obj.toString()
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATE_TO, json)
+                }
             }
         }
     }

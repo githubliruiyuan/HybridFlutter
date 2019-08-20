@@ -12,10 +12,10 @@ Page({
     */
     onLoad(e) {
         cc.setNavigationBarTitle({
-            title: 'Python系列丛书' 
-        });  
+            title: 'Python系列丛书'
+        });
 
-        cc.showLoading({  
+        cc.showLoading({
             message: '正在玩命加载...'
         });
         let that = this;
@@ -25,7 +25,7 @@ Page({
             header: {},
             method: 'get',
             success: function (response) {
-                that.setData({ 
+                that.setData({
                     list: response.body.books
                 });
             },
@@ -38,6 +38,13 @@ Page({
             }
         });
     },
+
+    onItemClick(item) {
+        console.log(JSON.stringify(item));
+        cc.navigateTo({ 
+            url: "home?a=1&b=2"
+        });
+    },  
 
     /**
     * 页面卸载时触发。如cc.redirectTo或cc.navigateBack到其他页面时。
