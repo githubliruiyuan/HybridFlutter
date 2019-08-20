@@ -75,6 +75,10 @@ class MainActivity : FlutterActivity() {
                 EventManager.TYPE_ONCLICK -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_ONCLICK, "")
                 }
+                EventManager.TYPE_NAVIGATION_BAR_TITLE -> {
+                    val title = msg.obj.toString()
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_TITLE, title)
+                }
             }
         }
     }

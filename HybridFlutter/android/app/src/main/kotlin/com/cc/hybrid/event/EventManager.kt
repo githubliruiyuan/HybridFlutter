@@ -7,6 +7,7 @@ class EventManager {
     companion object {
         const val TYPE_SOCKET = 0
         const val TYPE_ONCLICK = 1
+        const val TYPE_NAVIGATION_BAR_TITLE = 2
         var instance = EventManager()
     }
 

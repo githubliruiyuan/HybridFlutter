@@ -51,8 +51,8 @@ class PPDebugger(host: String, port: Int, handler: Handler) : Thread() {
             try {
                 val inputStream = socket.getInputStream()
                 while (!socket.isClosed && !socket.isInputShutdown && isStart) {
-                    var totalLength = readLength(inputStream)
-                    var baos = ByteArrayOutputStream()
+                    val totalLength = readLength(inputStream)
+                    val baos = ByteArrayOutputStream()
                     var i = 0
                     while (baos.size() != totalLength) {
                         i = inputStream.read()

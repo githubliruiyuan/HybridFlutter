@@ -1,5 +1,6 @@
 package com.cc.hybrid.bridge.js
 
+import android.os.Message
 import com.eclipsesource.v8.JavaCallback
 import com.eclipsesource.v8.V8Array
 import com.eclipsesource.v8.V8Function
@@ -44,6 +45,16 @@ object JSEngineManager {
                 }
 
                 val cc = V8Manager.v8.getObject("cc")
+                cc.registerJavaMethod(JavaCallback { p0, p1 ->
+                    val data = p1?.getObject(0)
+                    if (null != data && data.contains("title")) {
+                        val msg = Message.obtain()
+                        msg.what = EventManager.TYPE_NAVIGATION_BAR_TITLE
+                        msg.obj = data.getString("title")
+                        EventManager.instance.handler?.sendMessage(msg)
+                    }
+                    p0 as Any
+                }, "setNavigationBarTitle")
                 cc.registerJavaMethod(JavaCallback { p0, p1 ->
                     val data = p1?.getObject(0)
                     data?.add("requestId", UUID.randomUUID().toString())
