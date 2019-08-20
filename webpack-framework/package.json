@@ -1,5 +1,5 @@
 {
-  "name": "webpack-helloworld",
+  "name": "webpack-framework",
   "version": "2.0.0",
   "scripts": {
     "dev": "webpack --mode=development",

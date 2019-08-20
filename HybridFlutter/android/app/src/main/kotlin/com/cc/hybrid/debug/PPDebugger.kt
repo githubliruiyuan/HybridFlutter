@@ -14,13 +14,6 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.concurrent.Executors
 
-
-/**
- * Created by Lyman on 4/11/18.
- * PPMoney Ltd
- * lyman.liu@PPMoney.com
- */
-
 // Thread to read content from Socket
 class PPDebugger(host: String, port: Int, handler: Handler) : Thread() {
 

@@ -44,6 +44,4 @@ Array.prototype.contains = function (needle) {
 }
 
 require('./page')
-//require('./element')
-//require('./jsbridge')
 
