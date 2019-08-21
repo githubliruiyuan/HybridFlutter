@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.Message
 import com.cc.hybrid.bridge.flutter.FlutterPluginMethodChannel
 import com.cc.hybrid.util.LoadingUtil
-import com.cc.hybrid.debug.PPDebugger
+import com.cc.hybrid.debug.Debugger
 import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.util.SpUtil
 import io.flutter.app.FlutterActivity
@@ -19,8 +19,7 @@ import java.lang.ref.WeakReference
 
 class MainActivity : FlutterActivity() {
 
-    private lateinit var handler: MHandler
-    private lateinit var debug: PPDebugger
+    private lateinit var debug: Debugger
     private lateinit var channel: BasicMessageChannel<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,18 +42,18 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun initHandler() {
-        handler = MHandler(this)
-        EventManager.instance.handler = handler
+        EventManager.instance.initHandler(MHandler(this))
     }
 
     private fun debug() {
-        debug = PPDebugger("192.168.12.170", 9999, handler)
+        debug = Debugger("192.168.12.170", 9999)
         debug.startSocket()
     }
 
-    private fun sendMessage2Flutter(type: Int, content: String) {
+    private fun sendMessage2Flutter(type: Int, pageId: String, content: String) {
         val jsonObject = JSONObject()
         jsonObject.put("type", type)
+        jsonObject.put("pageId", pageId)
         jsonObject.put("message", content)
         channel.send(jsonObject.toString())
     }
@@ -69,21 +68,22 @@ class MainActivity : FlutterActivity() {
         private val mActivity: WeakReference<MainActivity> = WeakReference(activity)
         override fun handleMessage(msg: Message?) {
             super.handleMessage(msg)
-            when (msg?.what) {
+            if (null == msg) return
+            val jsonObject = msg.obj as JSONObject
+            val pageId = jsonObject.getString("pageId")
+            val json = jsonObject.get("obj").toString()
+            when (msg.what) {
                 EventManager.TYPE_SOCKET -> {
-                    val json = msg.obj.toString()
-                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_SOCKET, json)
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_SOCKET, pageId, json)
                 }
                 EventManager.TYPE_ONCLICK -> {
-                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_ONCLICK, "")
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_ONCLICK, pageId,"")
                 }
                 EventManager.TYPE_NAVIGATION_BAR_TITLE -> {
-                    val title = msg.obj.toString()
-                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_TITLE, title)
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_TITLE, pageId, json)
                 }
                 EventManager.TYPE_NAVIGATE_TO -> {
-                    val json = msg.obj.toString()
-                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATE_TO, json)
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATE_TO, pageId, json)
                 }
             }
         }

@@ -1,6 +1,8 @@
 package com.cc.hybrid.event
 
 import android.os.Handler
+import android.os.Message
+import org.json.JSONObject
 
 class EventManager {
 
@@ -12,6 +14,20 @@ class EventManager {
         var instance = EventManager()
     }
 
-    var handler: Handler? = null
+    private var handler: Handler? = null
+
+    fun initHandler(handler: Handler) {
+        this.handler = handler
+    }
+
+    fun sendMessage(what: Int, pageId: String, obj: Any) {
+        val jsonObject = JSONObject()
+        jsonObject.put("pageId", pageId)
+        jsonObject.put("obj", obj)
+        val msg = Message.obtain()
+        msg.what = what
+        msg.obj = jsonObject
+        handler?.sendMessage(msg)
+    }
 
 }

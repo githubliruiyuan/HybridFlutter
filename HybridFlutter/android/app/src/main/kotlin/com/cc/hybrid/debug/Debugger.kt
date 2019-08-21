@@ -1,9 +1,5 @@
 package com.cc.hybrid.debug
 
-import android.os.Handler
-import android.os.Message
-import android.util.Log
-import com.cc.hybrid.MainActivity
 import com.cc.hybrid.event.EventManager
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -15,10 +11,9 @@ import java.nio.ByteOrder
 import java.util.concurrent.Executors
 
 // Thread to read content from Socket
-class PPDebugger(host: String, port: Int, handler: Handler) : Thread() {
+class Debugger(host: String, port: Int) : Thread() {
 
     var socket: WeakReference<Socket>? = null
-    var handler: Handler? = null
     var host: String? = null
     var port: Int? = null
     private val mThreadPool = Executors.newCachedThreadPool()
@@ -26,7 +21,6 @@ class PPDebugger(host: String, port: Int, handler: Handler) : Thread() {
     init {
         this.host = host
         this.port = port
-        this.handler = handler
     }
 
     private var isStart = true
@@ -59,10 +53,7 @@ class PPDebugger(host: String, port: Int, handler: Handler) : Thread() {
                         baos.write(i)
                     }
                     val json = baos.toString()
-                    val msg = Message.obtain()
-                    msg.what = EventManager.TYPE_SOCKET
-                    msg.obj = json
-                    handler!!.sendMessage(msg)
+                    EventManager.instance.sendMessage(EventManager.TYPE_SOCKET, "", json)
                 }
             } catch (e: IOException) {
 

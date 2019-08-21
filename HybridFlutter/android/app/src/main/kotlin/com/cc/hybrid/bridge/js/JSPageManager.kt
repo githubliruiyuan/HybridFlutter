@@ -1,5 +1,6 @@
 package com.cc.hybrid.bridge.js
 
+import android.os.Message
 import com.cc.hybrid.Logger
 import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.v8.V8Manager
@@ -7,6 +8,7 @@ import com.eclipsesource.v8.JavaCallback
 import com.eclipsesource.v8.V8Array
 import com.eclipsesource.v8.V8Function
 import com.eclipsesource.v8.V8Object
+import org.json.JSONObject
 
 object JSPageManager {
 
@@ -46,6 +48,28 @@ object JSPageManager {
                     onRefresh(pageId)
                     receiver as Any
                 }, "refresh")
+
+                val cc = V8Manager.v8.getObject("cc")
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val data = parameters?.getObject(0)
+                    if (null != data && data.contains("title")) {
+                        EventManager.instance.sendMessage(what = EventManager.TYPE_NAVIGATION_BAR_TITLE, pageId = pageId, obj = data.getString("title"))
+                    }
+                    receiver as Any
+                }, "setNavigationBarTitle")
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val data = parameters?.getObject(0)
+                    if (null != data) {
+                        val jsonObject = JSONObject()
+                        data.keys.forEach {
+                            jsonObject.put(it, data.get(it))
+                        }
+                        EventManager.instance.sendMessage(what = EventManager.TYPE_NAVIGATE_TO, pageId = pageId, obj = jsonObject.toString())
+                    }
+                    receiver as Any
+                }, "navigateTo")
+                realPageObject.setPrototype(cc)
+                realPageObject.add("cc", cc)
             }
         } catch (e: Exception) {
             Logger.printError(e)
@@ -64,7 +88,7 @@ object JSPageManager {
     @Synchronized
     fun onRefresh(pageId: String) {
         Logger.d("JSPageManager", "onRefresh pageId = $pageId")
-        EventManager.instance.handler?.sendEmptyMessage(EventManager.TYPE_ONCLICK)
+        EventManager.instance.sendMessage(what = EventManager.TYPE_ONCLICK, pageId = pageId, obj = "")
     }
 
     private fun getV8Page(pageId: String): V8Object? {

@@ -35,30 +35,6 @@ object V8Manager {
         val cc = v8.getObject("cc")
         cc.registerJavaMethod(JavaCallback { receiver, parameters ->
             val data = parameters?.getObject(0)
-            if (null != data && data.contains("title")) {
-                val msg = Message.obtain()
-                msg.what = EventManager.TYPE_NAVIGATION_BAR_TITLE
-                msg.obj = data.getString("title")
-                EventManager.instance.handler?.sendMessage(msg)
-            }
-            receiver as Any
-        }, "setNavigationBarTitle")
-        cc.registerJavaMethod(JavaCallback { receiver, parameters ->
-            val data = parameters?.getObject(0)
-            if (null != data) {
-                val jsonObject = JSONObject()
-                data.keys.forEach {
-                    jsonObject.put(it, data.get(it))
-                }
-                val msg = Message.obtain()
-                msg.what = EventManager.TYPE_NAVIGATE_TO
-                msg.obj = jsonObject.toString()
-                EventManager.instance.handler?.sendMessage(msg)
-            }
-            receiver as Any
-        }, "navigateTo")
-        cc.registerJavaMethod(JavaCallback { receiver, parameters ->
-            val data = parameters?.getObject(0)
             data?.add("requestId", UUID.randomUUID().toString())
             cc.getObject("requestData").add(data?.getString("requestId"), data)
             JSNetwork().request(data!!)
