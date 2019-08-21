@@ -35,7 +35,7 @@ Page({
             complete: function () {
                 console.log('request complete');
                 cc.hideLoading();
-            }
+            } 
         });
     },
 

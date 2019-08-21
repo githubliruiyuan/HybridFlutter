@@ -73,7 +73,7 @@ class JSNetwork {
                     result[CODE] = -1
                     result[MESSAGE] = e?.message
                 handler.post {
-                    JSEngineManager.onNetworkResult(requestId, FAIL, result.toJSONString())
+                    JSPageManager.onNetworkResult(requestId, FAIL, result.toJSONString())
                 }
             }
 
@@ -89,7 +89,7 @@ class JSNetwork {
                     result[HANDSHAKE] = response.handshake()
                     result[PROTOCOL] = response.protocol()
                     handler.post {
-                        JSEngineManager.onNetworkResult(requestId, SUCCESS, result.toJSONString())
+                        JSPageManager.onNetworkResult(requestId, SUCCESS, result.toJSONString())
                     }
                 }
             }

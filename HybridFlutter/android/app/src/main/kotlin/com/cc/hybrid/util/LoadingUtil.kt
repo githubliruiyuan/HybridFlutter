@@ -1,4 +1,4 @@
-package com.cc.hybrid.bridge.js
+package com.cc.hybrid.util
 
 import android.app.ProgressDialog
 import android.content.Context

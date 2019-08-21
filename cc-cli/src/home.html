@@ -9,13 +9,13 @@
 </head>
 
 <body>
-    <singlechildscrollview> 
+    <singlechildscrollview>  
         <column>  
             <container id="btn-container" cc:for="{{list}}"> 
                 <raisedbutton id="raisedbutton" onclick="onItemClick">
                     <row>
                         <container id="image-container">
-                            <image src="{{item.images.medium}}" />  
+                            <image src="{{item.image}}" />  
                         </container>
                         <expanded>
                             <column id="column-text">

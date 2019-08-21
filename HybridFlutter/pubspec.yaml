@@ -21,7 +21,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   english_words: ^3.1.0
   json_annotation: ^2.0.0
-  http: ^0.11.3+17
+  flutter_webview_plugin: ^0.2.1+2
 
 dev_dependencies:
   flutter_test:

@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import com.cc.hybrid.bridge.flutter.FlutterPluginMethodChannel
-import com.cc.hybrid.bridge.js.LoadingUtil
+import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.debug.PPDebugger
 import com.cc.hybrid.event.EventManager
 import io.flutter.app.FlutterActivity

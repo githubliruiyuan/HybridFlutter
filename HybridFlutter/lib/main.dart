@@ -15,8 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp() {
     _pages = Map();
-    var home =
-        "{\"style\":{},\"body\":{\"tag\":\"body\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"column\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"row\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"container\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"text\",\"innerHTML\":\"e3snaWQ6JyArIGlkeCArICcgdGV4dDonICsgaXR9fQ==\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{\"font-size\":\"14px\",\"color\":\"white\"},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{\"repeat\":{\"name\":\"or\",\"expression\":\"{{item}}\",\"item\":\"it\",\"index\":\"idx\"}},\"attribStyle\":{\"width\":\"100px\",\"height\":\"100px\",\"color\":\"{{colors[index]}}\",\"margin-right\":\"15px\"},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{\"repeat\":{\"name\":\"or\",\"expression\":\"{{list}}\",\"item\":\"item\",\"index\":\"index\"}},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}},\"type\":{},\"align\":{},\"description\":{},\"script\":{\"tag\":\"script\",\"innerHTML\":\"IWZ1bmN0aW9uKGUpe3ZhciB0PXt9O2Z1bmN0aW9uIG8obil7aWYodFtuXSlyZXR1cm4gdFtuXS5leHBvcnRzO3ZhciByPXRbbl09e2k6bixsOiExLGV4cG9ydHM6e319O3JldHVybiBlW25dLmNhbGwoci5leHBvcnRzLHIsci5leHBvcnRzLG8pLHIubD0hMCxyLmV4cG9ydHN9by5tPWUsby5jPXQsby5kPWZ1bmN0aW9uKGUsdCxuKXtvLm8oZSx0KXx8T2JqZWN0LmRlZmluZVByb3BlcnR5KGUsdCx7ZW51bWVyYWJsZTohMCxnZXQ6bn0pfSxvLnI9ZnVuY3Rpb24oZSl7InVuZGVmaW5lZCIhPXR5cGVvZiBTeW1ib2wmJlN5bWJvbC50b1N0cmluZ1RhZyYmT2JqZWN0LmRlZmluZVByb3BlcnR5KGUsU3ltYm9sLnRvU3RyaW5nVGFnLHt2YWx1ZToiTW9kdWxlIn0pLE9iamVjdC5kZWZpbmVQcm9wZXJ0eShlLCJfX2VzTW9kdWxlIix7dmFsdWU6ITB9KX0sby50PWZ1bmN0aW9uKGUsdCl7aWYoMSZ0JiYoZT1vKGUpKSw4JnQpcmV0dXJuIGU7aWYoNCZ0JiYib2JqZWN0Ij09dHlwZW9mIGUmJmUmJmUuX19lc01vZHVsZSlyZXR1cm4gZTt2YXIgbj1PYmplY3QuY3JlYXRlKG51bGwpO2lmKG8ucihuKSxPYmplY3QuZGVmaW5lUHJvcGVydHkobiwiZGVmYXVsdCIse2VudW1lcmFibGU6ITAsdmFsdWU6ZX0pLDImdCYmInN0cmluZyIhPXR5cGVvZiBlKWZvcih2YXIgciBpbiBlKW8uZChuLHIsZnVuY3Rpb24odCl7cmV0dXJuIGVbdF19LmJpbmQobnVsbCxyKSk7cmV0dXJuIG59LG8ubj1mdW5jdGlvbihlKXt2YXIgdD1lJiZlLl9fZXNNb2R1bGU/ZnVuY3Rpb24oKXtyZXR1cm4gZS5kZWZhdWx0fTpmdW5jdGlvbigpe3JldHVybiBlfTtyZXR1cm4gby5kKHQsImEiLHQpLHR9LG8ubz1mdW5jdGlvbihlLHQpe3JldHVybiBPYmplY3QucHJvdG90eXBlLmhhc093blByb3BlcnR5LmNhbGwoZSx0KX0sby5wPSIiLG8oby5zPTApfShbZnVuY3Rpb24oZSx0KXtQYWdlKHtkYXRhOntsaXN0OltbIngxIiwieDIiXSxbInkxIiwieTIiXSxbInoxIiwiejIiXV0sYnRuQ29sb3I6ImdyZWVuIixjb2xvcnM6WyJncmVlbiIsInJlZCIsImJsdWUiXSxpdGVtMjoieXl5eSIsd2lkdGg6LjIsaGVpZ2h0Oi4yLG5hbWU6ImNtcyBkZW1vIn0sb25jbGljaygpe2xldCBlPXRoaXMuZGF0YS53aWR0aCsuMSx0PXRoaXMuZGF0YS5oZWlnaHQrLjEsbz1NYXRoLmNlaWwoMypNYXRoLnJhbmRvbSgpKTtjb25zb2xlLmxvZygicmFuZG9tID0gIitvKTtsZXQgbj10aGlzLmRhdGEuY29sb3JzW29dO3RoaXMuc2V0RGF0YSh7bmFtZToiY21zIix3aWR0aDplLGhlaWdodDp0LGJ0bkNvbG9yOm59KTtsZXQgcj10aGlzO2NjLnJlcXVlc3Qoe3VybDoiaHR0cDovL3FhLnNjbS5wcG1vbmV5LmNvbTo3MzAwL21vY2svNWFiMjMyYTFhODgxNzEwMDZkMmI2MDY2L2Ntcy9wYWdlL2dldCIsZGF0YTp7fSxoZWFkZXI6e30sbWV0aG9kOiJwb3N0IixzdWNjZXNzOmZ1bmN0aW9uKGUpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IHN1Y2Nlc3M6IitKU09OLnN0cmluZ2lmeShlKSksci5zZXREYXRhKHtpdGVtMjpKU09OLnN0cmluZ2lmeShlKX0pfSxmYWlsOmZ1bmN0aW9uKGUpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IGVycm9yOiIrSlNPTi5zdHJpbmdpZnkoZSkpfSxjb21wbGV0ZTpmdW5jdGlvbigpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IGNvbXBsZXRlIil9fSl9LG9uTG9hZChlKXtjb25zb2xlLmxvZygicHBjbXMgbmFtZSA9ICIrdGhpcy5kYXRhLm5hbWUpfSxvblVubG9hZCgpe319KX1dKTsKLy8jIHNvdXJjZU1hcHBpbmdVUkw9ZXhhbXBsZS5idW5kbGUuanMubWFw\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}}";
+    var home = "{\"style\":{\".btn-container\":{\"margin-top\":\"10\",\"margin-left\":\"10\",\"margin-right\":\"10\"},\".raisedbutton\":{\"color\":\"white\"},\".image-container\":{\"width\":\"100px\",\"height\":\"100px\",\"padding\":\"5\"},\".column-text\":{\"cross-axis-alignment\":\"start\"},\".text-title\":{\"font-size\":\"14px\",\"color\":\"black\"},\".text-publisher\":{\"font-size\":\"12px\",\"color\":\"gray\"},\".text-summary\":{\"font-size\":\"12px\",\"color\":\"gray\"}},\"body\":{\"tag\":\"body\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"singlechildscrollview\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"column\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"container\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"raisedbutton\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"row\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"container\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"image\",\"innerHTML\":\"\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{\"src\":\"{{item.images.medium}}\"},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"image-container\"},{\"tag\":\"expanded\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"column\",\"innerHTML\":\"\",\"childNodes\":[{\"tag\":\"text\",\"innerHTML\":\"e3tpdGVtLnRpdGxlfX0=\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"text-title\"},{\"tag\":\"text\",\"innerHTML\":\"e3tpdGVtLnB1Ymxpc2hlcn19\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"text-publisher\"},{\"tag\":\"text\",\"innerHTML\":\"e3tpdGVtLnN1bW1hcnkuc3Vic3RyaW5nKDAsIDIwKSArICcuLi4nfX0=\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"text-summary\"}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"column-text\"}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{\"onclick\":\"onItemClick\"},\"directives\":{},\"attribStyle\":{},\"attrib\":{},\"id\":\"raisedbutton\"}],\"datasets\":{},\"events\":{},\"directives\":{\"repeat\":{\"name\":\"or\",\"expression\":\"{{list}}\",\"item\":\"item\",\"index\":\"index\"}},\"attribStyle\":{},\"attrib\":{},\"id\":\"btn-container\"}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}},\"type\":{},\"align\":{},\"description\":{},\"script\":{\"tag\":\"script\",\"innerHTML\":\"IWZ1bmN0aW9uKGUpe3ZhciB0PXt9O2Z1bmN0aW9uIG8obil7aWYodFtuXSlyZXR1cm4gdFtuXS5leHBvcnRzO3ZhciByPXRbbl09e2k6bixsOiExLGV4cG9ydHM6e319O3JldHVybiBlW25dLmNhbGwoci5leHBvcnRzLHIsci5leHBvcnRzLG8pLHIubD0hMCxyLmV4cG9ydHN9by5tPWUsby5jPXQsby5kPWZ1bmN0aW9uKGUsdCxuKXtvLm8oZSx0KXx8T2JqZWN0LmRlZmluZVByb3BlcnR5KGUsdCx7ZW51bWVyYWJsZTohMCxnZXQ6bn0pfSxvLnI9ZnVuY3Rpb24oZSl7InVuZGVmaW5lZCIhPXR5cGVvZiBTeW1ib2wmJlN5bWJvbC50b1N0cmluZ1RhZyYmT2JqZWN0LmRlZmluZVByb3BlcnR5KGUsU3ltYm9sLnRvU3RyaW5nVGFnLHt2YWx1ZToiTW9kdWxlIn0pLE9iamVjdC5kZWZpbmVQcm9wZXJ0eShlLCJfX2VzTW9kdWxlIix7dmFsdWU6ITB9KX0sby50PWZ1bmN0aW9uKGUsdCl7aWYoMSZ0JiYoZT1vKGUpKSw4JnQpcmV0dXJuIGU7aWYoNCZ0JiYib2JqZWN0Ij09dHlwZW9mIGUmJmUmJmUuX19lc01vZHVsZSlyZXR1cm4gZTt2YXIgbj1PYmplY3QuY3JlYXRlKG51bGwpO2lmKG8ucihuKSxPYmplY3QuZGVmaW5lUHJvcGVydHkobiwiZGVmYXVsdCIse2VudW1lcmFibGU6ITAsdmFsdWU6ZX0pLDImdCYmInN0cmluZyIhPXR5cGVvZiBlKWZvcih2YXIgciBpbiBlKW8uZChuLHIsZnVuY3Rpb24odCl7cmV0dXJuIGVbdF19LmJpbmQobnVsbCxyKSk7cmV0dXJuIG59LG8ubj1mdW5jdGlvbihlKXt2YXIgdD1lJiZlLl9fZXNNb2R1bGU/ZnVuY3Rpb24oKXtyZXR1cm4gZS5kZWZhdWx0fTpmdW5jdGlvbigpe3JldHVybiBlfTtyZXR1cm4gby5kKHQsImEiLHQpLHR9LG8ubz1mdW5jdGlvbihlLHQpe3JldHVybiBPYmplY3QucHJvdG90eXBlLmhhc093blByb3BlcnR5LmNhbGwoZSx0KX0sby5wPSIiLG8oby5zPTApfShbZnVuY3Rpb24oZSx0KXtQYWdlKHtkYXRhOntsaXN0OltdfSxvbkxvYWQoZSl7Y2Muc2V0TmF2aWdhdGlvbkJhclRpdGxlKHt0aXRsZToiUHl0aG9u57O75YiX5Lib5LmmIn0pLGNjLnNob3dMb2FkaW5nKHttZXNzYWdlOiLmraPlnKjnjqnlkb3liqDovb0uLi4ifSk7bGV0IHQ9dGhpcztjYy5yZXF1ZXN0KHt1cmw6Imh0dHBzOi8vd3d3LmVhc3ktbW9jay5jb20vbW9jay81YWI0NjIzNmUxYzE3YjNiMmNjNTU4NDMvZXhhbXBsZS9ib29rcyIsZGF0YTp7fSxoZWFkZXI6e30sbWV0aG9kOiJnZXQiLHN1Y2Nlc3M6ZnVuY3Rpb24oZSl7dC5zZXREYXRhKHtsaXN0OmUuYm9keS5ib29rc30pfSxmYWlsOmZ1bmN0aW9uKGUpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IGVycm9yOiIrSlNPTi5zdHJpbmdpZnkoZSkpfSxjb21wbGV0ZTpmdW5jdGlvbigpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IGNvbXBsZXRlIiksY2MuaGlkZUxvYWRpbmcoKX19KX0sb25JdGVtQ2xpY2soZSl7Y29uc29sZS5sb2coSlNPTi5zdHJpbmdpZnkoZSkpLGNjLm5hdmlnYXRlVG8oe3VybDoiaG9tZT9hPTEmYj0yIn0pfSxvblVubG9hZCgpe319KX1dKTsKLy8jIHNvdXJjZU1hcHBpbmdVUkw9aG9tZS5idW5kbGUuanMubWFw\",\"childNodes\":[],\"datasets\":{},\"events\":{},\"directives\":{},\"attribStyle\":{},\"attrib\":{}}}";
     _pages.putIfAbsent('home', () => home);
   }
 
@@ -24,20 +23,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: _MainPage({}),
-      onGenerateRoute: (settings) {
-        return MaterialPageRoute(builder: (context) {
-          return _MainPage(settings.arguments);
-        });
-      },
-      routes: <String, WidgetBuilder>{
-        '/main': (BuildContext context) => _MainPage({}),
-      },
     );
   }
 }
 
 class _MainPage extends StatefulWidget {
-  Map<String, dynamic> _args;
+  final Map<String, dynamic> _args;
 
   _MainPage(this._args);
 
@@ -64,13 +55,14 @@ class _MainPageState extends State<_MainPage> {
           _pageCode = v;
         }
       });
+      _args.remove("pageCode");
     } else {
       _pageCode = 'home';
     }
+    _pageId = _pageCode + this.hashCode.toString();
   }
 
   _initData() async {
-    _pageId = _pageCode + this.hashCode.toString();
     _data = jsonDecode(_pages[_pageCode]);
     _create(true);
   }
@@ -128,7 +120,8 @@ class _MainPageState extends State<_MainPage> {
         params?.forEach((k, v) {
           args.putIfAbsent(k, () => v);
         });
-        Navigator.of(context).pushNamed("/main", arguments: args);
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => _MainPage(args)));
       }
     }
   }
@@ -143,15 +136,11 @@ class _MainPageState extends State<_MainPage> {
       script = script['innerHTML'];
     }
 
-    var widget;
     if (isInit) {
       _initScript(script);
-      widget = await _createWidget(body, styles);
       _callOnLoad();
-    } else {
-      widget = await _createWidget(body, styles);
     }
-
+    var widget = await _createWidget(body, styles);
     setState(() {
       view = widget;
     });
@@ -197,9 +186,6 @@ class _MainPageState extends State<_MainPage> {
         appBar: AppBar(
           title: Text(_title),
         ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.of(context).pushNamed("/main");
-        }),
         backgroundColor: Colors.grey[200],
         body: view);
   }
