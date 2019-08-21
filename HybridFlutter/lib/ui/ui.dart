@@ -268,7 +268,7 @@ class UIFactory {
 
   Widget _createText(Map<String, Property> properties, String text) {
     var fontSize = dealFontSize(properties['font-size']);
-    Color color = dealColor(properties['color']);
+    Color color = dealFontColor(properties['color']);
     Color backgroundColor = dealColor(properties['background-color']);
     var inherit = dealBoolDefNull(properties['inherit']);
     if (null == inherit) {

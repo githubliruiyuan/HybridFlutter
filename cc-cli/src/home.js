@@ -39,12 +39,12 @@ Page({
         });
     },
 
-    onItemClick(item) {
-        console.log(JSON.stringify(item));
+    onItemClick(e) {
+        var item = this.data.list[e.target.dataset.index];
         cc.navigateTo({ 
-            url: "home?a=1&b=2"
+            url: "detail?item=" + JSON.stringify(item)
         });
-    },  
+    },   
 
     /**
     * 页面卸载时触发。如cc.redirectTo或cc.navigateBack到其他页面时。

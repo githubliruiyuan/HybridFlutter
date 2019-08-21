@@ -7,6 +7,7 @@ import com.cc.hybrid.bridge.flutter.FlutterPluginMethodChannel
 import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.debug.PPDebugger
 import com.cc.hybrid.event.EventManager
+import com.cc.hybrid.util.SpUtil
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.PluginRegistry
@@ -27,6 +28,7 @@ class MainActivity : FlutterActivity() {
         GeneratedPluginRegistrant.registerWith(this)
         registerCustomPlugin(this)
         registerMessageChannel()
+        SpUtil.initSp(this)
         LoadingUtil.initDialog(this)
         initHandler()
         debug()

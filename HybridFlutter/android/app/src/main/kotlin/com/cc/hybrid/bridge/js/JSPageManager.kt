@@ -31,7 +31,8 @@ object JSPageManager {
         try {
             V8Manager.executeScript("global.loadPage('$pageId')")
             val realPageObject = getV8Page(pageId)
-            if (realPageObject is V8Object) {
+            if (null != realPageObject) {
+                // 将js对象注入到临时page
                 realPageObject.executeJSFunction("evalInPage", script)
 
                 // 将临时page添加到RealPage里面
@@ -41,14 +42,9 @@ object JSPageManager {
                     realPageObject.add(it, page.getObject(it))
                     realPageObject.setPrototype(page.getObject(it))
                 }
-
-                val cc = V8Manager.v8.getObject("cc")
-                realPageObject.setPrototype(cc)
-                realPageObject.add("cc", cc)
-
-                realPageObject.registerJavaMethod(JavaCallback { p0, p1 ->
+                realPageObject.registerJavaMethod(JavaCallback { receiver, parameters ->
                     onRefresh(pageId)
-                    p0 as Any
+                    receiver as Any
                 }, "refresh")
             }
         } catch (e: Exception) {

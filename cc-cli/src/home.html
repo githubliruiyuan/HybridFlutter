@@ -10,14 +10,14 @@
 
 <body>
     <singlechildscrollview>  
-        <column>  
+        <column>   
             <container id="btn-container" cc:for="{{list}}"> 
-                <raisedbutton id="raisedbutton" onclick="onItemClick">
+                <raisedbutton id="raisedbutton" onclick="onItemClick" data-index="{{index}}">
                     <row>
                         <container id="image-container">
                             <image src="{{item.image}}" />  
                         </container>
-                        <expanded>
+                        <expanded>  
                             <column id="column-text">
                                 <text id="text-title">{{item.title}}</text>
                                 <text id="text-publisher">{{item.publisher}}</text> 

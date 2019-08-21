@@ -12,6 +12,22 @@ Color hexToColor(String s) {
   }
 }
 
+Color dealFontColor(Property property) {
+  Color color = Colors.black;
+  if (null == property) {
+    return color;
+  }
+  String str = property.getValue();
+  if (null != str) {
+    if (str.startsWith('#')) {
+      color = hexToColor(str);
+    } else {
+      color = _getColor(str, defaultValue: Colors.black);
+    }
+  }
+  return color;
+}
+
 Color dealColor(Property property) {
   Color color = Colors.transparent;
   if (null == property) {
@@ -28,8 +44,8 @@ Color dealColor(Property property) {
   return color;
 }
 
-Color _getColor(String str) {
-  switch(str) {
+Color _getColor(String str, {Color defaultValue = Colors.transparent}) {
+  switch (str) {
     case 'white':
       return Colors.white;
     case 'blue':
@@ -65,6 +81,6 @@ Color _getColor(String str) {
     case 'transparent':
       return Colors.transparent;
     default:
-      return Colors.transparent;
+      return defaultValue;
   }
 }
