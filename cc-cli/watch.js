@@ -161,13 +161,13 @@ class Watcher {
 
         //send json file to client
         let json_name = path.basename(filepath);
-        json_name = json_name.replace(path.extname(filepath), '.json');
+        json_name = json_name.replace(path.extname(filepath), '');
 
         let jsonpath = filepath.replace(path.extname(filepath), '.json')
 
         let json_content = fs.readFileSync(jsonpath).toString();
         let res = JSON.stringify({
-            'fileName': json_name,
+            'pageCode': json_name,
             'content': json_content
         });
         if (this.socket == null) {

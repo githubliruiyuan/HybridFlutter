@@ -21,11 +21,8 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
         }
     }
 
-
     override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
-
-        Logger.d("lry", "onMethodCall = ${methodCall.method} result = $result ")
-
+//        Logger.d("lry", "onMethodCall = ${methodCall.method} result = $result ")
         when (methodCall.method) {
             Methods.ATTACH_PAGE -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("script")) {
@@ -45,7 +42,6 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
             Methods.ONCLICK -> {
-                Logger.d("lry", "Methods onclick")
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("event") && methodCall.hasArgument("data")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val event = methodCall.argument<String>("event")
@@ -56,7 +52,6 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
             Methods.HANDLE_EXPRESSION -> {
-                Logger.d("lry", "Methods handle_expression")
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val expression = methodCall.argument<String>("expression")
@@ -65,7 +60,6 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
             Methods.HANDLE_REPEAT -> {
-                Logger.d("lry", "Methods handle_repeat")
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val expression = methodCall.argument<String>("expression")
@@ -79,8 +73,5 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
         }
-
-
     }
-
 }

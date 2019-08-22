@@ -220,10 +220,6 @@ class UIFactory {
       Map<String, Property> properties, Widget child) {
     var widthFactor = dealDoubleDefZero(properties['width-factor']);
     var heightFactor = dealDoubleDefZero(properties['height-factor']);
-    print("widthFactor = " +
-        widthFactor.toString() +
-        " heightFactor = " +
-        heightFactor.toString());
     return FractionallySizedBox(
         child: child, widthFactor: widthFactor, heightFactor: heightFactor);
   }
@@ -342,8 +338,7 @@ class UIFactory {
   }
 
   Widget _createWidget(Component component) {
-    print("createChild tag ${component.tag}");
-
+//    print("createChild tag ${component.tag}");
     var children = _getChildren(component);
     var widget;
     switch (component.tag) {

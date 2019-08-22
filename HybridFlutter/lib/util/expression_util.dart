@@ -72,7 +72,7 @@ Future handleProperty(MethodChannel methodChannel, String pageId, Component comp
 }
 
 Future<dynamic> _calcExpression(MethodChannel methodChannel, String pageId, String expression) async {
-  print("pageId = $pageId exp = $expression");
+//  print("pageId = $pageId exp = $expression");
   return await methodChannel.invokeMethod(
       'handle_expression', {'pageId': pageId, 'expression': expression});
 }

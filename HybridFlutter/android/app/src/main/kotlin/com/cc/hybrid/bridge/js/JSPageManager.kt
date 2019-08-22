@@ -148,7 +148,7 @@ object JSPageManager {
 
     @Synchronized
     fun onRefresh(pageId: String) {
-        Logger.d("JSPageManager", "onRefresh pageId = $pageId")
+//        Logger.d("JSPageManager", "onRefresh pageId = $pageId")
         EventManager.instance.sendMessage(what = EventManager.TYPE_ONCLICK, pageId = pageId, obj = "")
     }
 

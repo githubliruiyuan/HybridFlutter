@@ -14,26 +14,26 @@ const logger = require('./logger')
 const argv = require('yargs')
 .command(
   'tpl',
-  '创建模板',
+  '创建页面',
   function (yargs) {//可选参数
     return yargs
       .option('name', {
         alias: 'n',
-        describe: '指定模板名称'
+        describe: '指定页面名称'
       })
       .option('code', {
         alias: 'c',
-        describe: '指定模板code'
+        describe: '指定页面code'
       })
   },
   function (argv) {
     let {code , name} = argv
     if(!code){
-      logger.fatal(`请用--code参数指定模板名字`);
+      logger.fatal(`请用--code参数指定页面名字`);
       return;
     }
     if(!name){
-      logger.fatal(`请用--name 参数指定模板名字`);
+      logger.fatal(`请用--name 参数指定页面名字`);
       return;
     }
      createtemplate(code, name)

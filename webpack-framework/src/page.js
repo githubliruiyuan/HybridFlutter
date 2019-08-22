@@ -73,10 +73,10 @@ function loadPage(pageId) {
                 var str = "this.data." + key + " = dataObj['" + key + "']";
                 eval(str);
             }
-            var startTime = Date.now();
+//            var startTime = Date.now();
             this.__native__refresh();
-            var endTime = Date.now();
-            console.log("耗时:"+(endTime-startTime));
+//            var endTime = Date.now();
+//            console.log("耗时:"+(endTime-startTime));
         }
     };
 

@@ -71,8 +71,8 @@ class JSNetwork {
         HttpRequestUtil.okHttpClient.newCall(builder.build()).enqueue(object : Callback {
             override fun onFailure(call: Call?, e: IOException?) {
                 val result = JSONObject()
-                    result[CODE] = -1
-                    result[MESSAGE] = e?.message
+                result[CODE] = -1
+                result[MESSAGE] = e?.message
                 handler.post {
                     JSPageManager.onNetworkResult(pageId, requestId, FAIL, result.toJSONString())
                 }
@@ -82,15 +82,22 @@ class JSNetwork {
                 val result = JSONObject()
                 result[CODE] = -1
                 result[MESSAGE] = ""
-                if (null != response) {
-                    result[CODE] = response.code()
-                    result[BODY] = JSON.parse(response.body().string())
-                    result[MESSAGE] = response.message()
-                    result[HEADERS] = response.headers()
-                    result[HANDSHAKE] = response.handshake()
-                    result[PROTOCOL] = response.protocol()
+                try {
+                    if (null != response) {
+                        result[CODE] = response.code()
+                        result[BODY] = JSON.parse(response.body().string())
+                        result[MESSAGE] = response.message()
+                        result[HEADERS] = response.headers()
+                        result[HANDSHAKE] = response.handshake()
+                        result[PROTOCOL] = response.protocol()
+                        handler.post {
+                            JSPageManager.onNetworkResult(pageId, requestId, SUCCESS, result.toJSONString())
+                        }
+                    }
+                } catch (e: Exception) {
+                    result[MESSAGE] = e.message
                     handler.post {
-                        JSPageManager.onNetworkResult(pageId, requestId, SUCCESS, result.toJSONString())
+                        JSPageManager.onNetworkResult(pageId, requestId, FAIL, result.toJSONString())
                     }
                 }
             }
