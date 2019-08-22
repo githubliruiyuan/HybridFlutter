@@ -37,7 +37,7 @@ object JSPageManager {
             val realPageObject = getV8Page(pageId)
             if (null != realPageObject) {
                 // 将js对象注入到临时page
-                realPageObject.executeJSFunction("evalInPage", script)
+                realPageObject.executeJSFunction("__native__evalInPage", script)
 
                 // 将临时page添加到RealPage里面
                 val page = V8Manager.v8.getObject("page")
@@ -49,7 +49,7 @@ object JSPageManager {
                 realPageObject.registerJavaMethod(JavaCallback { receiver, parameters ->
                     onRefresh(pageId)
                     receiver as Any
-                }, "refresh")
+                }, "__native__refresh")
 
                 val cc = realPageObject.getObject("cc")
                 cc.registerJavaMethod(JavaCallback { receiver, parameters ->
@@ -201,11 +201,11 @@ object JSPageManager {
 
     fun handleRepeat(pageId: String, expression: String): Int? {
         val page = getV8Page(pageId)
-        return page?.executeIntegerFunction("handleRepeat", V8Array(V8Manager.v8).push(expression))
+        return page?.executeIntegerFunction("__native__handleRepeat", V8Array(V8Manager.v8).push(expression))
     }
 
     fun handleExpression(pageId: String, expression: String): String? {
         val page = getV8Page(pageId)
-        return page?.executeFunction("getExpValue", V8Array(V8Manager.v8).push(expression)).toString()
+        return page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(expression)).toString()
     }
 }

@@ -22,6 +22,7 @@ function loadPage(pageId) {
         }
     };
 
+    // __native__ 开头是内部方法，避免与外部冲突
     function RealPage(pageId) {
 
         this.pageId = pageId;
@@ -31,14 +32,14 @@ function loadPage(pageId) {
         // 需要加这一行赋值，不然在模板使用cc.调用不到
         var cc = this.cc;
 
-        this.evalInPage = function (jsContent) {
+        this.__native__evalInPage = function (jsContent) {
             if (!jsContent) {
                 console.log("js content is empty!");
             }
             eval(jsContent);
         }
     
-        this.getExpValue = function (script) {
+        this.__native__getExpValue = function (script) {
             const expFunc = exp => {
                 return new Function('', 'with(this){' + exp + '}').bind(
                     this.data
@@ -54,7 +55,7 @@ function loadPage(pageId) {
             return value;
         }
         
-        this.handleRepeat = function (script) {
+        this.__native__handleRepeat = function (script) {
             const expFunc = exp => {
                 return new Function('', 'with(this){' + exp + '}').bind(
                     this.data
@@ -73,7 +74,7 @@ function loadPage(pageId) {
                 eval(str);
             }
             var startTime = Date.now();
-            this.refresh();
+            this.__native__refresh();
             var endTime = Date.now();
             console.log("耗时:"+(endTime-startTime));
         }
@@ -96,7 +97,7 @@ global.getPage = function(pageId) {
 }
 
 global.Page = function(obj) {
-    // 这里的page是个零时变量
+    // 这里的page是个临时变量
     global.page = obj;
 }
 
