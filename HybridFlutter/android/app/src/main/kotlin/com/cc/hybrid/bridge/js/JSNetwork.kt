@@ -65,6 +65,7 @@ class JSNetwork {
         }
 
         val requestId = request.getString(REQUEST_ID)
+        val pageId = request.getString(PAGE_ID)
         val handler = Handler(Looper.getMainLooper())
 
         HttpRequestUtil.okHttpClient.newCall(builder.build()).enqueue(object : Callback {
@@ -73,7 +74,7 @@ class JSNetwork {
                     result[CODE] = -1
                     result[MESSAGE] = e?.message
                 handler.post {
-                    JSPageManager.onNetworkResult(requestId, FAIL, result.toJSONString())
+                    JSPageManager.onNetworkResult(pageId, requestId, FAIL, result.toJSONString())
                 }
             }
 
@@ -89,7 +90,7 @@ class JSNetwork {
                     result[HANDSHAKE] = response.handshake()
                     result[PROTOCOL] = response.protocol()
                     handler.post {
-                        JSPageManager.onNetworkResult(requestId, SUCCESS, result.toJSONString())
+                        JSPageManager.onNetworkResult(pageId, requestId, SUCCESS, result.toJSONString())
                     }
                 }
             }
@@ -102,6 +103,7 @@ class JSNetwork {
         private val DATA = "data"
         private val METHOD = "method"
         private val REQUEST_ID = "requestId"
+        private val PAGE_ID = "pageId"
 
         private val SUCCESS = "success"
         private val FAIL = "fail"

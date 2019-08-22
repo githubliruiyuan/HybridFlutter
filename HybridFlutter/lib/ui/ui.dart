@@ -15,13 +15,10 @@ import 'package:flutter_app/util/widget_util.dart';
 import 'basic.dart';
 
 class UIFactory {
-  String _pageId;
-  MethodChannel _methodChannel;
+  final String _pageId;
+  final MethodChannel _methodChannel;
 
-  UIFactory(String pageId, MethodChannel methodChannel) {
-    this._pageId = pageId;
-    this._methodChannel = methodChannel;
-  }
+  UIFactory(this._pageId, this._methodChannel);
 
   Future<dynamic> _calcRepeatSize(String expression) async {
     return await _methodChannel.invokeMethod(

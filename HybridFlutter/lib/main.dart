@@ -51,6 +51,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
+//class _TestPage extends StatelessWidget {
+//  @override
+//  Widget build(BuildContext context) {
+//    return Scaffold(
+//        appBar: AppBar(
+//          title: Text("Test"),
+//        ),
+//        floatingActionButton: FloatingActionButton(onPressed: () {
+//          Navigator.of(context)
+//              .push(MaterialPageRoute(builder: (context) => _MainPage({})));
+//        }),
+//        body: Text("Test"));
+//  }
+//}
+
 class _MainPage extends StatefulWidget {
   final Map<String, dynamic> _args;
 
@@ -72,6 +87,8 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   String _title = "";
   Widget _view;
 
+  UIFactory _factory;
+
   _MainPageState(this._args) {
     if (_args.containsKey("pageCode")) {
       _pageCode = _args['pageCode'];
@@ -80,6 +97,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
       _pageCode = 'home';
     }
     _pageId = _pageCode + this.hashCode.toString();
+    _factory = UIFactory(_pageId, _methodChannel);
     _handlers.putIfAbsent(_pageId, () => this);
   }
 
@@ -145,13 +163,21 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   @override
   void initState() {
     super.initState();
+    print("lifecycle initState $_pageId");
     _initData();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("lifecycle didChangeDependencies $_pageId");
   }
 
   @override
   void dispose() {
     super.dispose();
-    //_handlers.remove(_pageId);
+    print("lifecycle dispose $_pageId");
+    _handlers.remove(_pageId);
     _callOnUnload();
   }
 
@@ -162,8 +188,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
   Future<Widget> _createWidget(
       Map<String, dynamic> body, Map<String, dynamic> styles) async {
-    var factory = UIFactory(_pageId, _methodChannel);
-    return factory.createView(body, styles);
+    return _factory.createView(body, styles);
   }
 
   void _callOnLoad() {

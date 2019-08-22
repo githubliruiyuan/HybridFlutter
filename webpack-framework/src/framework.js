@@ -13,29 +13,6 @@ global.judgeIsNotNull = function(pageId, id, val) {
     return false;
 }
 
-function cc() {
-
-    this.requestData = {};
-    
-    this.onNetworkResult = function(requestId, result, json) {
-        console.log('onNetworkResult requestId = ' + requestId);
-        var req = this.requestData[requestId];
-        console.log('onNetworkResult req = ' + req);
-        if (req) {
-            if (result === 'success') {
-                req['success'](JSON.parse(json));
-                console.log('success json = ' + json);
-            } else {
-                req['fail'](JSON.parse(json));
-            }
-            req['complete']();
-        }
-    }
-
-}
-
-global.cc = new cc();
-
 Array.prototype.contains = function (needle) {
     for (i in this) {
         if (this[i] == needle) return true;

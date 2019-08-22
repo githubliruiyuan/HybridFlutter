@@ -3,7 +3,33 @@ global.pages = {};
 function loadPage(pageId) {
     if (!pageId) return;
 
+    function CC(pageId) {
+
+        this.pageId = pageId;
+
+        this.requestData = {};
+
+        this.onNetworkResult = function(requestId, result, json) {
+            var req = this.requestData[requestId];
+            if (req) {
+                if (result === 'success') {
+                    req['success'](JSON.parse(json));
+                } else {
+                    req['fail'](JSON.parse(json));
+                }
+                req['complete']();
+            }
+        }
+    };
+
     function RealPage(pageId) {
+
+        this.pageId = pageId;
+
+        this.cc = new CC(pageId);
+
+        // 需要加这一行赋值，不然在模板使用cc.调用不到
+        var cc = this.cc;
 
         this.evalInPage = function (jsContent) {
             if (!jsContent) {
@@ -47,7 +73,6 @@ function loadPage(pageId) {
                 eval(str);
             }
             var startTime = Date.now();
-            console.log(JSON.stringify(this.data));
             this.refresh();
             var endTime = Date.now();
             console.log("耗时:"+(endTime-startTime));
