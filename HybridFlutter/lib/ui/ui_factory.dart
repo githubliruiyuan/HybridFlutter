@@ -78,13 +78,7 @@ class UIFactory {
     return events;
   }
 
-  Future<Widget> createWidget(
-      Map<String, dynamic> data, Map<String, dynamic> styles) async {
-    var component = await _createComponentTree(null, data, styles);
-    return _createWidget(component);
-  }
-
-  Future<dynamic> _createComponentTree(Component parent,
+  Future<dynamic> createComponentTree(Component parent,
       Map<String, dynamic> data, Map<String, dynamic> styles) async {
     var component = Component();
     component.id = component.hashCode.toString();
@@ -112,12 +106,14 @@ class UIFactory {
         //需要添加 await，否则会出现异步导致children为空
         await _addChildren(clone, data, styles);
         await handleProperty(_methodChannel, _pageId, clone);
+        clone.widget = _createWidget(clone);
         list.add(clone);
       }
       return list;
     } else {
       await _addChildren(component, data, styles);
       await handleProperty(_methodChannel, _pageId, component);
+      component.widget = _createWidget(component);
       return component;
     }
   }
@@ -128,7 +124,7 @@ class UIFactory {
     var children = data['childNodes'];
     if (null != children) {
       for (var child in children) {
-        var result = await _createComponentTree(parent, child, styles);
+        var result = await createComponentTree(parent, child, styles);
         if (result is List) {
           parent.children.addAll(result as List<Component>);
         } else {
@@ -178,8 +174,8 @@ class UIFactory {
     return child;
   }
 
-  List<Widget> _getChildren(Component component) {
-    List<Widget> children = []; //先建一个数组用于存放循环生成的widget
+  List<BaseWidgetStateful> _getChildren(Component component) {
+    List<BaseWidgetStateful> children = []; //先建一个数组用于存放循环生成的widget
     if (null == component) {
       return children;
     }
@@ -189,14 +185,13 @@ class UIFactory {
     return children;
   }
 
-  Widget _createWidget(Component component) {
+  BaseWidgetStateful _createWidget(Component component) {
 //    print("createChild tag ${component.tag}");
     var children = _getChildren(component);
     var widget;
     switch (component.tag) {
       case "body":
-        var child = _getFirstChild(children);
-        widget = CenterStateful(_pageId, _methodChannel, component, child);
+        widget = CenterStateful(_pageId, _methodChannel, component, children);
         break;
       case "column":
         widget = ColumnStateful(_pageId, _methodChannel, component, children);
@@ -205,36 +200,28 @@ class UIFactory {
         widget = RowStateful(_pageId, _methodChannel, component, children);
         break;
       case "singlechildscrollview":
-        var child = _getFirstChild(children);
-        widget = SingleChildScrollViewStateful(_pageId, _methodChannel, component, child);
+        widget = SingleChildScrollViewStateful(_pageId, _methodChannel, component, children);
         break;
 //      case "nestedscrollview":
-//        var child = _getFirstChild(children);
 //        widget = _createNestedScrollView(component.properties, child);
 //        break;
 //      case "clipoval":
-//        var child = _getFirstChild(children);
 //        widget = _createClipOval(component.properties, child);
 //        break;
       case "container":
-        var child = _getFirstChild(children);
-        widget = ContainerStateful(_pageId, _methodChannel, component, child);
+        widget = ContainerStateful(_pageId, _methodChannel, component, children);
         break;
       case "expanded":
-        var child = _getFirstChild(children);
-        widget = ExpandedStateful(_pageId, _methodChannel, component, child);
+        widget = ExpandedStateful(_pageId, _methodChannel, component, children);
         break;
       case "fractionallysizedbox":
-        var child = _getFirstChild(children);
-        widget = FractionallySizedBoxStateful(_pageId, _methodChannel, component, child);
+        widget = FractionallySizedBoxStateful(_pageId, _methodChannel, component, children);
         break;
       case "aspectratio":
-        var child = _getFirstChild(children);
-        widget = AspectRatioStateful(_pageId, _methodChannel, component, child);
+        widget = AspectRatioStateful(_pageId, _methodChannel, component, children);
         break;
       case "raisedbutton":
-        var child = _getFirstChild(children);
-        widget = RaisedButtonStateful(_pageId, _methodChannel, component, child);
+        widget = RaisedButtonStateful(_pageId, _methodChannel, component, children);
         break;
 //      case "visibility":
 //        var child = _getFirstChild(children);
@@ -257,15 +244,15 @@ class UIFactory {
         widget = TextStateful(_pageId, _methodChannel, component);
         break;
     }
-    _widgets.add(widget);
+//    _widgets.add(widget);
     return widget;
   }
 
-  void updateWidgets() {
-    _widgets.forEach((it){
-      it.update();
-    });
-  }
+//  void updateWidgets() {
+//    _widgets.forEach((it){
+//      it.update();
+//    });
+//  }
 
   void clearWidgets() {
     _widgets.clear();

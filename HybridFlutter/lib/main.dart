@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/ui/ui_factory.dart';
 import 'package:flutter_app/util/base64.dart';
 
+import 'entity/component.dart';
+
 var _methodChannel = MethodChannel("com.cc.hybrid/method");
 var _basicChannel =
     BasicMessageChannel<String>('com.cc.hybrid/basic', StringCodec());
@@ -131,11 +133,11 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   Future _update() async {
     var body = _data['body'];
     var styles = _data['style'];
-    _factory.clearWidgets();
-    var widget = await _factory.createWidget(body, styles);
-    _factory.updateWidgets();
+//    _factory.clearWidgets();
+    Component component = await _factory.createComponentTree(null, body, styles);
+//    _factory.updateWidgets();
     setState(() {
-      _view = widget;
+      _view = component.widget;
     });
   }
 
@@ -174,9 +176,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
     _initScript(script);
     _callOnLoad();
-    var widget = await _factory.createWidget(body, styles);
+    Component component = await _factory.createComponentTree(null, body, styles);
     setState(() {
-      _view = widget;
+      _view = component.widget;
     });
   }
 

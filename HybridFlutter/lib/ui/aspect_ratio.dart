@@ -3,72 +3,56 @@ import 'package:flutter/services.dart';
 import 'package:flutter_app/entity/component.dart';
 import 'package:flutter_app/ui/base_state.dart';
 import 'package:flutter_app/ui/base_widget.dart';
-import 'package:flutter_app/util/expression_util.dart';
-import 'package:flutter_app/entity/property.dart';
 import 'package:flutter_app/util/widget_util.dart';
 
 class AspectRatioStateful extends BaseWidgetStateful {
-  final String _pageId;
-  final Component _component;
-  final MethodChannel _methodChannel;
-  final Widget _child;
 
-  AspectRatioStateful(this._pageId, this._methodChannel,
-      this._component, this._child);
+  AspectRatioStateful(String pageId, MethodChannel methodChannel,
+      Component component, List<BaseWidgetStateful> children) {
+    this.pageId = pageId;
+    this.methodChannel = methodChannel;
+    this.component = component;
+    this.children = children;
+  }
 
   @override
   State<StatefulWidget> createStateX() {
-    return _AspectRatioState(_pageId, _methodChannel, _component, _child);
+    return _AspectRatioState(pageId, methodChannel, component, children);
   }
 }
 
 class _AspectRatioState extends BaseState<AspectRatioStateful> {
-  String _pageId;
-  MethodChannel _methodChannel;
-  Map<String, Property> _properties;
-  Component _component;
-  Widget _child;
 
-  _AspectRatioState(this._pageId, this._methodChannel,
-      this._component, this._child){
-    this._properties = _component.properties;
+  _AspectRatioState(String pageId, MethodChannel methodChannel,
+      Component component, List<BaseWidgetStateful> children) {
+    this.pageId = pageId;
+    this.methodChannel = methodChannel;
+    this.component = component;
+    this.children = children;
   }
 
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-        aspectRatio: dealDoubleDefZero(_properties['aspect-ratio']),
-        child: _child);
+        aspectRatio: dealDoubleDefZero(component.properties['aspect-ratio']),
+        child: children[0]);
   }
 
   @override
   void initState() {
     super.initState();
-    //_initProp();
   }
-
-  Future _initProp() async {
-    await handleProperty(_methodChannel, _pageId, _component);
-    _properties = _component.properties;
-  }
-
-  bool _dispose = false;
 
   @override
   void dispose() {
     super.dispose();
-    _dispose = true;
   }
 
   @override
-  Future update() async {
-    if (!_dispose) {
-      bool needUpdate = await checkProperty(_methodChannel, _pageId, _component);
-      if (needUpdate) {
-        setState(() {
-          _properties =_component.properties;
-        });
-      }
-    }
+  void updateChild(BaseWidgetStateful oldChild, BaseWidgetStateful newChild) {
+    setState(() {
+      this.children = [newChild];
+    });
   }
+
 }

@@ -1,4 +1,5 @@
 import 'package:flutter_app/entity/property.dart';
+import 'package:flutter_app/ui/base_widget.dart';
 import 'package:flutter_app/util/expression_util.dart';
 
 class Component {
@@ -10,7 +11,7 @@ class Component {
   Map<String, dynamic> directives;
   Map<String, Property> properties;
   List<Component> children = [];
-  bool visible = true;
+  BaseWidgetStateful widget;
 
   /// 是否在for里面
   bool isInRepeat = false;
