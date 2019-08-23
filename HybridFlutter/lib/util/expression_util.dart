@@ -54,8 +54,7 @@ Future handleProperty(MethodChannel methodChannel, String pageId, Component comp
       } else {
         exp = 'return $exp';
       }
-      String res = await _calcExpression(methodChannel, pageId, exp);
-      v.setValue(res);
+      v.setValue(await _calcExpression(methodChannel, pageId, exp));
     }
   });
 
@@ -69,6 +68,42 @@ Future handleProperty(MethodChannel methodChannel, String pageId, Component comp
     }
     component.innerHTML.setValue(await _calcExpression(methodChannel, pageId, exp));
   }
+}
+
+Future<bool> checkProperty(MethodChannel methodChannel, String pageId, Component component) async {
+  bool isChange = false;
+  component.properties.forEach((k, v) async {
+    var exp = v.property;
+    if (containExpressionSimple(exp)) {
+      exp = getExpression(exp);
+      if (component.isInRepeat) {
+        exp = getInRepeatExp(component, exp);
+      } else {
+        exp = 'return $exp';
+      }
+      String result = await _calcExpression(methodChannel, pageId, exp);
+      if(v.getValue() != result) {
+        v.setValue(result);
+        isChange = true;
+      }
+    }
+  });
+
+  var exp = component.innerHTML.property;
+  if (containExpressionSimple(exp)) {
+    exp = getExpression(exp);
+    if (component.isInRepeat) {
+      exp = getInRepeatExp(component, exp);
+    } else {
+      exp = 'return $exp';
+    }
+    String result = await _calcExpression(methodChannel, pageId, exp);
+    if(component.innerHTML.getValue() != result) {
+      component.innerHTML.setValue(result);
+      isChange = true;
+    }
+  }
+  return isChange;
 }
 
 Future<dynamic> _calcExpression(MethodChannel methodChannel, String pageId, String expression) async {

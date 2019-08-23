@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/ui/ui.dart';
+import 'package:flutter_app/ui/ui_factory.dart';
 import 'package:flutter_app/util/base64.dart';
 
 var _methodChannel = MethodChannel("com.cc.hybrid/method");
@@ -57,25 +57,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: _MainPage({}),
+      home: _TestPage(),
     );
   }
 }
 
-//class _TestPage extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return Scaffold(
-//        appBar: AppBar(
-//          title: Text("Test"),
-//        ),
-//        floatingActionButton: FloatingActionButton(onPressed: () {
-//          Navigator.of(context)
-//              .push(MaterialPageRoute(builder: (context) => _MainPage({})));
-//        }),
-//        body: Text("Test"));
-//  }
-//}
+class _TestPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Test"),
+        ),
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => _MainPage({})));
+        }),
+        body: Text("Test"));
+  }
+}
 
 class _MainPage extends StatefulWidget {
   final Map<String, dynamic> _args;
@@ -114,7 +114,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
   _initData() async {
     _data = jsonDecode(_pages[_pageCode]);
-    _create(true);
+    _create();
   }
 
   void _refresh(Map<String, dynamic> map) {
@@ -124,12 +124,19 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     var content = jsonObject['content'];
     if (_pageCode == pageCode) {
       _data = jsonDecode(content);
-      _create(true);
+      _create();
     }
   }
 
-  void _update() {
-    _create(false);
+  Future _update() async {
+    var body = _data['body'];
+    var styles = _data['style'];
+    _factory.clearWidgets();
+    var widget = await _factory.createWidget(body, styles);
+    _factory.updateWidgets();
+    setState(() {
+      _view = widget;
+    });
   }
 
   void _updateTitle(Map<String, dynamic> map) {
@@ -155,7 +162,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     }
   }
 
-  void _create(bool isInit) async {
+  void _create() async {
     var body = _data['body'];
     var styles = _data['style'];
     var script = _data['script'];
@@ -165,11 +172,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
       script = script['innerHTML'];
     }
 
-    if (isInit) {
-      _initScript(script);
-      _callOnLoad();
-    }
-    var widget = await _createWidget(body, styles);
+    _initScript(script);
+    _callOnLoad();
+    var widget = await _factory.createWidget(body, styles);
     setState(() {
       _view = widget;
     });
@@ -193,17 +198,13 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     super.dispose();
 //    print("lifecycle dispose $_pageId");
     _handlers.remove(_pageId);
+    _factory.clearWidgets();
     _callOnUnload();
   }
 
   void _initScript(String script) {
     _methodChannel.invokeMethod(
         "attach_page", {"pageId": _pageId, "script": decodeBase64(script)});
-  }
-
-  Future<Widget> _createWidget(
-      Map<String, dynamic> body, Map<String, dynamic> styles) async {
-    return _factory.createView(body, styles);
   }
 
   void _callOnLoad() {
