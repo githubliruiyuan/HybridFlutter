@@ -6,8 +6,9 @@ import 'package:flutter_app/ui/base_widget.dart';
 import 'package:flutter_app/util/widget_util.dart';
 
 class ImageStateful extends BaseWidgetStateful {
-  ImageStateful(
-      String pageId, MethodChannel methodChannel, Component component) {
+  ImageStateful(BaseWidgetStateful parent, String pageId,
+      MethodChannel methodChannel, Component component) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;

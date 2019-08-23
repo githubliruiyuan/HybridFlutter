@@ -7,8 +7,13 @@ import 'package:flutter_app/ui/base_widget.dart';
 import 'basic.dart';
 
 class ColumnStateful extends BaseWidgetStateful {
-  ColumnStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  ColumnStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -22,8 +27,8 @@ class ColumnStateful extends BaseWidgetStateful {
 }
 
 class _ColumnState extends BaseState<ColumnStateful> {
-  _ColumnState(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  _ColumnState(String pageId, MethodChannel methodChannel, Component component,
+      List<BaseWidgetStateful> children) {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -68,5 +73,4 @@ class _ColumnState extends BaseState<ColumnStateful> {
     children[index] = newChild;
     setState(() {});
   }
-
 }

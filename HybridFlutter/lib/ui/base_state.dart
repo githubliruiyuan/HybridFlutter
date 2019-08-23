@@ -11,7 +11,6 @@ abstract class BaseState<T extends StatefulWidget> extends State<T> {
   String pageId;
   Component component;
   MethodChannel methodChannel;
-  BaseWidgetStateful parent;
   List<BaseWidgetStateful> children;
 
   void updateChild(BaseWidgetStateful oldChild, BaseWidgetStateful newChild);

@@ -8,8 +8,13 @@ import 'package:flutter_app/util/color_util.dart';
 import 'package:flutter_app/util/event_util.dart';
 
 class RaisedButtonStateful extends BaseWidgetStateful {
-  RaisedButtonStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  RaisedButtonStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;

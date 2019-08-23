@@ -6,9 +6,13 @@ import 'package:flutter_app/ui/base_widget.dart';
 import 'package:flutter_app/util/widget_util.dart';
 
 class AspectRatioStateful extends BaseWidgetStateful {
-
-  AspectRatioStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  AspectRatioStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -22,7 +26,6 @@ class AspectRatioStateful extends BaseWidgetStateful {
 }
 
 class _AspectRatioState extends BaseState<AspectRatioStateful> {
-
   _AspectRatioState(String pageId, MethodChannel methodChannel,
       Component component, List<BaseWidgetStateful> children) {
     this.pageId = pageId;
@@ -54,5 +57,4 @@ class _AspectRatioState extends BaseState<AspectRatioStateful> {
       this.children = [newChild];
     });
   }
-
 }

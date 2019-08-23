@@ -7,8 +7,13 @@ import 'package:flutter_app/ui/base_widget.dart';
 import 'basic.dart';
 
 class RowStateful extends BaseWidgetStateful {
-  RowStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  RowStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -22,8 +27,8 @@ class RowStateful extends BaseWidgetStateful {
 }
 
 class _RowState extends BaseState<RowStateful> {
-  _RowState(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  _RowState(String pageId, MethodChannel methodChannel, Component component,
+      List<BaseWidgetStateful> children) {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -68,5 +73,4 @@ class _RowState extends BaseState<RowStateful> {
     children[index] = newChild;
     setState(() {});
   }
-
 }

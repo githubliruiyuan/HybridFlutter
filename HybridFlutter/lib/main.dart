@@ -100,6 +100,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   String _title = "";
   Widget _view;
 
+  Component _component;
   UIFactory _factory;
 
   _MainPageState(this._args) {
@@ -133,11 +134,10 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   Future _update() async {
     var body = _data['body'];
     var styles = _data['style'];
-//    _factory.clearWidgets();
     Component component = await _factory.createComponentTree(null, body, styles);
-//    _factory.updateWidgets();
+    _factory.compareComponent(_component, component);
     setState(() {
-      _view = component.widget;
+      _view = _component.widget;
     });
   }
 
@@ -176,9 +176,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
     _initScript(script);
     _callOnLoad();
-    Component component = await _factory.createComponentTree(null, body, styles);
+    _component = await _factory.createComponentTree(null, body, styles);
     setState(() {
-      _view = component.widget;
+      _view = _component.widget;
     });
   }
 
@@ -200,7 +200,6 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     super.dispose();
 //    print("lifecycle dispose $_pageId");
     _handlers.remove(_pageId);
-    _factory.clearWidgets();
     _callOnUnload();
   }
 

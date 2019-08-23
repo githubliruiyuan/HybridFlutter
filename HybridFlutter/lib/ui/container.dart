@@ -9,9 +9,13 @@ import 'package:flutter_app/util/widget_util.dart';
 import 'basic.dart';
 
 class ContainerStateful extends BaseWidgetStateful {
-
-  ContainerStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  ContainerStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -25,7 +29,6 @@ class ContainerStateful extends BaseWidgetStateful {
 }
 
 class _ContainerState extends BaseState<ContainerStateful> {
-
   _ContainerState(String pageId, MethodChannel methodChannel,
       Component component, List<BaseWidgetStateful> children) {
     this.pageId = pageId;

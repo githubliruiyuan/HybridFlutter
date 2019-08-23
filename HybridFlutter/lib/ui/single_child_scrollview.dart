@@ -7,9 +7,13 @@ import 'package:flutter_app/ui/base_widget.dart';
 import 'basic.dart';
 
 class SingleChildScrollViewStateful extends BaseWidgetStateful {
-
-  SingleChildScrollViewStateful(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
+  SingleChildScrollViewStateful(
+      BaseWidgetStateful parent,
+      String pageId,
+      MethodChannel methodChannel,
+      Component component,
+      List<BaseWidgetStateful> children) {
+    this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
@@ -18,12 +22,13 @@ class SingleChildScrollViewStateful extends BaseWidgetStateful {
 
   @override
   State<StatefulWidget> createStateX() {
-    return _SingleChildScrollViewState(pageId, methodChannel, component, children);
+    return _SingleChildScrollViewState(
+        pageId, methodChannel, component, children);
   }
 }
 
-class _SingleChildScrollViewState extends BaseState<SingleChildScrollViewStateful> {
-
+class _SingleChildScrollViewState
+    extends BaseState<SingleChildScrollViewStateful> {
   _SingleChildScrollViewState(String pageId, MethodChannel methodChannel,
       Component component, List<BaseWidgetStateful> children) {
     this.pageId = pageId;
@@ -57,6 +62,4 @@ class _SingleChildScrollViewState extends BaseState<SingleChildScrollViewStatefu
       this.children = [newChild];
     });
   }
-
-
 }
