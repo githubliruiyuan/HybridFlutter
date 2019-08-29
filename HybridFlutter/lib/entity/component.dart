@@ -1,6 +1,6 @@
-import 'package:flutter_app/entity/property.dart';
-import 'package:flutter_app/ui/base_widget.dart';
-import 'package:flutter_app/util/expression_util.dart';
+import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/ui/base_widget.dart';
+import 'package:hybrid_flutter/util/expression_util.dart';
 
 class Component {
   String id;

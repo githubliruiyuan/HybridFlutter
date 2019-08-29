@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/entity/property.dart';
-import 'package:flutter_app/util/widget_util.dart';
+import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/util/widget_util.dart';
 
 class MAxis {
   static Axis parse(Property value, {Axis defaultValue = Axis.horizontal}) {

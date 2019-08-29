@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/ui/base_widget.dart';
+import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/ui/base_widget.dart';
 
 import 'basic.dart';
 

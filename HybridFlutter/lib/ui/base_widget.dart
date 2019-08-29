@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/component.dart';
+import 'package:hybrid_flutter/entity/component.dart';
 
 abstract class BaseWidget extends StatelessWidget {
 

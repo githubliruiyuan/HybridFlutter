@@ -3,11 +3,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/ui/base_widget.dart';
-import 'package:flutter_app/ui/container.dart';
-import 'package:flutter_app/ui/text.dart';
-import 'package:flutter_app/ui/ui_factory.dart';
-import 'package:flutter_app/util/base64.dart';
+import 'package:hybrid_flutter/ui/base_widget.dart';
+import 'package:hybrid_flutter/ui/container.dart';
+import 'package:hybrid_flutter/ui/text.dart';
+import 'package:hybrid_flutter/ui/ui_factory.dart';
+import 'package:hybrid_flutter/util/base64.dart';
 
 import 'entity/component.dart';
 import 'entity/property.dart';
@@ -194,7 +194,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     Component component =
         await _factory.createComponentTree(null, body, styles);
     var newWidgetTree = _factory.createWidgetTree(null, component);
-    _factory.compareTree(_view, newWidgetTree);
+    _factory.compareTreeAndUpdate(_view, newWidgetTree);
   }
 
   void _updateTitle(Map<String, dynamic> map) {

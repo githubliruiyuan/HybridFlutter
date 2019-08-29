@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_app/entity/property.dart';
+import 'package:hybrid_flutter/entity/property.dart';
 
 Color hexToColor(String s) {
 // 如果传入的十六进制颜色值不符合要求，返回默认值

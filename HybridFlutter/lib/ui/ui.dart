@@ -4,13 +4,13 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/entity/property.dart';
-import 'package:flutter_app/util/base64.dart';
-import 'package:flutter_app/util/color_util.dart';
-import 'package:flutter_app/util/event_util.dart';
-import 'package:flutter_app/util/expression_util.dart';
-import 'package:flutter_app/util/widget_util.dart';
+import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/util/base64.dart';
+import 'package:hybrid_flutter/util/color_util.dart';
+import 'package:hybrid_flutter/util/event_util.dart';
+import 'package:hybrid_flutter/util/expression_util.dart';
+import 'package:hybrid_flutter/util/widget_util.dart';
 
 import 'basic.dart';
 

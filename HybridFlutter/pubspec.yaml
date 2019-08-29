@@ -1,4 +1,4 @@
-name: flutter_app
+name: hybrid_flutter
 description: A new Flutter application.
 
 # The following defines the version and build number for your application.
@@ -21,7 +21,6 @@ dependencies:
   cupertino_icons: ^0.1.2
   english_words: ^3.1.0
   json_annotation: ^2.0.0
-  flutter_webview_plugin: ^0.2.1+2
 
 dev_dependencies:
   flutter_test:

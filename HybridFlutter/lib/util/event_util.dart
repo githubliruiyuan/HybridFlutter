@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/property.dart';
+import 'package:hybrid_flutter/entity/property.dart';
 
 String createEvent(String id, Map<String, dynamic> dataSet, String type) {
   Map<String, dynamic> target = Map();

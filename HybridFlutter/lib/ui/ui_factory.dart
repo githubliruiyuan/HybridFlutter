@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/entity/property.dart';
-import 'package:flutter_app/ui/raised_button.dart';
-import 'package:flutter_app/ui/row.dart';
-import 'package:flutter_app/ui/single_child_scrollview.dart';
-import 'package:flutter_app/ui/text.dart';
-import 'package:flutter_app/util/base64.dart';
-import 'package:flutter_app/util/expression_util.dart';
+import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/ui/raised_button.dart';
+import 'package:hybrid_flutter/ui/row.dart';
+import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
+import 'package:hybrid_flutter/ui/text.dart';
+import 'package:hybrid_flutter/util/base64.dart';
+import 'package:hybrid_flutter/util/expression_util.dart';
 
 import 'aspect_ratio.dart';
 import 'base_widget.dart';
@@ -227,7 +227,7 @@ class UIFactory {
     return widget;
   }
 
-  void compareTree(BaseWidget oldOne, BaseWidget newOne) {
+  void compareTreeAndUpdate(BaseWidget oldOne, BaseWidget newOne) {
     var same = true;
     if (oldOne.component.tag != newOne.component.tag) {
       if (null != oldOne.parent) {
@@ -257,7 +257,7 @@ class UIFactory {
     }
     if (same) {
       for (var i = 0; i < oldOne.children.value.length; i++) {
-        compareTree(oldOne.children.value[i], newOne.children.value[i]);
+        compareTreeAndUpdate(oldOne.children.value[i], newOne.children.value[i]);
       }
     } else {
       oldOne.updateChildrenOfParent(newOne.parent.children);

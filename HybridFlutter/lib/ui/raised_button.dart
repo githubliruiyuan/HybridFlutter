@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/ui/base_widget.dart';
-import 'package:flutter_app/util/color_util.dart';
-import 'package:flutter_app/util/event_util.dart';
+import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/ui/base_widget.dart';
+import 'package:hybrid_flutter/util/color_util.dart';
+import 'package:hybrid_flutter/util/event_util.dart';
 
 class RaisedButtonStateless extends BaseWidget {
   RaisedButtonStateless(

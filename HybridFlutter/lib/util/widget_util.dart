@@ -1,5 +1,5 @@
 
-import 'package:flutter_app/entity/property.dart';
+import 'package:hybrid_flutter/entity/property.dart';
 
 dynamic dealDoubleDefNull(Property property) {
   return null == property ? null : double.parse(removePx(property.getValue()));
