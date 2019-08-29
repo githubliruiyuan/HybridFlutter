@@ -1,43 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/ui/base_state.dart';
 import 'package:flutter_app/ui/base_widget.dart';
 
 import 'basic.dart';
 
-class RowStateful extends BaseWidgetStateful {
-  RowStateful(
-      BaseWidgetStateful parent,
+class RowStateless extends BaseWidget {
+  RowStateless(
+      BaseWidget parent,
       String pageId,
       MethodChannel methodChannel,
-      Component component,
-      List<BaseWidgetStateful> children) {
+      Component component) {
     this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
-    this.children = children;
-  }
-
-  @override
-  State<StatefulWidget> createStateX() {
-    return _RowState(pageId, methodChannel, component, children);
-  }
-}
-
-class _RowState extends BaseState<RowStateful> {
-  _RowState(String pageId, MethodChannel methodChannel, Component component,
-      List<BaseWidgetStateful> children) {
-    this.pageId = pageId;
-    this.methodChannel = methodChannel;
-    this.component = component;
-    this.children = children;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return ValueListenableBuilder(
+        builder: (BuildContext context, List<BaseWidget> value, Widget child) {
+      return Row(
         mainAxisAlignment: MMainAxisAlignment.parse(
             component.properties["main-axis-alignment"],
             defaultValue: MainAxisAlignment.start),
@@ -54,23 +38,8 @@ class _RowState extends BaseState<RowStateful> {
             defaultValue: VerticalDirection.down),
         textBaseline:
             MTextBaseline.parse(component.properties["text-baseline"]),
-        children: children);
+        children: value);
+        }, valueListenable: children);
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void updateChild(BaseWidgetStateful oldChild, BaseWidgetStateful newChild) {
-    var index = children.indexOf(oldChild);
-    children[index] = newChild;
-    setState(() {});
-  }
 }

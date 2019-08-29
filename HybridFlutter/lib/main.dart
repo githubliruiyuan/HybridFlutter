@@ -3,10 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_app/ui/base_widget.dart';
+import 'package:flutter_app/ui/container.dart';
+import 'package:flutter_app/ui/text.dart';
 import 'package:flutter_app/ui/ui_factory.dart';
 import 'package:flutter_app/util/base64.dart';
 
 import 'entity/component.dart';
+import 'entity/property.dart';
 
 var _methodChannel = MethodChannel("com.cc.hybrid/method");
 var _basicChannel =
@@ -46,8 +50,8 @@ class MyApp extends StatelessWidget {
         var pageCode = jsonObject['pageCode'];
         var content = jsonObject['content'];
         _pages.putIfAbsent(pageCode, () => content);
-        _handlers.forEach((k,v) {
-          if(k.startsWith(pageCode)) {
+        _handlers.forEach((k, v) {
+          if (k.startsWith(pageCode)) {
             v.onMessage(jsonObj);
           }
         });
@@ -59,24 +63,78 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: _TestPage(),
+      home: _MainPage({})
     );
   }
 }
 
-class _TestPage extends StatelessWidget {
+class _TestPage extends StatefulWidget {
+
+  @override
+  State<StatefulWidget> createState() {
+    return _TestPageState();
+  }
+}
+
+class _TestPageState extends State<_TestPage> {
+
   @override
   Widget build(BuildContext context) {
+    Component parent = Component();
+    parent.properties = Map();
+    parent.properties.putIfAbsent("width", () => Property("100"));
+    parent.properties.putIfAbsent("height", () => Property("100"));
+    parent.properties.putIfAbsent("color", () => Property('blue'));
+    var container = ContainerStateless(null, "", null, parent);
+
+    var font = Property('14');
+    var color = Property('red');
+    Component child = Component();
+    child.properties = Map();
+    child.properties.putIfAbsent('font-size', () => font);
+    child.properties.putIfAbsent('color', () => color);
+    child.innerHTML = Property("1111");
+    var text = TextStateless(container, "", null, child);
+    ValueNotifier<List<BaseWidget>> children = ValueNotifier([text]);
+    container.setChildren(children);
+
+//    var text = Text("1111\n1111\n1111\n1111\n1111\n");
+//    ValueNotifier<List<Widget>> children = ValueNotifier([text]);
+//    var container = Container(width: 300, color: Colors.blue, child: ValueListenableBuilder(
+//      builder: (BuildContext context, List<Widget> value, Widget child) {
+//        return value[0];
+//      }, valueListenable: children,));
+
+
+//    var s = SingleChildScrollView(child: Column(children: <Widget>[container,container,container,container,container,container,container]));
+
+
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Test"),
-        ),
-        floatingActionButton: FloatingActionButton(onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => _MainPage({})));
-        }),
-        body: Text("Test"));
+          appBar: AppBar(
+            title: Text("TEST"),
+          ),
+          floatingActionButton: Builder(builder: (context) {
+            return FloatingActionButton(onPressed: () {
+              var font = Property('14');
+              var color = Property("green");
+              Component child2 = Component();
+              child2.properties = Map();
+              child2.properties.putIfAbsent('font-size', () => font);
+              child2.properties.putIfAbsent('color', () => color);
+              child2.innerHTML = Property("2222");
+              var text2 = TextStateless(container, "", null, child2);
+
+//            var text2 = Text("2222\nxxxxxxxsssssssssssssssssssxxxxxx\nxxxxxssssssssssssssssssssssssssssxxxxxxx\n1231231sssssssssssssssssssssss231\n12sssssssssssssssssssssssssssss321313123123\nxxxxxxxxx\nxxxxxxxxxxxxxxxxxxxx\nxxxxxxxxxx\nxxxxx");
+              container.children.value = [text2];
+
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) => _MainPage({})));
+            });
+          }),
+          body: container,
+        );
   }
+
 }
 
 class _MainPage extends StatefulWidget {
@@ -100,7 +158,6 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   String _title = "";
   Widget _view;
 
-  Component _component;
   UIFactory _factory;
 
   _MainPageState(this._args) {
@@ -134,11 +191,10 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   Future _update() async {
     var body = _data['body'];
     var styles = _data['style'];
-    Component component = await _factory.createComponentTree(null, body, styles);
-    _factory.compareComponent(_component, component);
-    setState(() {
-      _view = _component.widget;
-    });
+    Component component =
+        await _factory.createComponentTree(null, body, styles);
+    var newWidgetTree = _factory.createWidgetTree(null, component);
+    _factory.compareTree(_view, newWidgetTree);
   }
 
   void _updateTitle(Map<String, dynamic> map) {
@@ -176,9 +232,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
     _initScript(script);
     _callOnLoad();
-    _component = await _factory.createComponentTree(null, body, styles);
+    var component = await _factory.createComponentTree(null, body, styles);
     setState(() {
-      _view = _component.widget;
+      _view = _factory.createWidgetTree(null, component);
     });
   }
 
@@ -220,7 +276,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: Key(_view.hashCode.toString()),
+        key: UniqueKey(),
         appBar: AppBar(
           title: Text(_title),
         ),

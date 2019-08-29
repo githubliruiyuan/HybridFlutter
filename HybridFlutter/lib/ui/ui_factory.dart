@@ -105,14 +105,12 @@ class UIFactory {
         //需要添加 await，否则会出现异步导致children为空
         await _addChildren(clone, data, styles);
         await handleProperty(_methodChannel, _pageId, clone);
-        clone.widget = _createWidget(parent?.widget, clone);
         list.add(clone);
       }
       return list;
     } else {
       await _addChildren(component, data, styles);
       await handleProperty(_methodChannel, _pageId, component);
-      component.widget = _createWidget(parent?.widget, component);
       return component;
     }
   }
@@ -151,61 +149,34 @@ class UIFactory {
     return ClipOval(child: child);
   }
 
-  Widget _getFirstChild(List<Widget> children) {
-    var child;
-    if (null == children) {
-      return child;
-    }
-    if (children.length > 0) {
-      child = children[0];
-    }
-    return child;
-  }
-
-  Widget _getSecondChild(List<Widget> children) {
-    var child;
-    if (null == children) {
-      return child;
-    }
-    if (children.length > 1) {
-      child = children[1];
-    }
-    return child;
-  }
-
-  List<BaseWidgetStateful> _getChildren(
-      BaseWidgetStateful parent, Component component) {
-    List<BaseWidgetStateful> children = []; //先建一个数组用于存放循环生成的widget
+  ValueNotifier<List<BaseWidget>> _getChildren(
+      BaseWidget parent, Component component) {
+    ValueNotifier<List<BaseWidget>> children = ValueNotifier([]);
     if (null == component) {
       return children;
     }
     component.children?.forEach((it) {
-      children.add(_createWidget(parent, it));
+      children.value.add(createWidgetTree(parent, it));
     });
     return children;
   }
 
-  BaseWidgetStateful _createWidget(
-      BaseWidgetStateful parent, Component component) {
+  BaseWidget createWidgetTree(BaseWidget parent, Component component) {
 //    print("createChild tag ${component.tag}");
-    var children = _getChildren(null, component);
-    var widget;
+    BaseWidget widget;
     switch (component.tag) {
       case "body":
-        widget = CenterStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = CenterStateless(parent, _pageId, _methodChannel, component);
         break;
       case "column":
-        widget = ColumnStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = ColumnStateless(parent, _pageId, _methodChannel, component);
         break;
       case "row":
-        widget =
-            RowStateful(parent, _pageId, _methodChannel, component, children);
+        widget = RowStateless(parent, _pageId, _methodChannel, component);
         break;
       case "singlechildscrollview":
-        widget = SingleChildScrollViewStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = SingleChildScrollViewStateless(
+            parent, _pageId, _methodChannel, component);
         break;
 //      case "nestedscrollview":
 //        widget = _createNestedScrollView(component.properties, child);
@@ -214,24 +185,22 @@ class UIFactory {
 //        widget = _createClipOval(component.properties, child);
 //        break;
       case "container":
-        widget = ContainerStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = ContainerStateless(parent, _pageId, _methodChannel, component);
         break;
       case "expanded":
-        widget = ExpandedStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = ExpandedStateless(parent, _pageId, _methodChannel, component);
         break;
       case "fractionallysizedbox":
-        widget = FractionallySizedBoxStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget = FractionallySizedBoxStateless(
+            parent, _pageId, _methodChannel, component);
         break;
       case "aspectratio":
-        widget = AspectRatioStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget =
+            AspectRatioStateless(parent, _pageId, _methodChannel, component);
         break;
       case "raisedbutton":
-        widget = RaisedButtonStateful(
-            parent, _pageId, _methodChannel, component, children);
+        widget =
+            RaisedButtonStateless(parent, _pageId, _methodChannel, component);
         break;
 //      case "visibility":
 //        var child = _getFirstChild(children);
@@ -239,10 +208,10 @@ class UIFactory {
 //        widget = _createVisibility(component.properties, child, replacement);
 //        break;
       case "text":
-        widget = TextStateful(parent, _pageId, _methodChannel, component);
+        widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;
       case "image":
-        widget = ImageStateful(parent, _pageId, _methodChannel, component);
+        widget = ImageStateless(parent, _pageId, _methodChannel, component);
         break;
       default:
         var text = '未实现控件${component.tag}';
@@ -251,50 +220,47 @@ class UIFactory {
         component.properties.putIfAbsent('font-size', () => font);
         component.properties.putIfAbsent('color', () => color);
         component.innerHTML = Property(text);
-        widget = TextStateful(parent, _pageId, _methodChannel, component);
+        widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;
     }
-    children.forEach((child) {
-      child.parent = widget;
-    });
+    widget.setChildren(_getChildren(widget, component));
     return widget;
   }
 
-  void compareComponent(Component oldOne, Component newOne) {
+  void compareTree(BaseWidget oldOne, BaseWidget newOne) {
     var same = true;
-    if (oldOne.tag != newOne.tag) {
-      if (null != oldOne.widget.parent) {
+    if (oldOne.component.tag != newOne.component.tag) {
+      if (null != oldOne.parent) {
         same = false;
       } else {
         same = false;
-        oldOne.widget = newOne.widget;
       }
     } else {
-      if (oldOne.properties.length != newOne.properties.length) {
+      if (oldOne.component.properties.length != newOne.component.properties.length) {
         same = false;
       } else {
-        oldOne.properties.forEach((k, v) {
-          if (!newOne.properties.containsKey(k)) {
+        oldOne.component.properties.forEach((k, v) {
+          if (!newOne.component.properties.containsKey(k)) {
             same = false;
-          } else if (newOne.properties[k].getValue() != v.getValue()) {
+          } else if (newOne.component.properties[k].getValue() != v.getValue()) {
             same = false;
           }
         });
       }
-      if (oldOne.children?.length != newOne.children?.length) {
+      if (oldOne.children.value.length != newOne.children.value.length) {
         same = false;
       }
 
-      if (oldOne.innerHTML.getValue() != newOne.innerHTML.getValue()) {
+      if (oldOne.component.innerHTML.getValue() != newOne.component.innerHTML.getValue()) {
         same = false;
       }
     }
-    if (!same) {
-      for (var i = 0; i < oldOne.children?.length; i++) {
-        compareComponent(oldOne.children[i], newOne.children[i]);
+    if (same) {
+      for (var i = 0; i < oldOne.children.value.length; i++) {
+        compareTree(oldOne.children.value[i], newOne.children.value[i]);
       }
     } else {
-      oldOne.widget.updateChild(oldOne.widget, newOne.widget);
+      oldOne.updateChildrenOfParent(newOne.parent.children);
     }
   }
 }

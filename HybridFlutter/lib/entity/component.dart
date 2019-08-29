@@ -11,7 +11,6 @@ class Component {
   Map<String, dynamic> directives;
   Map<String, Property> properties;
   List<Component> children = [];
-  BaseWidgetStateful widget;
 
   /// 是否在for里面
   bool isInRepeat = false;

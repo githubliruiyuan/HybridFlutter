@@ -2,38 +2,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/entity/component.dart';
-import 'package:flutter_app/ui/base_state.dart';
 import 'package:flutter_app/ui/base_widget.dart';
 import 'package:flutter_app/util/color_util.dart';
 import 'package:flutter_app/util/event_util.dart';
 
-class RaisedButtonStateful extends BaseWidgetStateful {
-  RaisedButtonStateful(
-      BaseWidgetStateful parent,
+class RaisedButtonStateless extends BaseWidget {
+  RaisedButtonStateless(
+      BaseWidget parent,
       String pageId,
       MethodChannel methodChannel,
-      Component component,
-      List<BaseWidgetStateful> children) {
+      Component component) {
     this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
-    this.children = children;
-  }
-
-  @override
-  State<StatefulWidget> createStateX() {
-    return _RaisedButtonState(pageId, methodChannel, component, children);
-  }
-}
-
-class _RaisedButtonState extends BaseState<RaisedButtonStateful> {
-  _RaisedButtonState(String pageId, MethodChannel methodChannel,
-      Component component, List<BaseWidgetStateful> children) {
-    this.pageId = pageId;
-    this.methodChannel = methodChannel;
-    this.component = component;
-    this.children = children;
   }
 
   @override
@@ -48,6 +30,7 @@ class _RaisedButtonState extends BaseState<RaisedButtonStateful> {
     Color highlightColor = dealColor(component.properties['highlight-color']);
     Color splashColor = dealColor(component.properties['splash-color']);
     return RaisedButton(
+      key: Key(component.id.toString()),
       onPressed: () {
         if (null != component.events['onclick']) {
           onclickEvent(methodChannel, pageId, this.hashCode.toString(),
@@ -62,24 +45,11 @@ class _RaisedButtonState extends BaseState<RaisedButtonStateful> {
       hoverColor: hoverColor,
       highlightColor: highlightColor,
       splashColor: splashColor,
-      child: children[0],
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void updateChild(BaseWidgetStateful oldChild, BaseWidgetStateful newChild) {
-    setState(() {
-      this.children = [newChild];
-    });
+        child: ValueListenableBuilder(
+            builder:
+                (BuildContext context, List<BaseWidget> value, Widget child) {
+              return value[0];
+            },
+            valueListenable: children));
   }
 }
