@@ -8,6 +8,7 @@ import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.debug.Debugger
 import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.util.SpUtil
+import com.cc.hybrid.util.ToastUtil
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.BasicMessageChannel
 import io.flutter.plugin.common.PluginRegistry
@@ -28,6 +29,7 @@ class MainActivity : FlutterActivity() {
         registerCustomPlugin(this)
         registerMessageChannel()
         SpUtil.initSp(this)
+        ToastUtil.initToast(this)
         LoadingUtil.initDialog(this)
         initHandler()
         debug()

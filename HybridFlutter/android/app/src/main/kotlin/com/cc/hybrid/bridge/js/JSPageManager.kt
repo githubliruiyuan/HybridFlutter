@@ -4,6 +4,7 @@ import com.cc.hybrid.Logger
 import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.util.SpUtil
+import com.cc.hybrid.util.ToastUtil
 import com.cc.hybrid.v8.V8Manager
 import com.eclipsesource.v8.JavaCallback
 import com.eclipsesource.v8.V8Array
@@ -93,6 +94,17 @@ object JSPageManager {
                     LoadingUtil.hideLoading()
                     receiver as Any
                 }, "hideLoading")
+
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val data = parameters?.getObject(0)
+                    ToastUtil.showToast(data)
+                    receiver as Any
+                }, "showToast")
+
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    ToastUtil.hideToast()
+                    receiver as Any
+                }, "hideToast")
 
                 cc.registerJavaMethod(JavaCallback { receiver, parameters ->
                     val data = parameters?.getObject(0)

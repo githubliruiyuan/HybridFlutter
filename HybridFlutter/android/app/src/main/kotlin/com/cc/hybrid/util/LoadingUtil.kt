@@ -20,7 +20,7 @@ object LoadingUtil {
     }
 
     fun showLoading(obj: V8Object?) {
-        if (null != obj) {
+        if (null != obj && !obj.isUndefined) {
             if (obj.contains("title")) {
                 val title = obj.getString("title")
                 if (!TextUtils.isEmpty(title)) {
