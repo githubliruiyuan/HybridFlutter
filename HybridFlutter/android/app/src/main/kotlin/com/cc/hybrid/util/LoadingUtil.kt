@@ -1,18 +1,22 @@
 package com.cc.hybrid.util
 
-import android.app.ProgressDialog
 import android.content.Context
+import android.support.v7.app.AlertDialog
 import android.text.TextUtils
+import com.cc.hybrid.R
 import com.eclipsesource.v8.V8Object
 
 object LoadingUtil {
 
-    private lateinit var dialog: ProgressDialog
+    private lateinit var dialog: AlertDialog
 
     fun initDialog(context: Context) {
-        dialog = ProgressDialog(context)
-        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        dialog = AlertDialog
+                .Builder(context, R.style.Alert)
+                .setView(R.layout.dialog_loading)
+                .create()
         dialog.setCancelable(true)
+        dialog.window?.decorView?.setBackgroundResource(android.R.color.transparent)
     }
 
     fun showLoading(obj: V8Object?) {

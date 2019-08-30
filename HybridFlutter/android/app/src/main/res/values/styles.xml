@@ -5,4 +5,8 @@
              Flutter draws its first frame -->
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
+
+    <style name="Alert" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>
