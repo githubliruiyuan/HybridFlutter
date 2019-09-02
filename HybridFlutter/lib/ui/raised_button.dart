@@ -30,7 +30,6 @@ class RaisedButtonStateless extends BaseWidget {
     Color highlightColor = dealColor(component.properties['highlight-color']);
     Color splashColor = dealColor(component.properties['splash-color']);
     return RaisedButton(
-      key: Key(component.id.toString()),
       onPressed: () {
         if (null != component.events['onclick']) {
           onclickEvent(methodChannel, pageId, this.hashCode.toString(),
@@ -48,7 +47,7 @@ class RaisedButtonStateless extends BaseWidget {
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value[0];
+              return value.length > 0 ? value[0] : null;
             },
             valueListenable: children));
   }

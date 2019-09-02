@@ -1,10 +1,12 @@
+import 'package:hybrid_flutter/entity/component.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-import 'package:hybrid_flutter/entity/component.dart';
-import 'package:hybrid_flutter/ui/base_widget.dart';
 
-class ExpandedStateless extends BaseWidget {
-  ExpandedStateless(
+import 'base_widget.dart';
+
+class VisibilityStateless extends BaseWidget {
+
+  VisibilityStateless(
       BaseWidget parent,
       String pageId,
       MethodChannel methodChannel,
@@ -17,11 +19,21 @@ class ExpandedStateless extends BaseWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    var visiblePro = component.properties['visible'];
+    var visible =
+        (null != visiblePro && "false" == visiblePro.getValue()) ? false : true;
+    return Visibility(
+        visible: visible,
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {
               return value.length > 0 ? value[0] : null;
+            },
+            valueListenable: children),
+        replacement: ValueListenableBuilder(
+            builder:
+                (BuildContext context, List<BaseWidget> value, Widget child) {
+              return value.length > 1 ? value[1] : null;
             },
             valueListenable: children));
   }

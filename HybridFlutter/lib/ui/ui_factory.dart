@@ -7,6 +7,7 @@ import 'package:hybrid_flutter/ui/raised_button.dart';
 import 'package:hybrid_flutter/ui/row.dart';
 import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
 import 'package:hybrid_flutter/ui/text.dart';
+import 'package:hybrid_flutter/ui/visibility.dart';
 import 'package:hybrid_flutter/util/base64.dart';
 import 'package:hybrid_flutter/util/expression_util.dart';
 
@@ -131,20 +132,6 @@ class UIFactory {
     }
   }
 
-//  Widget _createNestedScrollView(Map<String, Property> properties, Widget child) {
-//    return NestedScrollView(
-//      body: child,
-//    );
-//  }
-
-  Widget _createVisibility(
-      Map<String, Property> properties, Widget child, Widget replacement) {
-    var visiblePro = properties['visible'];
-    var visible =
-        (null != visiblePro && "false" == visiblePro.getValue()) ? false : true;
-    return Visibility(visible: visible, child: child, replacement: replacement);
-  }
-
   Widget _createClipOval(Map<String, Property> properties, Widget child) {
     return ClipOval(child: child);
   }
@@ -202,11 +189,9 @@ class UIFactory {
         widget =
             RaisedButtonStateless(parent, _pageId, _methodChannel, component);
         break;
-//      case "visibility":
-//        var child = _getFirstChild(children);
-//        var replacement = _getSecondChild(children);
-//        widget = _createVisibility(component.properties, child, replacement);
-//        break;
+      case "visibility":
+        widget = VisibilityStateless(parent, _pageId, _methodChannel, component);
+        break;
       case "text":
         widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;

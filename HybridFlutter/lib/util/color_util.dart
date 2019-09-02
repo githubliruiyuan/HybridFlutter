@@ -44,6 +44,18 @@ Color dealColor(Property property) {
   return color;
 }
 
+Color dealColorDefTrans(String str, {Color defaultValue = Colors.transparent}) {
+  Color color = defaultValue;
+  if (null != str) {
+    if (str.startsWith('#')) {
+      color = hexToColor(str);
+    } else {
+      color = _getColor(str);
+    }
+  }
+  return color;
+}
+
 Color _getColor(String str, {Color defaultValue = Colors.transparent}) {
   switch (str) {
     case 'white':

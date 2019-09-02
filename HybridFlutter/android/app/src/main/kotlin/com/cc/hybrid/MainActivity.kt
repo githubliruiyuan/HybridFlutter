@@ -87,6 +87,9 @@ class MainActivity : FlutterActivity() {
                 EventManager.TYPE_NAVIGATE_TO -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATE_TO, pageId, json)
                 }
+                EventManager.TYPE_NAVIGATION_BAR_COLOR -> {
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_COLOR, pageId, json)
+                }
             }
         }
     }

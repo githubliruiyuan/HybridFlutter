@@ -64,6 +64,14 @@ object JSPageManager {
                 cc.registerJavaMethod(JavaCallback { receiver, parameters ->
                     val localPageId = receiver.getString("pageId")
                     val data = parameters?.getObject(0)
+                    if (null != data && data.contains("backgroundColor")) {
+                        EventManager.instance.sendMessage(what = EventManager.TYPE_NAVIGATION_BAR_COLOR, pageId = localPageId, obj = data.getString("backgroundColor"))
+                    }
+                    receiver as Any
+                }, "setNavigationBarColor")
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val localPageId = receiver.getString("pageId")
+                    val data = parameters?.getObject(0)
                     if (null != data) {
                         val jsonObject = JSONObject()
                         data.keys.forEach {

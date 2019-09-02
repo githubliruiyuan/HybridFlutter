@@ -18,7 +18,7 @@ class CenterStateless extends BaseWidget {
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value[0];
+              return value.length > 0 ? value[0] : null;
             },
             valueListenable: children));
   }

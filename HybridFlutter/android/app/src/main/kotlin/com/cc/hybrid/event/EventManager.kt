@@ -11,6 +11,7 @@ class EventManager {
         const val TYPE_ONCLICK = 1
         const val TYPE_NAVIGATION_BAR_TITLE = 2
         const val TYPE_NAVIGATE_TO = 3
+        const val TYPE_NAVIGATION_BAR_COLOR = 4
         var instance = EventManager()
     }
 
