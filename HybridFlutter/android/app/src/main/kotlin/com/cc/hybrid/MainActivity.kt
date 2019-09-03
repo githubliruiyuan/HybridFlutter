@@ -90,6 +90,9 @@ class MainActivity : FlutterActivity() {
                 EventManager.TYPE_NAVIGATION_BAR_COLOR -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_COLOR, pageId, json)
                 }
+                EventManager.TYPE_BACKGROUND_COLOR -> {
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_BACKGROUND_COLOR, pageId, json)
+                }
             }
         }
     }

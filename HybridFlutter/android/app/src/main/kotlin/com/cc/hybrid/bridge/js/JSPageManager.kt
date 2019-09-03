@@ -72,6 +72,14 @@ object JSPageManager {
                 cc.registerJavaMethod(JavaCallback { receiver, parameters ->
                     val localPageId = receiver.getString("pageId")
                     val data = parameters?.getObject(0)
+                    if (null != data && data.contains("backgroundColor")) {
+                        EventManager.instance.sendMessage(what = EventManager.TYPE_BACKGROUND_COLOR, pageId = localPageId, obj = data.getString("backgroundColor"))
+                    }
+                    receiver as Any
+                }, "setBackgroundColor")
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val localPageId = receiver.getString("pageId")
+                    val data = parameters?.getObject(0)
                     if (null != data) {
                         val jsonObject = JSONObject()
                         data.keys.forEach {
@@ -219,13 +227,28 @@ object JSPageManager {
         }
     }
 
+    fun callback(callbackId: String) {
+        V8Manager.v8.executeVoidFunction("callback", V8Array(V8Manager.v8).push(callbackId))
+    }
+
     fun handleRepeat(pageId: String, expression: String): Int? {
         val page = getV8Page(pageId)
-        return page?.executeIntegerFunction("__native__handleRepeat", V8Array(V8Manager.v8).push(expression))
+        return try {
+             page?.executeIntegerFunction("__native__handleRepeat", V8Array(V8Manager.v8).push(expression))
+        } catch (e : Exception) {
+            Logger.e("handleExpression", "expression : $expression error ${e.message}")
+            0
+        }
     }
 
     fun handleExpression(pageId: String, expression: String): String? {
         val page = getV8Page(pageId)
-        return page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(expression)).toString()
+        val result: Any? = try {
+            page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(expression))
+        } catch (e : Exception) {
+            Logger.e("handleExpression", "expression : $expression error ${e.message}")
+            ""
+        }
+        return result?.toString()
     }
 }

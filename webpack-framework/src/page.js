@@ -1,4 +1,6 @@
 global.pages = {};
+global.callbacks = {};
+global.callbackArgs = {};
 
 function loadPage(pageId) {
     if (!pageId) return;
@@ -67,16 +69,29 @@ function loadPage(pageId) {
         }
     
         this.setData = function (dataObj) {
-            console.log("setData");
-            console.log(JSON.stringify(this.data));
+            console.log("call setData");
             for (var key in dataObj) {
                 var str = "this.data." + key + " = dataObj['" + key + "']";
                 eval(str);
             }
-//            var startTime = Date.now();
             this.__native__refresh();
-//            var endTime = Date.now();
-//            console.log("耗时:"+(endTime-startTime));
+        }
+
+        function setTimeout(callback, ms, ...args) {
+            var timerId = global.guid();
+            global.callbacks[timerId] = callback;
+            global.callbackArgs[timerId] = args;
+            __native__setTimeout(pageId, timerId, ms);
+            return timerId;
+        }
+
+        function clearTimeout(timerId) {
+            var callback = global.callbacks[timerId];
+            if (callback) {
+                global.callbacks[timerId] = undefined;
+                global.callbackArgs[timerId] = undefined;
+            }
+            __native__clearTimeout(timerId);
         }
     };
 
@@ -88,7 +103,17 @@ function cachePage(pageId, page) {
     if (page) {
         global.pages[pageId] = page;
     } else {
-        console.log("page: <" + pageId + "> is empty");
+        console.log("page: (" + pageId + ") is empty");
+    }
+}
+
+function callback(callbackId) {
+    var callback = global.callbacks[callbackId];
+    if (callback) {
+        var args = global.callbackArgs[callbackId];
+        callback(args);
+    } else {
+        console.log("callback: (" + callbackId + ") is empty");
     }
 }
 
@@ -102,3 +127,5 @@ global.Page = function(obj) {
 }
 
 global.loadPage = loadPage;
+global.callback = callback;
+

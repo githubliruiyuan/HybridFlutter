@@ -3,6 +3,7 @@ package com.cc.hybrid.bridge.flutter
 import android.app.Activity
 import com.cc.hybrid.Logger
 import com.cc.hybrid.bridge.js.JSPageManager
+import com.cc.hybrid.util.TimerManager
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
@@ -22,13 +23,12 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
     }
 
     override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
-//        Logger.d("lry", "onMethodCall = ${methodCall.method} result = $result ")
         when (methodCall.method) {
             Methods.ATTACH_PAGE -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("script")) {
                     val id = methodCall.argument<String>("pageId")
                     val script = methodCall.argument<String>("script")
-                    Logger.d("lry", "attach_page pageId = $id script = $script")
+//                    Logger.d("lry", "attach_page pageId = $id script = $script")
                     JSPageManager.attachPageScriptToJsCore(id!!, script!!)
                     result.success("success")
                 }
@@ -41,12 +41,21 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     result.success("success")
                 }
             }
+            Methods.ON_UNLOAD -> {
+                if (methodCall.hasArgument("pageId")) {
+                    val pageId = methodCall.argument<String>("pageId")
+                    val args = methodCall.argument<String>("args")
+                    TimerManager.delTimerByPageId(pageId!!)
+                    JSPageManager.callMethodInPage(pageId, Methods.ON_UNLOAD, args)
+                    result.success("success")
+                }
+            }
             Methods.ONCLICK -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("event") && methodCall.hasArgument("data")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val event = methodCall.argument<String>("event")
                     val data = methodCall.argument<String>("data")
-                    Logger.d("lry", "Methods onclick pageId = $pageId event = $event data = $data")
+//                    Logger.d("lry", "Methods onclick pageId = $pageId event = $event data = $data")
                     JSPageManager.callMethodInPage(pageId!!, event!!, data)
                     result.success("success")
                 }

@@ -3,10 +3,6 @@ package com.cc.hybrid.http
 import com.cc.hybrid.http.exception.HttpParamsException
 
 
-/**
- * Created by zhouwenliang on 2018/4/24.
- * Http访问的实体类
- */
 internal class HttpRequest {
     companion object {
         val METHOD_POST = "post"
@@ -16,7 +12,7 @@ internal class HttpRequest {
     val headerMap = HashMap<String, Any>()
     var url: String? = null
     var errorRetryTime = 0
-    var securiryTransfer = false
+    var securirtyTransfer = false
     var isBusinessInterface = false
     var method: String = METHOD_POST
 
@@ -38,7 +34,7 @@ internal class HttpRequest {
         }
 
         fun securityTransfer(boolean: Boolean): Builder {
-            request.securiryTransfer = boolean
+            request.securirtyTransfer = boolean
             return this
         }
 

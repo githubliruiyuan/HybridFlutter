@@ -3,7 +3,10 @@ package com.cc.hybrid.v8
 import android.content.Context
 import com.cc.hybrid.Logger
 import com.cc.hybrid.bridge.js.JSConsole
+import com.cc.hybrid.util.TimerManager
+import com.eclipsesource.v8.JavaCallback
 import com.eclipsesource.v8.V8
+import com.eclipsesource.v8.V8Array
 import com.eclipsesource.v8.V8Object
 import okio.Okio
 import java.io.IOException
@@ -16,15 +19,33 @@ object V8Manager {
         v8 = V8.createV8Runtime()
         executeScript("var global = this;")
         evaluateJsFileFromAsset(context, "framework.js")
+        registerObj()
         registerFunc()
     }
 
-    private fun registerFunc() {
+    private fun registerObj() {
         val v8Console = V8Object(v8)
         v8.add("console", v8Console)
         val jsConsole = JSConsole()
         v8Console.registerJavaMethod(jsConsole, "log", "log", arrayOf<Class<*>>(java.lang.Object::class.java))
         v8Console.release()
+    }
+
+    private fun registerFunc() {
+        v8.registerJavaMethod(JavaCallback { receiver, parameters ->
+            val pageId = parameters.getString(0)
+            val timerId = parameters.getString(1)
+            val delayed = parameters?.getInteger(2)
+            if (null != delayed) {
+                TimerManager.setTimeout(pageId, timerId, delayed)
+            }
+            receiver as Any
+        }, "__native__setTimeout")
+        v8.registerJavaMethod(JavaCallback { receiver, parameters ->
+            val timerId = parameters.getString(0)
+            TimerManager.delTimer(timerId)
+            receiver as Any
+        }, "__native__clearTimeout")
     }
 
     @Throws(IOException::class)
