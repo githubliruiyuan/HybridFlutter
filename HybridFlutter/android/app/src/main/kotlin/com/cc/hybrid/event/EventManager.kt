@@ -13,6 +13,8 @@ class EventManager {
         const val TYPE_NAVIGATE_TO = 3
         const val TYPE_NAVIGATION_BAR_COLOR = 4
         const val TYPE_BACKGROUND_COLOR = 5
+        const val TYPE_START_PULL_DOWN_REFRESH = 6
+        const val TYPE_STOP_PULL_DOWN_REFRESH = 7
         var instance = EventManager()
     }
 

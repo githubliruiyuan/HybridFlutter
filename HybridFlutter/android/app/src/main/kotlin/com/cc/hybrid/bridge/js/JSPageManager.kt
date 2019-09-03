@@ -107,6 +107,18 @@ object JSPageManager {
                 }, "showLoading")
 
                 cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val localPageId = receiver.getString("pageId")
+                    EventManager.instance.sendMessage(what = EventManager.TYPE_START_PULL_DOWN_REFRESH, pageId = localPageId, obj = "")
+                    receiver as Any
+                }, "startPullDownRefresh")
+
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
+                    val localPageId = receiver.getString("pageId")
+                    EventManager.instance.sendMessage(what = EventManager.TYPE_STOP_PULL_DOWN_REFRESH, pageId = localPageId, obj = "")
+                    receiver as Any
+                }, "stopPullDownRefresh")
+
+                cc.registerJavaMethod(JavaCallback { receiver, parameters ->
                     LoadingUtil.hideLoading()
                     receiver as Any
                 }, "hideLoading")

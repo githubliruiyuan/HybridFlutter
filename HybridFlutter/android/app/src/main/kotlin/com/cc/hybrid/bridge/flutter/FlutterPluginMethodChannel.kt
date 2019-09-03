@@ -60,6 +60,14 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     result.success("success")
                 }
             }
+            Methods.ON_PULL_DOWN_REFRESH -> {
+                if (methodCall.hasArgument("pageId")) {
+                    val pageId = methodCall.argument<String>("pageId")
+//                    Logger.d("lry", "Methods onclick pageId = $pageId event = $event data = $data")
+                    JSPageManager.callMethodInPage(pageId!!, Methods.ON_PULL_DOWN_REFRESH, null)
+                    result.success("success")
+                }
+            }
             Methods.HANDLE_EXPRESSION -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")

@@ -93,6 +93,12 @@ class MainActivity : FlutterActivity() {
                 EventManager.TYPE_BACKGROUND_COLOR -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_BACKGROUND_COLOR, pageId, json)
                 }
+                EventManager.TYPE_START_PULL_DOWN_REFRESH -> {
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_START_PULL_DOWN_REFRESH, pageId, json)
+                }
+                EventManager.TYPE_STOP_PULL_DOWN_REFRESH -> {
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_STOP_PULL_DOWN_REFRESH, pageId, json)
+                }
             }
         }
     }

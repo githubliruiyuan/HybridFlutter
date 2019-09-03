@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
+import 'package:hybrid_flutter/util/widget_util.dart';
 
 class CenterStateless extends BaseWidget {
   CenterStateless(BaseWidget parent, String pageId, MethodChannel methodChannel,
@@ -14,7 +15,11 @@ class CenterStateless extends BaseWidget {
 
   @override
   Widget build(BuildContext context) {
+    var widthFactor = dealDoubleDefZero(component.properties['width-factor']);
+    var heightFactor = dealDoubleDefZero(component.properties['height-factor']);
     return Center(
+        widthFactor: widthFactor,
+        heightFactor: heightFactor,
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {

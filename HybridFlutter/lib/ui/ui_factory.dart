@@ -154,6 +154,10 @@ class UIFactory {
     BaseWidget widget;
     switch (component.tag) {
       case "body":
+        component.properties['width-factor'] = Property("1");
+        component.properties['height-factor'] = Property("1");
+        widget = CenterStateless(parent, _pageId, _methodChannel, component);
+        break;
       case "center":
         widget = CenterStateless(parent, _pageId, _methodChannel, component);
         break;
