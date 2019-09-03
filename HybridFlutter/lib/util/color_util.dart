@@ -44,7 +44,7 @@ Color dealColor(Property property) {
   return color;
 }
 
-Color dealColorDefTrans(String str, {Color defaultValue = Colors.transparent}) {
+Color parseColor(String str, {Color defaultValue = Colors.transparent}) {
   Color color = defaultValue;
   if (null != str) {
     if (str.startsWith('#')) {

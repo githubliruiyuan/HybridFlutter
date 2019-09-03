@@ -201,29 +201,33 @@ object JSPageManager {
     }
 
     fun callMethodInPage(pageId: String, method: String, vararg args: String?, executeListener: ((Throwable?) -> Unit)? = null) {
-        if (method.isNotEmpty()) {
-            val page = getV8Page(pageId)
-            if (null != page && !page.isUndefined) {
-                val params = V8Array(page.runtime)
-                args.forEach {
-                    val json = V8Manager.v8.getObject("JSON")
-                    val param = json.executeJSFunction("parse", it)
-                    when (param) {
-                        is V8Array -> params.push(param)
-                        is V8Object -> params.push(param)
-                        is String -> params.push(param)
-                        is Int -> params.push(param)
-                        is Double -> params.push(param)
-                        is Boolean -> params.push(param)
+        try {
+            if (method.isNotEmpty()) {
+                val page = getV8Page(pageId)
+                if (null != page && !page.isUndefined) {
+                    val params = V8Array(page.runtime)
+                    args.forEach {
+                        val json = V8Manager.v8.getObject("JSON")
+                        val param = json.executeJSFunction("parse", it)
+                        when (param) {
+                            is V8Array -> params.push(param)
+                            is V8Object -> params.push(param)
+                            is String -> params.push(param)
+                            is Int -> params.push(param)
+                            is Double -> params.push(param)
+                            is Boolean -> params.push(param)
+                        }
+                    }
+                    if (page.contains(method)) {
+                        (page.get(method) as V8Function).call(page, params)
                     }
                 }
-                if (page.contains(method)) {
-                    (page.get(method) as V8Function).call(page, params)
-                }
             }
-        }
-        if (executeListener != null) {
-            executeListener(null)
+            if (executeListener != null) {
+                executeListener(null)
+            }
+        } catch (e: Exception) {
+            Logger.e("callMethodInPage", "$method : error ${e.message}" )
         }
     }
 

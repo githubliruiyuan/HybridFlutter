@@ -191,15 +191,14 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
   void _setNavigationBarColor(Map<String, dynamic> map) {
     setState(() {
-      _appBarColor =
-          dealColorDefTrans(map['message'], defaultValue: Colors.blue);
+      _appBarColor = parseColor(map['message'], defaultValue: Colors.blue);
     });
   }
 
   void _setBackgroundColor(Map<String, dynamic> map) {
     setState(() {
       _backgroundColor =
-          dealColorDefTrans(map['message'], defaultValue: Colors.grey[200]);
+          parseColor(map['message'], defaultValue: Colors.grey[200]);
     });
   }
 
@@ -224,18 +223,29 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     var body = _data['body'];
     var styles = _data['style'];
     var script = _data['script'];
+    var config = _data['config'];
     if (null == script) {
       script = "";
-    } else {
-      script = script['innerHTML'];
     }
 
+    _initConfig(config);
     _initScript(script);
     _callOnLoad();
     var component = await _factory.createComponentTree(null, body, styles);
     setState(() {
       _view = _factory.createWidgetTree(null, component);
     });
+  }
+
+  void _initConfig(Map<String, dynamic> config) {
+    if (null == config) {
+      return;
+    }
+    _title = config['navigationBarTitleText'];
+    _appBarColor = parseColor(config['navigationBarBackgroundColor'],
+        defaultValue: Colors.blue);
+    _backgroundColor =
+        parseColor(config['backgroundColor'], defaultValue: Colors.grey[200]);
   }
 
   @override
@@ -280,6 +290,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
         key: UniqueKey(),
         appBar: AppBar(
           title: Text(_title),
+          centerTitle: true,
           backgroundColor: _appBarColor,
         ),
         backgroundColor: _backgroundColor,

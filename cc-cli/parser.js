@@ -266,7 +266,7 @@ class CCParser {
         //base64 encode
         jscontent = this._base64Str(jscontent) || ''
 
-        this.result['script'] = this.jsonBody('script', jscontent);
+        this.result['script'] = jscontent;
     }
     _handleScript(str1) {
         //es6 to es5
@@ -286,6 +286,15 @@ class CCParser {
         str1 += expstr;
         return str1;
     }
+    
+    _handleConfig() {
+        let configFile = path.resolve('.', 'src', path.basename(this.file).replace('.html', '.config'));
+        if (fs.existsSync(configFile) === true) {
+            let config = JSON.parse(fs.readFileSync(configFile).toString());
+            this.result['config'] = config;
+        }
+    }
+
     /**
      * 对result做最后处理
      */
@@ -295,33 +304,24 @@ class CCParser {
         let styles = this.parseCSS(result['style']['innerHTML']);
         result['style'] = styles || {};
 
-        //fill default empty content
-        this.fillDefaultContent('type', {}, result);
-        this.fillDefaultContent('align', {}, result);
-        this.fillDefaultContent('description', {}, result);
-
         //script extend
         this._handleScriptExtend();
+
+        //config
+        this._handleConfig();
     }
-    /**
-     * set a default val to result
-     */
-    fillDefaultContent(key, defaultValue, result){
-        if(result[key]){
-            return;
-        }
-        result[key] = defaultValue;
-    }
+
     _base64Str(text){
         let buffer = new Buffer(text), base64Str = buffer.toString('base64');
         return base64Str;
     }
+
     async parseHTMLContent(content) {
         if (!content || typeof content != 'string') {
             return;
         }
         var currentNode = null;
-        let result = this.result, heads = ['style','script', 'title', 'type', 'align', 'description'];
+        let result = this.result, heads = ['style','script'];
         let that = this;
         var parser = new htmlparser.Parser({
             onopentag: function (tagname, attribs) {
@@ -385,3 +385,4 @@ class CCParser {
 module.exports = {
     Parser: CCParser
 }
+

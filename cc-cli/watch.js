@@ -126,7 +126,7 @@ class Watcher {
                 if (/node_modules\/|temp\/|node_modules\\|temp\\/.test(f)) {//match unix or windows path
                     return false;
                 }
-                return /\.js$|\.html|\.css$/.test(f);//only observe js,html,css content
+                return /\.js$|\.config$|\.html|\.css$/.test(f);//only observe js,html,css,config content
             }
         }, function (evt, name) {
             that._fileHandler(name);
@@ -163,9 +163,8 @@ class Watcher {
         let json_name = path.basename(filepath);
         json_name = json_name.replace(path.extname(filepath), '');
 
-        let jsonpath = filepath.replace(path.extname(filepath), '.json')
-
-        let json_content = fs.readFileSync(jsonpath).toString();
+        let jsonPath = filepath.replace(path.extname(filepath), '.json')
+        let json_content = fs.readFileSync(jsonPath).toString();
         let res = JSON.stringify({
             'pageCode': json_name,
             'content': json_content

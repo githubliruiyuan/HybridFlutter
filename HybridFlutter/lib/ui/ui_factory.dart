@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/property.dart';
 import 'package:hybrid_flutter/ui/raised_button.dart';
+import 'package:hybrid_flutter/ui/refresh_indicator.dart';
 import 'package:hybrid_flutter/ui/row.dart';
 import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
 import 'package:hybrid_flutter/ui/text.dart';
@@ -153,6 +154,7 @@ class UIFactory {
     BaseWidget widget;
     switch (component.tag) {
       case "body":
+      case "center":
         widget = CenterStateless(parent, _pageId, _methodChannel, component);
         break;
       case "column":
