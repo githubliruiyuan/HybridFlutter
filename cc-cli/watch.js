@@ -170,7 +170,7 @@ class Watcher {
             'content': json_content
         });
         if (this.socket == null) {
-            console.log(chalk.yellow(`Client not connected.changed file: ${jsonpath}`))
+            console.log(chalk.yellow(`Client not connected.changed file: ${jsonPath}`))
             return;
         }
         //write content length

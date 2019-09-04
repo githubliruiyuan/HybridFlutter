@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" html-identify="CC">
+
+<head>
+    <meta charset="UTF-8" />
+    <style type="text/css" media="screen">
+        @import "detail.css";
+    </style>
+</head> 
+
+<body>
+    <fractionallysizedbox id="scroll-container">
+        <singlechildscrollview>
+            <column id="column">
+                <container id="row-container">
+                    <row>
+                        <container id="image-container">
+                            <image id="image" src="{{detail.image}}"></image>
+                        </container>
+                        <column id="column">
+                            <container>
+                                <text id="title">{{"书名：" + detail.title}}</text>
+                            </container>
+                            <container>
+                                <text id="title">{{"作者：" + detail.author}}</text>
+                            </container>
+                            <container>
+                                <text id="title">{{"出版社：" + detail.publisher}}</text>
+                            </container>
+                            <container>
+                                <text id="title">{{"副标题：" + detail.subtitle}}</text>
+                            </container>
+                        </column>
+                    </row>
+                </container>
+                <container id="label-container">
+                    <text id="summary-label">内容简介</text>
+                </container>
+                <container id="summary-container">
+                    <text id="summary">{{detail.summary}}</text>
+                </container>
+                <container id="label-container">
+                    <text id="summary-label">作者简介</text>
+                </container>
+                <container id="summary-container">
+                    <text id="author">{{detail.author_intro}}</text>
+                </container>
+                <container id="label-container">
+                    <text id="summary-label">目录</text>
+                </container>
+                <container id="catalog-container">
+                    <text id="catalog">{{catalogShort}}</text>
+                </container>
+                <container id="more-container">
+                    <raisedbutton id="more-btn" onclick="onMoreClick">
+                        <text id="more">{{btnText}}</text> 
+                    </raisedbutton>
+                </container>
+            </column>
+
+        </singlechildscrollview>
+    </fractionallysizedbox>
+</body>
+
+</html>

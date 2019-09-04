@@ -12,11 +12,11 @@
     <singlechildscrollview>  
         <column>   
             <container id="btn-container" cc:for="{{list}}"> 
-                <raisedbutton id="raisedbutton" onclick="onItemClick" data-index="{{index}}">
+                <raisedbutton id="raised-button" onclick="onItemClick" data-index="{{index}}">
                     <row>
                         <container id="image-container">
                             <image src="{{item.image}}" />  
-                        </container>
+                        </container> 
                         <expanded>  
                             <column id="column-text">
                                 <text id="text-title">{{item.title}}</text>
@@ -25,7 +25,7 @@
                             </column>
                         </expanded>
                     </row>
-                </raisedbutton>
+                </raisedbutton> 
             </container>
         </column>
     </singlechildscrollview>

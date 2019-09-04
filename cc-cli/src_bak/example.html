@@ -9,28 +9,70 @@
 </head>
 
 <body>
-    <Column>
-        <Row>
-            <Container style="width: 100px; height:100px; margin-right: 15px;"> 
-                <RaisedButton style="color: {{btnColor}};" onclick="onclick">
-                    <text style="font-size: 14px;color: white;">click</text> 
-                </RaisedButton>
-            </Container>
-            <Visibility visible="{{list.length > 0}}"> 
-                <Container style="width: 100px; height:100px; color: blue; margin-right: 15px;">
-                    <text style="font-size: 14px;color: white;">{{item2}}</text>
-                </Container>
-                <Container style="width: 100px; height:100px; color: lightgray; margin-right: 15px;">
-                    <text style="font-size: 14px;color: white;">xxxx</text> 
-                </Container>
-            </Visibility>
-        </Row>
-        <Row cc:for="{{list}}">
-            <Container style="width: 100px; height:100px; color: {{colors[index]}}; margin-right: 15px;"
-                cc:for="{{item}}" cc:for-item="it" cc:for-index="idx">
-                <text style="font-size: 14px;color: white;">{{'id:' + idx + ' text:' + it}}</text>  
-            </Container>
-        </Row>
-    </Column>
+    <singlechildscrollview>
+        <column>
+            <container id="item-container">
+                <row>
+                    <text>cc.setNavigationBarTitle</text>
+                    <expanded><text></text></expanded>
+                    <raisedbutton style="color: green;" onclick="setNavigationBarTitle">
+                        <text style="font-size: 14px;color: white;">设置标题</text>
+                    </raisedbutton>
+                </row>
+            </container>
+            <container id="item-container">
+                <row>
+                    <text>cc.setNavigationBarColor</text>
+                    <expanded><text></text></expanded>
+                    <raisedbutton style="color: red;" onclick="setNavigationBarColor">
+                        <text style="font-size: 14px;color: white;">设置颜色</text>
+                    </raisedbutton>
+                </row>
+            </container>
+            <container id="item-container">
+                <row>
+                    <text>cc.setBackgroundColor</text>
+                    <expanded><text></text></expanded>
+                    <raisedbutton style="color: blue;" onclick="setBackgroundColor">
+                        <text style="font-size: 14px;color: white;">设置背景</text>
+                    </raisedbutton>
+                </row>
+            </container>
+            <container id="item-container">
+                <row>
+                    <text>cc.showToast</text>
+                    <expanded><text></text></expanded>
+                    <raisedbutton style="color: yellow;" onclick="showToast">
+                        <text style="font-size: 14px;color: white;">Toast</text>
+                    </raisedbutton>
+                </row>
+            </container>
+            <container id="item-container">
+                <row>
+                    <column>
+                        <text>cc.showLoading</text>
+                        <text>cc.hideLoading</text>
+                    </column>
+                    <expanded><text></text></expanded> 
+                    <raisedbutton style="color: green;" onclick="showLoading">
+                        <text style="font-size: 14px;color: white;">Loading</text>
+                    </raisedbutton>
+                </row>
+            </container>
+            <container id="item-container">
+                <row>
+                    <column>
+                        <text>cc.startPullDownRefresh</text>
+                        <text>cc.stopPullDownRefresh</text>
+                    </column>
+                    <expanded><text></text></expanded> 
+                    <raisedbutton style="color: red;" onclick="startPullDownRefresh">
+                        <text style="font-size: 14px;color: white;">start</text>
+                    </raisedbutton>
+                </row>
+            </container>
+        </column>
+    </singlechildscrollview> 
 </body>
+
 </html>

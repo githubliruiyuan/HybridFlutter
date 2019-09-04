@@ -14,10 +14,11 @@ Page({
         cc.setNavigationBarTitle({
             title: 'Python系列丛书'
         });
+        cc.showLoading({});
+        this.doRequest(true);
+    },
 
-        cc.showLoading({
-            message: '正在玩命加载...'
-        });
+    doRequest(isOnload) {
         let that = this;
         cc.request({
             url: 'https://www.easy-mock.com/mock/5ab46236e1c17b3b2cc55843/example/books',
@@ -28,13 +29,23 @@ Page({
                 that.setData({
                     list: response.body.books
                 });
+                cc.showToast({
+                    title: '加载成功'
+                });
             },
             fail: function (error) {
                 console.log('request error:' + JSON.stringify(error));
+                cc.showToast({
+                    title: '加载失败'
+                });
             },
             complete: function () {
                 console.log('request complete');
-                cc.hideLoading();
+                if (isOnload) {
+                    cc.hideLoading(); 
+                } else {
+                    cc.stopPullDownRefresh();
+                }
             } 
         });
     },
@@ -45,6 +56,11 @@ Page({
             url: "detail?item=" + JSON.stringify(item)
         });
     },   
+
+    onPullDownRefresh() { 
+        console.log("onPullDownRefresh");
+        this.doRequest(false);
+    },
 
     /**
     * 页面卸载时触发。如cc.redirectTo或cc.navigateBack到其他页面时。

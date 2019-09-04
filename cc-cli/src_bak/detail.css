@@ -1,0 +1,63 @@
+/* detail */
+.scroll-container {
+    width-factor: 1;
+    height-factor: 1;
+}
+
+.column {
+    cross-axis-alignment: start;
+}
+
+.row-container {
+    color: white;
+    padding: 10;
+}
+
+.image-container {
+    width: 120px; 
+    height:160px; 
+    margin-right: 5;
+}
+
+.title {
+    font-size: 14px;
+    color: black;
+}
+
+.summary-container {
+    color: white;
+    padding: 10;
+}
+
+.label-container {
+    padding-left: 10;
+    padding-top: 5;
+    padding-bottom: 5;
+}
+
+.summary-label {
+    font-size: 16;
+    color: green; 
+}
+
+.catalog-container {
+    color: white;
+    padding-top: 10;
+    padding-left: 10;
+    padding-right: 10;
+}
+
+.more-container {
+    padding-left: 10;
+    padding-right: 10;
+    padding-bottom: 10;
+    color: white;
+}
+
+.more-btn {
+    color: white;
+}
+
+.more {
+    color: blue;
+}
