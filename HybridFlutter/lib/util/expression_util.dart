@@ -15,7 +15,6 @@ String getExpression(String dataSource) {
   return trim.substring(2, trim.length - 2);
 }
 
-
 ///获取在for里面的表达式 判断是否有表达式前缀，有则需要拼接
 ///e.g.：return list
 ///e.g.：var index = 0; var item = list[index]; return item
@@ -42,10 +41,12 @@ String getInRepeatPrefixExp(Component component) {
   return prefix;
 }
 
-
 ///处理property以及innerHTML
-Future handleProperty(MethodChannel methodChannel, String pageId, Component component) async {
-  component.properties.forEach((k, v) async {
+Future<void> handleProperty(
+    MethodChannel methodChannel, String pageId, Component component) async {
+  var pros = component.properties.values.toList();
+  for (var i = 0; i < pros.length; i++) {
+    var v = pros[i];
     var exp = v.property;
     if (containExpressionSimple(exp)) {
       exp = getExpression(exp);
@@ -54,9 +55,11 @@ Future handleProperty(MethodChannel methodChannel, String pageId, Component comp
       } else {
         exp = 'return $exp';
       }
-      v.setValue(await _calcExpression(methodChannel, pageId, exp));
+      var result = await _calcExpression(methodChannel, pageId, exp);
+      v.setValue(result);
+//      print("exp value = ${v.getValue()}");
     }
-  });
+  }
 
   var exp = component.innerHTML.property;
   if (containExpressionSimple(exp)) {
@@ -66,11 +69,13 @@ Future handleProperty(MethodChannel methodChannel, String pageId, Component comp
     } else {
       exp = 'return $exp';
     }
-    component.innerHTML.setValue(await _calcExpression(methodChannel, pageId, exp));
+    var result = await _calcExpression(methodChannel, pageId, exp);
+    component.innerHTML.setValue(result);
   }
 }
 
-Future<dynamic> _calcExpression(MethodChannel methodChannel, String pageId, String expression) async {
+Future<dynamic> _calcExpression(
+    MethodChannel methodChannel, String pageId, String expression) async {
 //  print("pageId = $pageId exp = $expression");
   return await methodChannel.invokeMethod(
       'handle_expression', {'pageId': pageId, 'expression': expression});

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/property.dart';
 import 'package:hybrid_flutter/ui/raised_button.dart';
-import 'package:hybrid_flutter/ui/refresh_indicator.dart';
 import 'package:hybrid_flutter/ui/row.dart';
 import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
 import 'package:hybrid_flutter/ui/text.dart';
@@ -227,17 +226,14 @@ class UIFactory {
         same = false;
       }
     } else {
-      if (oldOne.component.properties.length != newOne.component.properties.length) {
-        same = false;
-      } else {
-        oldOne.component.properties.forEach((k, v) {
-          if (!newOne.component.properties.containsKey(k)) {
-            same = false;
-          } else if (newOne.component.properties[k].getValue() != v.getValue()) {
-            same = false;
-          }
-        });
-      }
+      oldOne.component.properties.forEach((k, v) {
+        if (!newOne.component.properties.containsKey(k)) {
+          same = false;
+        } else if (newOne.component.properties[k].getValue() != v.getValue()) {
+          same = false;
+        }
+      });
+
       if (oldOne.children.value.length != newOne.children.value.length) {
         same = false;
       }
