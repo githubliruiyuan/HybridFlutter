@@ -23,6 +23,7 @@ class VisibilityStateless extends BaseWidget {
     var visible =
         (null != visiblePro && "false" == visiblePro.getValue()) ? false : true;
     return Visibility(
+        key: ObjectKey(component),
         visible: visible,
         child: ValueListenableBuilder(
             builder:

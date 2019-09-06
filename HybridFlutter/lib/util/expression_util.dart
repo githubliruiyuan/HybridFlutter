@@ -1,13 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 
-bool containExpressionSimple(String content) {
-  if (null == content) return false;
-  var trim = content.trim();
-  if (trim.isEmpty) return false;
-  return trim.contains("{{") && trim.contains("}}");
-}
-
 //在双花括号中获取表达式
 String getExpression(String dataSource) {
   var trim = dataSource?.trim();
@@ -48,33 +41,32 @@ Future<void> handleProperty(
   for (var i = 0; i < pros.length; i++) {
     var v = pros[i];
     var exp = v.property;
-    if (containExpressionSimple(exp)) {
+    if (v.containExpression) {
       exp = getExpression(exp);
       if (component.isInRepeat) {
         exp = getInRepeatExp(component, exp);
       } else {
         exp = 'return $exp';
       }
-      var result = await _calcExpression(methodChannel, pageId, exp);
+      var result = await calcExpression(methodChannel, pageId, exp);
       v.setValue(result);
-//      print("exp value = ${v.getValue()}");
     }
   }
 
   var exp = component.innerHTML.property;
-  if (containExpressionSimple(exp)) {
+  if (component.innerHTML.containExpression) {
     exp = getExpression(exp);
     if (component.isInRepeat) {
       exp = getInRepeatExp(component, exp);
     } else {
       exp = 'return $exp';
     }
-    var result = await _calcExpression(methodChannel, pageId, exp);
+    var result = await calcExpression(methodChannel, pageId, exp);
     component.innerHTML.setValue(result);
   }
 }
 
-Future<dynamic> _calcExpression(
+Future<dynamic> calcExpression(
     MethodChannel methodChannel, String pageId, String expression) async {
 //  print("pageId = $pageId exp = $expression");
   return await methodChannel.invokeMethod(

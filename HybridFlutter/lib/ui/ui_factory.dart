@@ -195,7 +195,8 @@ class UIFactory {
             RaisedButtonStateless(parent, _pageId, _methodChannel, component);
         break;
       case "visibility":
-        widget = VisibilityStateless(parent, _pageId, _methodChannel, component);
+        widget =
+            VisibilityStateless(parent, _pageId, _methodChannel, component);
         break;
       case "text":
         widget = TextStateless(parent, _pageId, _methodChannel, component);
@@ -238,16 +239,29 @@ class UIFactory {
         same = false;
       }
 
-      if (oldOne.component.innerHTML.getValue() != newOne.component.innerHTML.getValue()) {
+      if (oldOne.component.innerHTML.getValue() !=
+          newOne.component.innerHTML.getValue()) {
         same = false;
       }
     }
     if (same) {
       for (var i = 0; i < oldOne.children.value.length; i++) {
-        compareTreeAndUpdate(oldOne.children.value[i], newOne.children.value[i]);
+        compareTreeAndUpdate(
+            oldOne.children.value[i], newOne.children.value[i]);
       }
     } else {
       oldOne.updateChildrenOfParent(newOne.parent.children);
     }
   }
+
+//  void updateTree(BaseWidget tree) {
+//    var pros = tree.component.properties.values.toList();
+//    for (var i = 0; i < pros.length; i++) {
+//      var it = pros[i];
+//      if (it.containExpression) {
+//        var newValue = calcExpression(
+//            tree.methodChannel, tree.pageId, it.property);
+//      }
+//    }
+//  }
 }

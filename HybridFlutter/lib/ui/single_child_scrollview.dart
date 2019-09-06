@@ -20,7 +20,7 @@ class SingleChildScrollViewStateless extends BaseWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        key: PageStorageKey(component.id),
+        key: ObjectKey(component),
         scrollDirection: MAxis.parse(component.properties["scrollDirection"],
             defaultValue: Axis.vertical),
         child: ValueListenableBuilder(

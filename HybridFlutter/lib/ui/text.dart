@@ -6,8 +6,8 @@ import 'package:hybrid_flutter/util/color_util.dart';
 import 'package:hybrid_flutter/util/widget_util.dart';
 
 class TextStateless extends BaseWidget {
-  TextStateless(BaseWidget parent, String pageId,
-      MethodChannel methodChannel, Component component) {
+  TextStateless(BaseWidget parent, String pageId, MethodChannel methodChannel,
+      Component component) {
     this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
@@ -24,11 +24,11 @@ class TextStateless extends BaseWidget {
       inherit = true;
     }
     return Text(component.innerHTML.getValue(),
+        key: ObjectKey(component),
         style: TextStyle(
             inherit: inherit,
             fontSize: fontSize,
             backgroundColor: backgroundColor,
             color: color));
   }
-
 }

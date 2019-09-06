@@ -18,6 +18,7 @@ class ExpandedStateless extends BaseWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+        key: ObjectKey(component),
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {

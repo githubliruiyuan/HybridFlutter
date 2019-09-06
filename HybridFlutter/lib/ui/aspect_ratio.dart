@@ -16,6 +16,7 @@ class AspectRatioStateless extends BaseWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
+        key: ObjectKey(component),
         aspectRatio: dealDoubleDefZero(component.properties['aspect-ratio']),
         child: ValueListenableBuilder(
             builder:

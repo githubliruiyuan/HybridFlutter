@@ -19,6 +19,7 @@ class ColumnStateless extends BaseWidget {
     return ValueListenableBuilder(
         builder: (BuildContext context, List<BaseWidget> value, Widget child) {
           return Column(
+              key: ObjectKey(component),
               mainAxisAlignment: MMainAxisAlignment.parse(
                   component.properties["main-axis-alignment"],
                   defaultValue: MainAxisAlignment.start),

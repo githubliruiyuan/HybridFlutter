@@ -7,11 +7,8 @@ import 'package:hybrid_flutter/util/color_util.dart';
 import 'package:hybrid_flutter/util/event_util.dart';
 
 class RaisedButtonStateless extends BaseWidget {
-  RaisedButtonStateless(
-      BaseWidget parent,
-      String pageId,
-      MethodChannel methodChannel,
-      Component component) {
+  RaisedButtonStateless(BaseWidget parent, String pageId,
+      MethodChannel methodChannel, Component component) {
     this.parent = parent;
     this.pageId = pageId;
     this.methodChannel = methodChannel;
@@ -30,20 +27,21 @@ class RaisedButtonStateless extends BaseWidget {
     Color highlightColor = dealColor(component.properties['highlight-color']);
     Color splashColor = dealColor(component.properties['splash-color']);
     return RaisedButton(
-      onPressed: () {
-        if (null != component.events['onclick']) {
-          onclickEvent(methodChannel, pageId, this.hashCode.toString(),
-              component.properties, component.events);
-        }
-      },
-      textColor: textColor,
-      disabledTextColor: disabledTextColor,
-      color: color,
-      disabledColor: disabledColor,
-      focusColor: focusColor,
-      hoverColor: hoverColor,
-      highlightColor: highlightColor,
-      splashColor: splashColor,
+        onPressed: () {
+          if (null != component.events['onclick']) {
+            onclickEvent(methodChannel, pageId, this.hashCode.toString(),
+                component.properties, component.events);
+          }
+        },
+        key: ObjectKey(component),
+        textColor: textColor,
+        disabledTextColor: disabledTextColor,
+        color: color,
+        disabledColor: disabledColor,
+        focusColor: focusColor,
+        hoverColor: hoverColor,
+        highlightColor: highlightColor,
+        splashColor: splashColor,
         child: ValueListenableBuilder(
             builder:
                 (BuildContext context, List<BaseWidget> value, Widget child) {

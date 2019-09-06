@@ -22,6 +22,7 @@ class FractionallySizedBoxStateless extends BaseWidget {
     var widthFactor = dealDoubleDefZero(component.properties['width-factor']);
     var heightFactor = dealDoubleDefZero(component.properties['height-factor']);
     return FractionallySizedBox(
+        key: ObjectKey(component),
         widthFactor: widthFactor,
         heightFactor: heightFactor,
         child: ValueListenableBuilder(

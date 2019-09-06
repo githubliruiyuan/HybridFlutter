@@ -20,7 +20,7 @@ class ImageStateless extends BaseWidget {
     var src = component.properties['src'].getValue();
     return Image.network(
         null == src ? '' : src,
-        key: Key(component.id.toString()),
+        key: ObjectKey(component),
         width: width,
         height: height);
   }

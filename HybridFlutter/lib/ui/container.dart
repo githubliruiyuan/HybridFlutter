@@ -29,6 +29,7 @@ class ContainerStateless extends BaseWidget {
         defaultValue: Alignment.topLeft);
 
     return Container(
+        key: ObjectKey(component),
         alignment: alignment,
         color: color,
         width: width,
