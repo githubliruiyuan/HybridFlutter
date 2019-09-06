@@ -126,6 +126,7 @@ class Component {
 
   Component clone() {
     var clone = Component();
+    clone.id = tag + clone.hashCode.toString();
     clone.tag = tag;
     clone.parent = parent;
     clone.events = events;

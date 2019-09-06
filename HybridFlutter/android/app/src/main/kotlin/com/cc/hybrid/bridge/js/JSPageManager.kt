@@ -239,7 +239,7 @@ object JSPageManager {
                 executeListener(null)
             }
         } catch (e: Exception) {
-            Logger.e("callMethodInPage", "$method : error ${e.message}" )
+            Logger.e("callMethodInPage", "$method : error ${e.message}")
         }
     }
 
@@ -247,21 +247,21 @@ object JSPageManager {
         V8Manager.v8.executeVoidFunction("callback", V8Array(V8Manager.v8).push(callbackId))
     }
 
-    fun handleRepeat(pageId: String, expression: String): Int? {
+    fun handleRepeat(pageId: String, componentId: String, expression: String): Int? {
         val page = getV8Page(pageId)
         return try {
-             page?.executeIntegerFunction("__native__handleRepeat", V8Array(V8Manager.v8).push(expression))
-        } catch (e : Exception) {
+            page?.executeIntegerFunction("__native__handleRepeat", V8Array(V8Manager.v8).push(componentId).push(expression))
+        } catch (e: Exception) {
             Logger.e("handleExpression", "expression : $expression error ${e.message}")
             0
         }
     }
 
-    fun handleExpression(pageId: String, expression: String): String? {
+    fun handleExpression(pageId: String, componentId: String, expression: String): String? {
         val page = getV8Page(pageId)
         val result: Any? = try {
-            page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(expression))
-        } catch (e : Exception) {
+            page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(componentId).push(expression))
+        } catch (e: Exception) {
             Logger.e("handleExpression", "expression : $expression error ${e.message}")
             ""
         }

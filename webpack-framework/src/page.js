@@ -1,3 +1,5 @@
+import {Watcher, getAssemblerSingle, observe} from './observer'
+
 global.pages = {};
 global.callbacks = {};
 global.callbackArgs = {};
@@ -41,7 +43,8 @@ function loadPage(pageId) {
             eval(jsContent);
         }
     
-        this.__native__getExpValue = function (script) {
+        this.__native__getExpValue = function (id, script) {
+            let watcher = new Watcher(id, script);
             const expFunc = exp => {
                 return new Function('', 'with(this){' + exp + '}').bind(
                     this.data
@@ -54,10 +57,12 @@ function loadPage(pageId) {
             if (value instanceof Array) {
                 return JSON.stringify(value);
             }
+            watcher.stopCollectMapping();
             return value;
         }
         
-        this.__native__handleRepeat = function (script) {
+        this.__native__handleRepeat = function (id, script) {
+            let watcher = new Watcher(id, script);
             const expFunc = exp => {
                 return new Function('', 'with(this){' + exp + '}').bind(
                     this.data
@@ -65,7 +70,13 @@ function loadPage(pageId) {
             };
             var array = expFunc(script);
             if(!array) return 0;
+            watcher.stopCollectMapping();
             return array.length;
+        }
+
+        this.__native__initComplete = function () {
+            observe(this.data);
+            getAssemblerSingle().getNeedUpdateMapping();
         }
     
         this.setData = function (dataObj) {
@@ -75,6 +86,15 @@ function loadPage(pageId) {
                 eval(str);
             }
             this.__native__refresh();
+            var startTime = Date.now();
+            if(observe(this.data)) {
+                let needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
+//            if (Object.keys(needUpdateMapping).length) {
+//                this._updatePartlyData(JSON.stringify(needUpdateMapping));
+//            }
+            }
+            var endTime = Date.now();
+            console.log("耗时:"+(endTime-startTime));
         }
 
         function setTimeout(callback, ms, ...args) {

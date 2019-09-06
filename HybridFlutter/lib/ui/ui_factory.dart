@@ -81,7 +81,7 @@ class UIFactory {
   Future<dynamic> createComponentTree(Component parent,
       Map<String, dynamic> data, Map<String, dynamic> styles) async {
     var component = Component();
-    component.id = component.hashCode.toString();
+    component.id = data["tag"] + component.hashCode.toString();
     component.tag = data["tag"];
     component.innerHTML = Property(decodeBase64(data["innerHTML"]));
     component.properties = _initProperties(data, styles);

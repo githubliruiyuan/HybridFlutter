@@ -48,7 +48,8 @@ Future<void> handleProperty(
       } else {
         exp = 'return $exp';
       }
-      var result = await calcExpression(methodChannel, pageId, exp);
+      var result =
+          await calcExpression(methodChannel, pageId, component.id, exp);
       v.setValue(result);
     }
   }
@@ -61,14 +62,14 @@ Future<void> handleProperty(
     } else {
       exp = 'return $exp';
     }
-    var result = await calcExpression(methodChannel, pageId, exp);
+    var result = await calcExpression(methodChannel, pageId, component.id, exp);
     component.innerHTML.setValue(result);
   }
 }
 
-Future<dynamic> calcExpression(
-    MethodChannel methodChannel, String pageId, String expression) async {
+Future<dynamic> calcExpression(MethodChannel methodChannel, String pageId,
+    String componentId, String expression) async {
 //  print("pageId = $pageId exp = $expression");
-  return await methodChannel.invokeMethod(
-      'handle_expression', {'pageId': pageId, 'expression': expression});
+  return await methodChannel.invokeMethod('handle_expression',
+      {'pageId': pageId, 'id': componentId, 'expression': expression});
 }

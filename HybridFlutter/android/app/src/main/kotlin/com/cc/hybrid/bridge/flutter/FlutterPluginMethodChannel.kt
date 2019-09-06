@@ -26,10 +26,10 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
         when (methodCall.method) {
             Methods.ATTACH_PAGE -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("script")) {
-                    val id = methodCall.argument<String>("pageId")
+                    val pageId = methodCall.argument<String>("pageId")
                     val script = methodCall.argument<String>("script")
 //                    Logger.d("lry", "attach_page pageId = $id script = $script")
-                    JSPageManager.attachPageScriptToJsCore(id!!, script!!)
+                    JSPageManager.attachPageScriptToJsCore(pageId!!, script!!)
                     result.success("success")
                 }
             }
@@ -38,6 +38,13 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     val pageId = methodCall.argument<String>("pageId")
                     val args = methodCall.argument<String>("args")
                     JSPageManager.callMethodInPage(pageId!!, Methods.ON_LOAD, args)
+                    result.success("success")
+                }
+            }
+            Methods.ON_INIT_COMPLETE -> {
+                if (methodCall.hasArgument("pageId")) {
+                    val pageId = methodCall.argument<String>("pageId")
+                    JSPageManager.callMethodInPage(pageId!!, Methods.ON_INIT_COMPLETE)
                     result.success("success")
                 }
             }
@@ -69,19 +76,21 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
             Methods.HANDLE_EXPRESSION -> {
-                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("expression")) {
+                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
+                    val id = methodCall.argument<String>("id")
                     val expression = methodCall.argument<String>("expression")
-                    val obj = JSPageManager.handleExpression(pageId!!, expression!!)
+                    val obj = JSPageManager.handleExpression(pageId!!, id!!, expression!!)
                     result.success(obj)
                 }
             }
             Methods.HANDLE_REPEAT -> {
-                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("expression")) {
+                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
+                    val id = methodCall.argument<String>("id")
                     val expression = methodCall.argument<String>("expression")
                     val obj = try {
-                        JSPageManager.handleRepeat(pageId!!, expression!!)
+                        JSPageManager.handleRepeat(pageId!!, id!!, expression!!)
                     } catch (e: Exception) {
                         Logger.printError(e)
                         0
