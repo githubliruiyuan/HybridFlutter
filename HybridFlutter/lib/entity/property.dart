@@ -1,20 +1,20 @@
 
 
 class Property {
-  String property, _expressionValue;
+  String property, _expValue;
   bool containExpression = false;
 
   Property(this.property) {
-    this._expressionValue = property;
+    this._expValue = property;
     containExpression = _containExpression(property);
   }
 
   void setValue(String value) {
-    _expressionValue = value;
+    _expValue = value;
   }
 
   String getValue() {
-    return _expressionValue;
+    return _expValue;
   }
 
   bool _containExpression(String content) {
@@ -26,6 +26,6 @@ class Property {
 
   @override
   String toString() {
-    return 'Property{property: $property, expressionValue: $_expressionValue}';
+    return 'Property{property: $property, _expValue: $_expValue}';
   }
 }

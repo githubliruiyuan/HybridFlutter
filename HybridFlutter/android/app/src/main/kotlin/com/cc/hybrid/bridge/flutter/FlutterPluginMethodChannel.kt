@@ -76,21 +76,25 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 }
             }
             Methods.HANDLE_EXPRESSION -> {
-                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("expression")) {
+                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("type") && methodCall.hasArgument("key") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val id = methodCall.argument<String>("id")
+                    val type = methodCall.argument<String>("type")
+                    val key = methodCall.argument<String>("key")
                     val expression = methodCall.argument<String>("expression")
-                    val obj = JSPageManager.handleExpression(pageId!!, id!!, expression!!)
+                    val obj = JSPageManager.handleExpression(pageId!!, id!!, type!!, key!!, expression!!)
                     result.success(obj)
                 }
             }
             Methods.HANDLE_REPEAT -> {
-                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("expression")) {
+                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("id") && methodCall.hasArgument("type") && methodCall.hasArgument("key") && methodCall.hasArgument("expression")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val id = methodCall.argument<String>("id")
+                    val type = methodCall.argument<String>("type")
+                    val key = methodCall.argument<String>("key")
                     val expression = methodCall.argument<String>("expression")
                     val obj = try {
-                        JSPageManager.handleRepeat(pageId!!, id!!, expression!!)
+                        JSPageManager.handleRepeat(pageId!!, id!!, type!!, key!!, expression!!)
                     } catch (e: Exception) {
                         Logger.printError(e)
                         0

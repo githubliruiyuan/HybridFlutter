@@ -1,6 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 
+const String TYPE_PROPERTY = "property";
+const String TYPE_INNER_HTML = "innerHTML";
+const String TYPE_DIRECTIVE = "directive";
+
 //在双花括号中获取表达式
 String getExpression(String dataSource) {
   var trim = dataSource?.trim();
@@ -37,20 +41,20 @@ String getInRepeatPrefixExp(Component component) {
 ///处理property以及innerHTML
 Future<void> handleProperty(
     MethodChannel methodChannel, String pageId, Component component) async {
-  var pros = component.properties.values.toList();
+  var pros = component.properties.entries.toList();
   for (var i = 0; i < pros.length; i++) {
-    var v = pros[i];
-    var exp = v.property;
-    if (v.containExpression) {
+    var entry = pros[i];
+    var exp = entry.value.property;
+    if (entry.value.containExpression) {
       exp = getExpression(exp);
       if (component.isInRepeat) {
         exp = getInRepeatExp(component, exp);
       } else {
         exp = 'return $exp';
       }
-      var result =
-          await calcExpression(methodChannel, pageId, component.id, exp);
-      v.setValue(result);
+      var result = await calcExpression(
+          methodChannel, pageId, component.id, TYPE_PROPERTY, entry.key, exp);
+      entry.value.setValue(result);
     }
   }
 
@@ -62,14 +66,31 @@ Future<void> handleProperty(
     } else {
       exp = 'return $exp';
     }
-    var result = await calcExpression(methodChannel, pageId, component.id, exp);
+    var result = await calcExpression(methodChannel, pageId, component.id,
+        TYPE_INNER_HTML, TYPE_PROPERTY, exp);
     component.innerHTML.setValue(result);
   }
 }
 
+Future<dynamic> calcRepeatSize(MethodChannel methodChannel, String pageId,
+    String componentId, String type, String key, String expression) async {
+  return await methodChannel.invokeMethod(
+      'handle_repeat', {
+    'pageId': pageId,
+    'id': componentId,
+    'type': type,
+    'key': key,
+    'expression': '$expression.length'
+  });
+}
+
 Future<dynamic> calcExpression(MethodChannel methodChannel, String pageId,
-    String componentId, String expression) async {
-//  print("pageId = $pageId exp = $expression");
-  return await methodChannel.invokeMethod('handle_expression',
-      {'pageId': pageId, 'id': componentId, 'expression': expression});
+    String componentId, String type, String key, String expression) async {
+  return await methodChannel.invokeMethod('handle_expression', {
+    'pageId': pageId,
+    'id': componentId,
+    'type': type,
+    'key': key,
+    'expression': expression
+  });
 }

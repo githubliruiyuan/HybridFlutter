@@ -137,7 +137,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
       _pageCode = _args['pageCode'];
       _args = _args['args'];
     } else {
-      _pageCode = 'example';
+      _pageCode = 'home';
     }
     _appBarColor = Colors.blue;
     _backgroundColor = Colors.grey[200];
@@ -217,7 +217,6 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     _initScript(script);
     _callOnLoad();
     var component = await _factory.createComponentTree(null, body, styles);
-    _callInitComplete();
     setState(() {
       _tree = _factory.createWidgetTree(null, component);
     });
@@ -260,15 +259,12 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
   void _initScript(String script) {
     _methodChannel.invokeMethod(
         "attach_page", {"pageId": _pageId, "script": decodeBase64(script)});
+    _methodChannel.invokeMethod("__native__initComplete", {"pageId": _pageId});
   }
 
   void _callOnLoad() {
     _methodChannel
         .invokeMethod("onLoad", {"pageId": _pageId, "args": jsonEncode(_args)});
-  }
-
-  void _callInitComplete() {
-    _methodChannel.invokeMethod("__native__initComplete", {"pageId": _pageId});
   }
 
   void _callOnUnload() {

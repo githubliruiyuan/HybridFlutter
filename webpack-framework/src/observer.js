@@ -3,8 +3,8 @@
  * @param data
  * @returns {*} 第一次setData会遍历转化对象属性为可响应对象，非第一次调用则会返回data.__ob__，用此区别data是否已经转换过，避免重复遍历
  */
-export function observe(data) {
-    if (!data || data == undefined || typeof (data) !== "object") {
+function observe(data) {
+    if (!data || data === undefined || typeof (data) !== "object") {
         return;
     }
     if (!data.hasOwnProperty("__ob__") || !data.__ob__ instanceof Observer) {
@@ -12,7 +12,7 @@ export function observe(data) {
         return;
     }
     return data.__ob__;
-};
+}
 
 /**
  * 观察者，用于观察data对象属性变化
@@ -27,12 +27,12 @@ function Observer(data) {
 Observer.prototype = {
     observeData: function (data) {
         for (const key in data) {
-            var value = data[key];
-            if (typeof(value) == "undefined") {
+            let value = data[key];
+            if (typeof(value) === "undefined") {
                 continue;
             }
             this.defineReactive(data, key, value);
-            if (Array.isArray(value) || typeof(value) == "object") {
+            if (Array.isArray(value) || typeof(value) === "object") {
                 this.observeData(value);
             }
         }
@@ -50,16 +50,11 @@ Observer.prototype = {
         }
 
         const dep = new DependCollector();
-        const reference = this;
         Object.defineProperty(data, key, {
             enumerable: true,
             configurable: true,
             get: function reactiveGetter() {
                 const value = getter ? getter.call(data) : val;
-                //过滤数组的多余依赖收集
-                if (Array.isArray(value) && reference.isNotSpecificScript(key)) {
-                    return value;
-                }
                 if (DependCollector.targetWatcher) {
                     dep.depend();
                 }
@@ -77,13 +72,9 @@ Observer.prototype = {
                 }
                 // 新值如果是object或数组的话，也要进行监听
                 observe(newVal);
-                dep.notify();
+                dep.notify(data);
             }
         });
-    },
-
-    isNotSpecificScript: function (key) {
-        return key !== Observer.currentScript;
     },
     /**
      * 被观察者data对象新增ob属性，绑定观察者，用于判断被观察者是否已经被观察
@@ -115,13 +106,13 @@ DependCollector.targetWatcher = null;
 DependCollector.prototype = {
 
     addSub: function (sub) {
+        // console.log("sub key = " + sub.key());
         this.subs[sub.key()] = sub;
     },
 
     removeSub: function (sub) {
         delete this.subs[sub.key()];
     },
-
     depend: function () {
         if (DependCollector.targetWatcher) {
             DependCollector.targetWatcher.addDep(this)
@@ -131,15 +122,21 @@ DependCollector.prototype = {
     /**
      * 通知所有订阅者，同时把当前Dep持有的所有订阅者的映射数组（id-表达式）添加到组装者中，等待组装
      */
-    notify: function () {
+    notify: function (data) {
         let formatResult = [];
         let subs = this.subs;
-        for(const key in subs) {
-            let sub = subs[key];
+        let _key;
+        for(const _k in subs) {
+            let sub = subs[_k];
+            _key = sub.id;
+            sub.value = global.getExpValue(data, sub.script);
             formatResult.push(sub.format());
-            sub.update()
+            sub.update();
         }
-        getAssemblerSingle().addPackagingObject(formatResult);
+        if (formatResult.length > 0) {
+            // console.log(`notify : ${JSON.stringify(formatResult)}`);
+            getAssemblerSingle().addPackagingObject(_key, formatResult);
+        }
     }
 };
 
@@ -147,9 +144,13 @@ DependCollector.prototype = {
  * 订阅者，用于响应观察者的变化
  * @constructor
  */
-export function Watcher(id, script, callBack) {
+function Watcher(id, type, prefix, script, callBack) {
+    // console.log(id + type + prefix + script);
     this.id = id;
+    this.type = type;
+    this.prefix = prefix;
     this.script = script;
+    this.value = {};
     this.callBack = callBack;
     this.elementId = [];
     this.depIds = [];
@@ -165,6 +166,7 @@ Watcher.prototype = {
     },
 
     addDep: function (dep) {
+        // console.log("dep = " + dep);
         if (!this.depIds.hasOwnProperty(dep.id)) {
             dep.addSub(this);
             this.depIds[dep.id] = dep;
@@ -186,12 +188,15 @@ Watcher.prototype = {
 
     format: function () {
         let obj = {};
-        obj[this.id] = this.script;
+        obj.id = this.id;
+        obj.type = this.type;
+        obj.key = this.prefix;
+        obj.value = this.value;
         return obj;
     },
 
     key:function(){
-        return this.id.toString() + this.script.toString();
+        return this.id + '-' + this.type + '-' + this.script;
     }
 };
 
@@ -201,16 +206,16 @@ Watcher.prototype = {
  * @constructor
  */
 function Assembler() {
-    this.packagingArray = [];
+    this.packagingArray = {};
 }
 Assembler.prototype = {
-    addPackagingObject: function (array) {
-        this.packagingArray.push(array);
+    addPackagingObject: function (key, array) {
+        this.packagingArray[key] = array;
     },
 
     getNeedUpdateMapping: function () {
         let result = this.packing();
-        this.packagingArray = [];
+        this.packagingArray = {};
         return result;
     },
     /**
@@ -220,28 +225,29 @@ Assembler.prototype = {
      * @returns {} 组装结果Map
      */
     packing: function () {
-        let packingResult = {};
-        this.packagingArray.forEach(function (array) {
-            array.forEach(function (item) {
-                let key = Object.keys(item)[0];
-                //做一个重复id的筛选，节点id相同，则把表达式添加到该id的value数组中
-                if (packingResult.hasOwnProperty(key)) {
-                    packingResult[key].push(item[key]);
-                } else {
-                    packingResult[key] = new Array(item[key]);
-                }
-            });
-        });
-        console.log("组装映射结果:" + JSON.stringify(packingResult));
-        return packingResult;
+        // let packingResult = {};
+        // this.packagingArray.forEach(function (array) {
+        //     array.forEach(function (item) {
+        //         console.log("item:" + JSON.stringify(item));
+        //         let key = Object.keys(item)[0];
+        //
+        //     });
+        // });
+        console.log("组装映射结果:" + JSON.stringify(this.packagingArray));
+        return this.packagingArray;
     }
 };
 /**
  * 获取组装者单例instance方法，全局只有一个组装者
  */
-export var getAssemblerSingle = (function () {
+let getAssemblerSingle = (function () {
     let instance;
     return function () {
         return instance || (instance = new Assembler())
     }
 })();
+
+global.observe = observe;
+global.Watcher = Watcher;
+global.getAssemblerSingle = getAssemblerSingle;
+

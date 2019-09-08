@@ -26,11 +26,6 @@ class UIFactory {
 
   UIFactory(this._pageId, this._methodChannel);
 
-  Future<dynamic> _calcRepeatSize(String expression) async {
-    return await _methodChannel.invokeMethod(
-        'handle_repeat', {'pageId': _pageId, 'expression': expression});
-  }
-
   Map<String, Property> _initProperties(
       Map<String, dynamic> data, Map<String, dynamic> styles) {
     if (null == data) {
@@ -95,7 +90,8 @@ class UIFactory {
     var repeat = component.getRealForExpression();
     if (null != repeat) {
       repeat = getInRepeatExp(component, repeat);
-      int size = await _calcRepeatSize(repeat);
+      int size = await calcRepeatSize(_methodChannel, _pageId, component.id,
+          TYPE_DIRECTIVE, 'repeat', repeat);
       //处理for出来的
       List<Component> list = [];
       for (var index = 0; index < size; index++) {
