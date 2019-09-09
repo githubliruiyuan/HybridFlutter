@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
 import 'package:hybrid_flutter/util/color_util.dart';
 import 'package:hybrid_flutter/util/event_util.dart';
@@ -13,40 +14,40 @@ class RaisedButtonStateless extends BaseWidget {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
+    this.data = ValueNotifier(Data(component.properties));
   }
 
   @override
   Widget build(BuildContext context) {
-    Color color = dealColor(component.properties['color']);
-    Color textColor = dealColor(component.properties['text-color']);
-    Color disabledTextColor =
-        dealColor(component.properties['disabled-text-color']);
-    Color disabledColor = dealColor(component.properties['disabled-color']);
-    Color focusColor = dealColor(component.properties['focus-color']);
-    Color hoverColor = dealColor(component.properties['hover-color']);
-    Color highlightColor = dealColor(component.properties['highlight-color']);
-    Color splashColor = dealColor(component.properties['splash-color']);
-    return RaisedButton(
-        onPressed: () {
-          if (null != component.events['onclick']) {
-            onclickEvent(methodChannel, pageId, this.hashCode.toString(),
-                component.properties, component.events);
-          }
+    return ValueListenableBuilder(
+        builder: (BuildContext context, Data data, Widget child) {
+          Color color = dealColor(data.map['color']);
+          Color textColor = dealColor(data.map['text-color']);
+          Color disabledTextColor = dealColor(data.map['disabled-text-color']);
+          Color disabledColor = dealColor(data.map['disabled-color']);
+          Color focusColor = dealColor(data.map['focus-color']);
+          Color hoverColor = dealColor(data.map['hover-color']);
+          Color highlightColor = dealColor(data.map['highlight-color']);
+          Color splashColor = dealColor(data.map['splash-color']);
+
+          return RaisedButton(
+              onPressed: () {
+                if (null != component.events['onclick']) {
+                  onclickEvent(methodChannel, pageId, this.hashCode.toString(),
+                      data.map, component.events);
+                }
+              },
+              key: ObjectKey(component),
+              textColor: textColor,
+              disabledTextColor: disabledTextColor,
+              color: color,
+              disabledColor: disabledColor,
+              focusColor: focusColor,
+              hoverColor: hoverColor,
+              highlightColor: highlightColor,
+              splashColor: splashColor,
+              child: data.children.isNotEmpty ? data.children[0] : null);
         },
-        key: ObjectKey(component),
-        textColor: textColor,
-        disabledTextColor: disabledTextColor,
-        color: color,
-        disabledColor: disabledColor,
-        focusColor: focusColor,
-        hoverColor: hoverColor,
-        highlightColor: highlightColor,
-        splashColor: splashColor,
-        child: ValueListenableBuilder(
-            builder:
-                (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value.length > 0 ? value[0] : null;
-            },
-            valueListenable: children));
+        valueListenable: this.data);
   }
 }

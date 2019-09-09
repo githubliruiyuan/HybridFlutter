@@ -48,7 +48,9 @@ object JSPageManager {
                     realPageObject.setPrototype(page.getObject(it))
                 }
                 realPageObject.registerJavaMethod(JavaCallback { receiver, parameters ->
-                    onRefresh(pageId)
+                    val localPageId = receiver.getString("pageId")
+                    val data = parameters?.getString(0)
+                    onRefresh(localPageId, data)
                     receiver as Any
                 }, "__native__refresh")
 
@@ -187,9 +189,9 @@ object JSPageManager {
     }
 
     @Synchronized
-    fun onRefresh(pageId: String) {
+    fun onRefresh(pageId: String, json: String?) {
 //        Logger.d("JSPageManager", "onRefresh pageId = $pageId")
-        EventManager.instance.sendMessage(what = EventManager.TYPE_ONCLICK, pageId = pageId, obj = "")
+        EventManager.instance.sendMessage(what = EventManager.TYPE_REFRESH, pageId = pageId, obj = json?: "")
     }
 
     private fun getV8Page(pageId: String): V8Object? {

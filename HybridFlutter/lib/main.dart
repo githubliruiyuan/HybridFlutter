@@ -8,6 +8,8 @@ import 'package:hybrid_flutter/util/base64.dart';
 import 'package:hybrid_flutter/util/color_util.dart';
 
 import 'entity/component.dart';
+import 'entity/data.dart';
+import 'entity/property.dart';
 
 var _methodChannel = MethodChannel("com.cc.hybrid/method");
 var _basicChannel =
@@ -66,8 +68,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: _MainPage({}));
-//    return MaterialApp(home: _TestPage());
+//    return MaterialApp(home: _MainPage({}));
+    return MaterialApp(home: _TestPage());
   }
 }
 
@@ -81,10 +83,27 @@ class _TestPage extends StatefulWidget {
 class _TestPageState extends State<_TestPage> {
   @override
   Widget build(BuildContext context) {
-    var text =
-        Text("test", style: TextStyle(color: Colors.white, fontSize: 18));
+    Component component = Component();
+    component.id = "x1";
+    var text = Property('未实现控件');
+    var font = Property('14');
+    var color = Property('red');
+    component.properties = Map();
+    component.properties.putIfAbsent('font-size', () => font);
+    component.properties.putIfAbsent('color', () => color);
+    component.properties.putIfAbsent('innerHTML', () => text);
+    ValueNotifier<Data> valueNotifier = ValueNotifier(Data(component.properties));
+
+
+    var textW = ValueListenableBuilder(
+        builder:
+            (BuildContext context, Data data, Widget child) {
+          return Text(data.map['innerHTML'].getValue(), style: TextStyle(color: Colors.white, fontSize: 18));
+        },
+        valueListenable: valueNotifier);
+
     var container =
-        Container(width: 100, height: 100, color: Colors.green, child: text);
+        Container(width: 100, height: 100, color: Colors.green, child: textW);
 
     return Scaffold(
       appBar: AppBar(
@@ -94,6 +113,8 @@ class _TestPageState extends State<_TestPage> {
         return FloatingActionButton(onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => _MainPage({})));
+//          component.properties['innerHTML'].setValue("1111");
+//          valueNotifier.value = Data(component.properties);
         });
       }),
       body: container,
@@ -158,14 +179,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     }
   }
 
-  Future _update() async {
-    var body = _data['body'];
-    var styles = _data['style'];
-    Component component =
-        await _factory.createComponentTree(null, body, styles);
-    var newWidgetTree = _factory.createWidgetTree(null, component);
-    _factory.compareTreeAndUpdate(_tree, newWidgetTree);
-//    _factory.updateTree(_tree);
+  Future _update(Map<String, dynamic> map) async {
+    var jsonObject = jsonDecode(map['message']);
+    _factory.updateTree(jsonObject);
   }
 
   void _updateTitle(Map<String, dynamic> map) {
@@ -253,6 +269,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     super.dispose();
 //    print("lifecycle dispose $_pageId");
     _handlers.remove(_pageId);
+    _factory.release();
     _callOnUnload();
   }
 
@@ -321,7 +338,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
         _refresh(message);
         break;
       case 1: //onclick setData
-        _update();
+        _update(message);
         break;
       case 2: //set_navigation_bar_title
         _updateTitle(message);

@@ -78,8 +78,8 @@ class MainActivity : FlutterActivity() {
                 EventManager.TYPE_SOCKET -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_SOCKET, pageId, json)
                 }
-                EventManager.TYPE_ONCLICK -> {
-                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_ONCLICK, pageId,"")
+                EventManager.TYPE_REFRESH -> {
+                    mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_REFRESH, pageId, json)
                 }
                 EventManager.TYPE_NAVIGATION_BAR_TITLE -> {
                     mActivity.get()?.sendMessage2Flutter(EventManager.TYPE_NAVIGATION_BAR_TITLE, pageId, json)

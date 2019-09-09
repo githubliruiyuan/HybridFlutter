@@ -5,7 +5,8 @@ class Component {
   String id;
   String tag;
   Component parent;
-  Property innerHTML;
+  Map<String, dynamic> data;
+  Map<String, dynamic> styles;
   Map<String, dynamic> events;
   Map<String, dynamic> directives;
   Map<String, Property> properties;
@@ -128,11 +129,12 @@ class Component {
     var clone = Component();
     clone.id = tag + clone.hashCode.toString();
     clone.tag = tag;
+    clone.data = data;
+    clone.styles = styles;
     clone.parent = parent;
     clone.events = events;
     clone.directives = directives;
     clone.properties = properties;
-    clone.innerHTML = innerHTML;
     clone.isInRepeat = isInRepeat;
     clone.children = [];
     return clone;

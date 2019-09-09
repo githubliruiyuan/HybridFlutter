@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
 
 class ExpandedStateless extends BaseWidget {
@@ -13,17 +14,18 @@ class ExpandedStateless extends BaseWidget {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
+    this.data = ValueNotifier(Data(component.properties));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        key: ObjectKey(component),
-        child: ValueListenableBuilder(
-            builder:
-                (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value.length > 0 ? value[0] : null;
-            },
-            valueListenable: children));
+
+    return ValueListenableBuilder(
+        builder: (BuildContext context, Data data, Widget child) {
+          return Expanded(
+              key: ObjectKey(component),
+              child: data.children.isNotEmpty ? data.children[0] : null);
+        },
+        valueListenable: this.data);
   }
 }

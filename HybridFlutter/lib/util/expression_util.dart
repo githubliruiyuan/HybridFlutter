@@ -2,7 +2,6 @@ import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 
 const String TYPE_PROPERTY = "property";
-const String TYPE_INNER_HTML = "innerHTML";
 const String TYPE_DIRECTIVE = "directive";
 
 //在双花括号中获取表达式
@@ -56,19 +55,6 @@ Future<void> handleProperty(
           methodChannel, pageId, component.id, TYPE_PROPERTY, entry.key, exp);
       entry.value.setValue(result);
     }
-  }
-
-  var exp = component.innerHTML.property;
-  if (component.innerHTML.containExpression) {
-    exp = getExpression(exp);
-    if (component.isInRepeat) {
-      exp = getInRepeatExp(component, exp);
-    } else {
-      exp = 'return $exp';
-    }
-    var result = await calcExpression(methodChannel, pageId, component.id,
-        TYPE_INNER_HTML, TYPE_PROPERTY, exp);
-    component.innerHTML.setValue(result);
   }
 }
 

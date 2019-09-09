@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +25,8 @@ import 'image.dart';
 class UIFactory {
   final String _pageId;
   final MethodChannel _methodChannel;
+  final Map<String, Component> _componentMap = Map();
+  final Map<String, BaseWidget> _widgetMap = Map();
 
   UIFactory(this._pageId, this._methodChannel);
 
@@ -52,6 +56,11 @@ class UIFactory {
         properties.putIfAbsent(k, () => Property(v));
       });
     }
+
+    if (null != data["innerHTML"]) {
+      properties.putIfAbsent(
+          "innerHTML", () => Property(decodeBase64(data["innerHTML"])));
+    }
     return properties;
   }
 
@@ -78,7 +87,8 @@ class UIFactory {
     var component = Component();
     component.id = data["tag"] + component.hashCode.toString();
     component.tag = data["tag"];
-    component.innerHTML = Property(decodeBase64(data["innerHTML"]));
+    component.data = data;
+    component.styles = styles;
     component.properties = _initProperties(data, styles);
     component.directives = _initDirectives(data);
     component.events = _initEvents(data);
@@ -86,6 +96,7 @@ class UIFactory {
     component.inRepeatIndex = parent?.inRepeatIndex;
     component.inRepeatPrefixExp = parent?.inRepeatPrefixExp;
     component.parent = parent;
+    _componentMap.putIfAbsent(component.id, () => component);
 
     var repeat = component.getRealForExpression();
     if (null != repeat) {
@@ -102,6 +113,7 @@ class UIFactory {
         //需要添加 await，否则会出现异步导致children为空
         await _addChildren(clone, data, styles);
         await handleProperty(_methodChannel, _pageId, clone);
+        _componentMap.putIfAbsent(clone.id, () => clone);
         list.add(clone);
       }
       return list;
@@ -132,14 +144,13 @@ class UIFactory {
     return ClipOval(child: child);
   }
 
-  ValueNotifier<List<BaseWidget>> _getChildren(
-      BaseWidget parent, Component component) {
-    ValueNotifier<List<BaseWidget>> children = ValueNotifier([]);
+  List<BaseWidget> _getChildren(BaseWidget parent, Component component) {
+    List<BaseWidget> children = [];
     if (null == component) {
       return children;
     }
     component.children?.forEach((it) {
-      children.value.add(createWidgetTree(parent, it));
+      children.add(createWidgetTree(parent, it));
     });
     return children;
   }
@@ -201,63 +212,64 @@ class UIFactory {
         widget = ImageStateless(parent, _pageId, _methodChannel, component);
         break;
       default:
-        var text = '未实现控件${component.tag}';
+        var text = Property('未实现控件${component.tag}');
         var font = Property('14');
         var color = Property('red');
+        component.properties = Map();
         component.properties.putIfAbsent('font-size', () => font);
         component.properties.putIfAbsent('color', () => color);
-        component.innerHTML = Property(text);
+        component.properties.putIfAbsent('innerHTML', () => text);
         widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;
     }
     widget.setChildren(_getChildren(widget, component));
+    _widgetMap.putIfAbsent(component.id, () => widget);
     return widget;
   }
 
-  void compareTreeAndUpdate(BaseWidget oldOne, BaseWidget newOne) {
-    var same = true;
-    if (oldOne.component.tag != newOne.component.tag) {
-      if (null != oldOne.parent) {
-        same = false;
-      } else {
-        same = false;
-      }
-    } else {
-      oldOne.component.properties.forEach((k, v) {
-        if (!newOne.component.properties.containsKey(k)) {
-          same = false;
-        } else if (newOne.component.properties[k].getValue() != v.getValue()) {
-          same = false;
-        }
-      });
-
-      if (oldOne.children.value.length != newOne.children.value.length) {
-        same = false;
-      }
-
-      if (oldOne.component.innerHTML.getValue() !=
-          newOne.component.innerHTML.getValue()) {
-        same = false;
-      }
-    }
-    if (same) {
-      for (var i = 0; i < oldOne.children.value.length; i++) {
-        compareTreeAndUpdate(
-            oldOne.children.value[i], newOne.children.value[i]);
-      }
-    } else {
-      oldOne.updateChildrenOfParent(newOne.parent.children);
-    }
+  void release() {
+    _componentMap.clear();
+    _widgetMap.clear();
   }
 
-//  void updateTree(BaseWidget tree) {
-//    var pros = tree.component.properties.values.toList();
-//    for (var i = 0; i < pros.length; i++) {
-//      var it = pros[i];
-//      if (it.containExpression) {
-//        var newValue = calcExpression(
-//            tree.methodChannel, tree.pageId, it.property);
+  Future updateTree(Map<String, dynamic> map) async {
+    var list = map.entries.toList();
+    for (var i = 0; i < list.length; i++) {
+      var entry = list[i];
+      if (_widgetMap.containsKey(entry.key)) {
+        BaseWidget widget = _widgetMap[entry.key];
+        widget.updateProperty(entry.value);
+      } else {
+        if (_componentMap.containsKey(entry.key)) {
+          var component = _componentMap[entry.key];
+          var parentId = component.parent.id;
+          if (_widgetMap.containsKey(parentId)) {
+            var parentWidget = _widgetMap[parentId];
+            var tree = await createComponentTree(
+                component.parent, component.data, component.styles);
+            _componentMap.remove(entry.key);
+            var children = [];
+            if (tree is List<Component>) {
+              tree.forEach((it) {
+                BaseWidget child = createWidgetTree(parentWidget, it);
+                children.add(child);
+              });
+            } else {
+              BaseWidget child = createWidgetTree(parentWidget, tree);
+              children.add(child);
+            }
+            parentWidget.updateChildren(children);
+          }
+        }
+      }
+
+//      var type = entry.value.get("type");
+//      switch (type) {
+//        case TYPE_DIRECTIVE:
+//          break;
+//        case TYPE_PROPERTY:
+//          break;
 //      }
-//    }
-//  }
+    }
+  }
 }

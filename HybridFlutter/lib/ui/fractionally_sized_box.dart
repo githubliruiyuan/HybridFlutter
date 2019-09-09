@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
 import 'package:hybrid_flutter/util/widget_util.dart';
 
@@ -14,22 +15,21 @@ class FractionallySizedBoxStateless extends BaseWidget {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
+    this.data = ValueNotifier(Data(component.properties));
   }
-
 
   @override
   Widget build(BuildContext context) {
-    var widthFactor = dealDoubleDefZero(component.properties['width-factor']);
-    var heightFactor = dealDoubleDefZero(component.properties['height-factor']);
-    return FractionallySizedBox(
-        key: ObjectKey(component),
-        widthFactor: widthFactor,
-        heightFactor: heightFactor,
-        child: ValueListenableBuilder(
-            builder:
-                (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value.length > 0 ? value[0] : null;
-            },
-            valueListenable: children));
+    return ValueListenableBuilder(
+        builder: (BuildContext context, Data data, Widget child) {
+          var widthFactor = dealDoubleDefZero(data.map['width-factor']);
+          var heightFactor = dealDoubleDefZero(data.map['height-factor']);
+          return FractionallySizedBox(
+              key: ObjectKey(component),
+              widthFactor: widthFactor,
+              heightFactor: heightFactor,
+              child: data.children.isNotEmpty ? data.children[0] : null);
+        },
+        valueListenable: this.data);
   }
 }

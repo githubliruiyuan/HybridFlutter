@@ -60,16 +60,16 @@ function loadPage(pageId) {
                 let str = "this.data." + key + " = dataObj['" + key + "']";
                 eval(str);
             }
-            this.__native__refresh();
             let startTime = Date.now();
+            var needUpdateMapping;
             if(observe(this.data)) {
-                let needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
-//            if (Object.keys(needUpdateMapping).length) {
-//                this._updatePartlyData(JSON.stringify(needUpdateMapping));
-//            }
+                needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
             }
             let endTime = Date.now();
             console.log("耗时:"+(endTime-startTime));
+            if (needUpdateMapping) {
+                this.__native__refresh(JSON.stringify(needUpdateMapping));
+            }
         };
 
         function setTimeout(callback, ms, ...args) {

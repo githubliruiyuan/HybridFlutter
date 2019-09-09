@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
 import 'package:hybrid_flutter/util/color_util.dart';
 import 'package:hybrid_flutter/util/widget_util.dart';
@@ -17,30 +18,33 @@ class ContainerStateless extends BaseWidget {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
+    this.data = ValueNotifier(Data(component.properties));
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = dealDoubleDefNull(component.properties['width']);
-    var height = dealDoubleDefNull(component.properties['height']);
 
-    Color color = dealColor(component.properties['color']);
-    var alignment = MAlignment.parse(component.properties['alignment'],
-        defaultValue: Alignment.topLeft);
+    return ValueListenableBuilder(
+        builder: (BuildContext context, Data data, Widget child) {
 
-    return Container(
-        key: ObjectKey(component),
-        alignment: alignment,
-        color: color,
-        width: width,
-        height: height,
-        margin: MMargin.parse(component.properties),
-        padding: MPadding.parse(component.properties),
-        child: ValueListenableBuilder(
-            builder:
-                (BuildContext context, List<BaseWidget> value, Widget child) {
-              return value.length > 0 ? value[0] : null;
-            },
-            valueListenable: children));
+          var width = dealDoubleDefNull(data.map['width']);
+          var height = dealDoubleDefNull(data.map['height']);
+
+          Color color = dealColor(data.map['color']);
+          var alignment = MAlignment.parse(data.map['alignment'],
+              defaultValue: Alignment.topLeft);
+
+          return Container(
+              key: ObjectKey(component),
+              alignment: alignment,
+              color: color,
+              width: width,
+              height: height,
+              margin: MMargin.parse(data.map),
+              padding: MPadding.parse(data.map),
+              child: data.children.isNotEmpty ? data.children[0] : null);
+        },
+        valueListenable: this.data);
+
   }
 }

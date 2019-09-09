@@ -1,28 +1,34 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 
 abstract class BaseWidget extends StatelessWidget {
-
   String pageId;
   Component component;
   MethodChannel methodChannel;
   BaseWidget parent;
-  ValueNotifier<List<BaseWidget>> children;
+  ValueNotifier<Data> data;
 
-
-  void setChildren(ValueNotifier<List<BaseWidget>> children) {
-    this.children = children;
+  void setChildren(List<BaseWidget> children) {
+    data.value.children = children;
   }
 
-  void updateChildrenOfParent(ValueNotifier<List<BaseWidget>> newChildren) {
-    if (null != parent && parent.children.value != newChildren.value) {
-      newChildren.value.forEach((it) {
-        it.parent = parent;
-      });
-      parent.children.value = newChildren.value;
-    }
+  void updateProperty(List<dynamic> list) {
+    list.forEach((it) {
+      var property = component.properties[it['key']];
+      if (null != property) {
+        property.setValue(it['value']);
+      }
+    });
+    var newData = Data(component.properties);
+    newData.children = data.value.children;
+    data.value = newData;
+  }
+
+  void updateChildren(List<BaseWidget> children) {
+    var newData = Data(data.value.map);
+    newData.children = children;
+    data.value = newData;
   }
 }

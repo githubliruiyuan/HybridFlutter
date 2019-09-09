@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
+import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
 
 import 'basic.dart';
@@ -12,32 +13,30 @@ class ColumnStateless extends BaseWidget {
     this.pageId = pageId;
     this.methodChannel = methodChannel;
     this.component = component;
+    this.data = ValueNotifier(Data(component.properties));
   }
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        builder: (BuildContext context, List<BaseWidget> value, Widget child) {
+        builder: (BuildContext context, Data data, Widget child) {
           return Column(
               key: ObjectKey(component),
               mainAxisAlignment: MMainAxisAlignment.parse(
-                  component.properties["main-axis-alignment"],
+                  data.map["main-axis-alignment"],
                   defaultValue: MainAxisAlignment.start),
-              mainAxisSize: MMainAxisSize.parse(
-                  component.properties["main-axis-size"],
+              mainAxisSize: MMainAxisSize.parse(data.map["main-axis-size"],
                   defaultValue: MainAxisSize.max),
               crossAxisAlignment: MCrossAxisAlignment.parse(
-                  component.properties["cross-axis-alignment"],
+                  data.map["cross-axis-alignment"],
                   defaultValue: CrossAxisAlignment.center),
-              textDirection:
-                  MTextDirection.parse(component.properties["text-direction"]),
+              textDirection: MTextDirection.parse(data.map["text-direction"]),
               verticalDirection: MVerticalDirection.parse(
-                  component.properties["vertical-direction"],
+                  data.map["vertical-direction"],
                   defaultValue: VerticalDirection.down),
-              textBaseline:
-                  MTextBaseline.parse(component.properties["text-baseline"]),
-              children: value);
+              textBaseline: MTextBaseline.parse(data.map["text-baseline"]),
+              children: data.children);
         },
-        valueListenable: children);
+        valueListenable: this.data);
   }
 }
