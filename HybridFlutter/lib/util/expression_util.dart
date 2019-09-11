@@ -53,6 +53,7 @@ Future<void> handleProperty(
       }
       var result = await calcExpression(
           methodChannel, pageId, component.id, TYPE_PROPERTY, entry.key, exp);
+//      print("$exp = $result");
       entry.value.setValue(result);
     }
   }
@@ -61,7 +62,7 @@ Future<void> handleProperty(
 Future<dynamic> calcRepeatSize(MethodChannel methodChannel, String pageId,
     String componentId, String type, String key, String expression) async {
   return await methodChannel.invokeMethod(
-      'handle_repeat', {
+      'handleRepeat', {
     'pageId': pageId,
     'id': componentId,
     'type': type,
@@ -72,11 +73,18 @@ Future<dynamic> calcRepeatSize(MethodChannel methodChannel, String pageId,
 
 Future<dynamic> calcExpression(MethodChannel methodChannel, String pageId,
     String componentId, String type, String key, String expression) async {
-  return await methodChannel.invokeMethod('handle_expression', {
+  return await methodChannel.invokeMethod('handleExpression', {
     'pageId': pageId,
     'id': componentId,
     'type': type,
     'key': key,
     'expression': expression
+  });
+}
+
+Future<void> removeObserver(MethodChannel methodChannel, String pageId, List<String> ids) async {
+  await methodChannel.invokeMethod('removeObserver', {
+    'pageId': pageId,
+    'ids': ids
   });
 }

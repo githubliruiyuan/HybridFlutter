@@ -13,7 +13,7 @@ function loadPage(pageId) {
 
         this.requestData = {};
 
-        this.onNetworkResult = function(requestId, result, json) {
+        this.onNetworkResult = function (requestId, result, json) {
             let req = this.requestData[requestId];
             if (req) {
                 if (result === 'success') {
@@ -29,6 +29,8 @@ function loadPage(pageId) {
     // __native__ 开头是内部方法，避免与外部冲突
     function RealPage(pageId) {
 
+        this.watchers = {};
+
         this.pageId = pageId;
 
         this.cc = new CC(pageId);
@@ -42,49 +44,63 @@ function loadPage(pageId) {
             }
             eval(jsContent);
         };
-    
+
         this.__native__getExpValue = function (id, type, prefix, script) {
+
+
             let watcher = new Watcher(id, type, prefix, script);
-            let value = global.getExpValue(this.data, script);
+            if (this.watchers[id] === undefined) {
+                this.watchers[id] = [];
+            }
+            this.watchers[id].push(watcher);
+            let value = getExpValue(this.data, script);
             watcher.stopCollectMapping();
             return value;
         };
-        
+
         this.__native__initComplete = function () {
-            observe(this.data);
+            new Observer(this.data);
         };
-    
+
         this.setData = function (dataObj) {
             console.log("call setData");
-            for (var key in dataObj) {
+            for (let key in dataObj) {
                 let str = "this.data." + key + " = dataObj['" + key + "']";
                 eval(str);
             }
             let startTime = Date.now();
-            var needUpdateMapping;
-            if(observe(this.data)) {
-                needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
-            }
+            let needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
             let endTime = Date.now();
-            console.log("耗时:"+(endTime-startTime));
+            console.log("耗时:" + (endTime - startTime));
             if (needUpdateMapping) {
                 this.__native__refresh(JSON.stringify(needUpdateMapping));
             }
         };
 
+        this.__native__removeObserverByIds = function (ids) {
+            ids.forEach((id) => {
+                let array = this.watchers[id];
+                if (array) {
+                    array.forEach((watcher) => {
+                        watcher.removeDep();
+                    });
+                }
+            });
+        };
+
         function setTimeout(callback, ms, ...args) {
-            let timerId = global.guid();
-            global.callbacks[timerId] = callback;
-            global.callbackArgs[timerId] = args;
+            let timerId = guid();
+            callbacks[timerId] = callback;
+            callbackArgs[timerId] = args;
             __native__setTimeout(pageId, timerId, ms);
             return timerId;
         }
 
         function clearTimeout(timerId) {
-            let callback = global.callbacks[timerId];
+            let callback = callbacks[timerId];
             if (callback) {
-                global.callbacks[timerId] = undefined;
-                global.callbackArgs[timerId] = undefined;
+                callbacks[timerId] = undefined;
+                callbackArgs[timerId] = undefined;
             }
             __native__clearTimeout(timerId);
         }
@@ -96,27 +112,27 @@ function loadPage(pageId) {
 
 function cachePage(pageId, page) {
     if (page) {
-        global.pages[pageId] = page;
+        pages[pageId] = page;
     } else {
         console.log("page: (" + pageId + ") is empty");
     }
 }
 
 function callback(callbackId) {
-    let callback = global.callbacks[callbackId];
+    let callback = callbacks[callbackId];
     if (callback) {
-        let args = global.callbackArgs[callbackId];
+        let args = callbackArgs[callbackId];
         callback(args);
     } else {
         console.log("callback: (" + callbackId + ") is empty");
     }
 }
 
-global.getPage = function(pageId) {
-    return global.pages[pageId];
+global.getPage = function (pageId) {
+    return pages[pageId];
 };
 
-global.Page = function(obj) {
+global.Page = function (obj) {
     // 这里的page是个临时变量
     global.page = obj;
 };

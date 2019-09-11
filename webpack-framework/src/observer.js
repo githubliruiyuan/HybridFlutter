@@ -1,39 +1,31 @@
 /**
- * 将data的属性变成可响应对象，为了监听变化回调
- * @param data
- * @returns {*} 第一次setData会遍历转化对象属性为可响应对象，非第一次调用则会返回data.__ob__，用此区别data是否已经转换过，避免重复遍历
- */
-function observe(data) {
-    if (!data || data === undefined || typeof (data) !== "object") {
-        return;
-    }
-    if (!data.hasOwnProperty("__ob__") || !data.__ob__ instanceof Observer) {
-        new Observer(data);
-        return;
-    }
-    return data.__ob__;
-}
-
-/**
  * 观察者，用于观察data对象属性变化
  * @param data
  * @constructor
  */
 function Observer(data) {
     this.data = data;
-    this.defineObProperty(data, '__ob__', this);
-    this.observeData(data);
+    this.observe(data);
 }
+
 Observer.prototype = {
-    observeData: function (data) {
+    /**
+     * 将data的属性变成可响应对象，为了监听变化回调
+     * @param data
+     */
+    observe: function (data) {
+        if (!data || data === undefined || typeof (data) !== "object") {
+            return;
+        }
         for (const key in data) {
             let value = data[key];
-            if (typeof(value) === "undefined") {
+            if (value === undefined) {
                 continue;
             }
+            // console.log("key = " + key + " value = " + value);
             this.defineReactive(data, key, value);
             if (Array.isArray(value) || typeof(value) === "object") {
-                this.observeData(value);
+                this.observe(value);
             }
         }
     },
@@ -48,6 +40,8 @@ Observer.prototype = {
         if ((!getter || setter) && arguments.length === 2) {
             val = data[key];
         }
+
+        let that = this;
 
         const dep = new DependCollector();
         Object.defineProperty(data, key, {
@@ -71,24 +65,11 @@ Observer.prototype = {
                     val = newVal;
                 }
                 // 新值如果是object或数组的话，也要进行监听
-                observe(newVal);
+                that.observe(newVal);
                 dep.notify(data);
             }
         });
     },
-    /**
-     * 被观察者data对象新增ob属性，绑定观察者，用于判断被观察者是否已经被观察
-     * @param data
-     * @param key
-     * @param observer
-     */
-    defineObProperty: function (data, key, observer) {
-        Object.defineProperty(data, key, {
-            value: observer,
-            writable: true,
-            configurable: true
-        })
-    }
 };
 
 /**
@@ -113,6 +94,11 @@ DependCollector.prototype = {
     removeSub: function (sub) {
         delete this.subs[sub.key()];
     },
+
+    removeSubByKey: function (key) {
+        delete this.subs[key];
+    },
+
     depend: function () {
         if (DependCollector.targetWatcher) {
             DependCollector.targetWatcher.addDep(this)
@@ -123,19 +109,12 @@ DependCollector.prototype = {
      * 通知所有订阅者，同时把当前Dep持有的所有订阅者的映射数组（id-表达式）添加到组装者中，等待组装
      */
     notify: function (data) {
-        let formatResult = [];
         let subs = this.subs;
-        let _key;
-        for(const _k in subs) {
+        for (const _k in subs) {
             let sub = subs[_k];
-            _key = sub.id;
             sub.value = global.getExpValue(data, sub.script);
-            formatResult.push(sub.format());
+            getAssemblerSingle().addPackagingObject(sub.format());
             sub.update();
-        }
-        if (formatResult.length > 0) {
-            // console.log(`notify : ${JSON.stringify(formatResult)}`);
-            getAssemblerSingle().addPackagingObject(_key, formatResult);
         }
     }
 };
@@ -145,7 +124,6 @@ DependCollector.prototype = {
  * @constructor
  */
 function Watcher(id, type, prefix, script, callBack) {
-    // console.log(id + type + prefix + script);
     this.id = id;
     this.type = type;
     this.prefix = prefix;
@@ -176,6 +154,13 @@ Watcher.prototype = {
         }
     },
 
+    removeDep: function () {
+        this.depIds.forEach((it) => {
+            // console.log("remove key = " + this.key());
+            it.removeSubByKey(this.key());
+        });
+    },
+
     get: function () {
         Observer.currentScript = this.script;
         DependCollector.targetWatcher = this;
@@ -195,7 +180,7 @@ Watcher.prototype = {
         return obj;
     },
 
-    key:function(){
+    key: function () {
         return this.id + '-' + this.type + '-' + this.script;
     }
 };
@@ -206,33 +191,24 @@ Watcher.prototype = {
  * @constructor
  */
 function Assembler() {
-    this.packagingArray = {};
+    this.packagingArray = [];
 }
 Assembler.prototype = {
-    addPackagingObject: function (key, array) {
-        this.packagingArray[key] = array;
+    addPackagingObject: function (item) {
+        this.packagingArray.push(item);
     },
 
     getNeedUpdateMapping: function () {
         let result = this.packing();
-        this.packagingArray = {};
+        this.packagingArray = [];
         return result;
     },
+
     /**
-     * 组装映射关系map，打平多余的层级
-     * 组装前：[[{id:表达式1}{id2:表达式2}],[{id:表达式3}]]
-     * 组装后：{id:[表达式1,表达式3],{id2:[表达式2]}}
-     * @returns {} 组装结果Map
+     * 组装映射关系
+     * @returns [] 组装结果
      */
     packing: function () {
-        // let packingResult = {};
-        // this.packagingArray.forEach(function (array) {
-        //     array.forEach(function (item) {
-        //         console.log("item:" + JSON.stringify(item));
-        //         let key = Object.keys(item)[0];
-        //
-        //     });
-        // });
         console.log("组装映射结果:" + JSON.stringify(this.packagingArray));
         return this.packagingArray;
     }
@@ -247,7 +223,7 @@ let getAssemblerSingle = (function () {
     }
 })();
 
-global.observe = observe;
+global.Observer = Observer;
 global.Watcher = Watcher;
 global.getAssemblerSingle = getAssemblerSingle;
 

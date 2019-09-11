@@ -28,7 +28,6 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("script")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val script = methodCall.argument<String>("script")
-//                    Logger.d("lry", "attach_page pageId = $id script = $script")
                     JSPageManager.attachPageScriptToJsCore(pageId!!, script!!)
                     result.success("success")
                 }
@@ -41,19 +40,11 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     result.success("success")
                 }
             }
-            Methods.ON_INIT_COMPLETE -> {
-                if (methodCall.hasArgument("pageId")) {
-                    val pageId = methodCall.argument<String>("pageId")
-                    JSPageManager.callMethodInPage(pageId!!, Methods.ON_INIT_COMPLETE)
-                    result.success("success")
-                }
-            }
             Methods.ON_UNLOAD -> {
                 if (methodCall.hasArgument("pageId")) {
                     val pageId = methodCall.argument<String>("pageId")
-                    val args = methodCall.argument<String>("args")
                     TimerManager.delTimerByPageId(pageId!!)
-                    JSPageManager.callMethodInPage(pageId, Methods.ON_UNLOAD, args)
+                    JSPageManager.callMethodInPage(pageId, Methods.ON_UNLOAD)
                     result.success("success")
                 }
             }
@@ -62,7 +53,6 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     val pageId = methodCall.argument<String>("pageId")
                     val event = methodCall.argument<String>("event")
                     val data = methodCall.argument<String>("data")
-//                    Logger.d("lry", "Methods onclick pageId = $pageId event = $event data = $data")
                     JSPageManager.callMethodInPage(pageId!!, event!!, data)
                     result.success("success")
                 }
@@ -70,8 +60,15 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
             Methods.ON_PULL_DOWN_REFRESH -> {
                 if (methodCall.hasArgument("pageId")) {
                     val pageId = methodCall.argument<String>("pageId")
-//                    Logger.d("lry", "Methods onclick pageId = $pageId event = $event data = $data")
                     JSPageManager.callMethodInPage(pageId!!, Methods.ON_PULL_DOWN_REFRESH, null)
+                    result.success("success")
+                }
+            }
+            //以下是__native__内部函数回调
+            Methods.INIT_COMPLETE -> {
+                if (methodCall.hasArgument("pageId")) {
+                    val pageId = methodCall.argument<String>("pageId")
+                    JSPageManager.onInitComplete(pageId!!)
                     result.success("success")
                 }
             }
@@ -100,6 +97,18 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                         0
                     }
                     result.success(obj)
+                }
+            }
+            Methods.REMOVE_OBSERVER -> {
+                if (methodCall.hasArgument("pageId") && methodCall.hasArgument("ids")) {
+                    val pageId = methodCall.argument<String>("pageId")
+                    val ids = methodCall.argument<List<String>>("ids")
+                    try {
+                        JSPageManager.removeObserver(pageId!!, ids!!)
+                    } catch (e: Exception) {
+                        Logger.printError(e)
+                    }
+                    result.success("success")
                 }
             }
         }

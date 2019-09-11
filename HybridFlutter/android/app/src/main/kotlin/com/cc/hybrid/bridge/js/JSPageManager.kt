@@ -6,10 +6,8 @@ import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.util.SpUtil
 import com.cc.hybrid.util.ToastUtil
 import com.cc.hybrid.v8.V8Manager
-import com.eclipsesource.v8.JavaCallback
-import com.eclipsesource.v8.V8Array
-import com.eclipsesource.v8.V8Function
-import com.eclipsesource.v8.V8Object
+import com.cc.hybrid.v8.V8Util
+import com.eclipsesource.v8.*
 import org.json.JSONObject
 import java.util.*
 
@@ -191,7 +189,7 @@ object JSPageManager {
     @Synchronized
     fun onRefresh(pageId: String, json: String?) {
 //        Logger.d("JSPageManager", "onRefresh pageId = $pageId")
-        EventManager.instance.sendMessage(what = EventManager.TYPE_REFRESH, pageId = pageId, obj = json?: "")
+        EventManager.instance.sendMessage(what = EventManager.TYPE_REFRESH, pageId = pageId, obj = json ?: "")
     }
 
     private fun getV8Page(pageId: String): V8Object? {
@@ -249,6 +247,15 @@ object JSPageManager {
         V8Manager.v8.executeVoidFunction("callback", V8Array(V8Manager.v8).push(callbackId))
     }
 
+    fun onInitComplete(pageId: String) {
+        val page = getV8Page(pageId)
+        try {
+            page?.executeVoidFunction("__native__initComplete", V8Array(V8Manager.v8))
+        } catch (e: Exception) {
+            Logger.printError(e)
+        }
+    }
+
     fun handleRepeat(pageId: String, componentId: String, type: String, key: String, expression: String): Int? {
         val page = getV8Page(pageId)
         return try {
@@ -268,5 +275,14 @@ object JSPageManager {
             ""
         }
         return result?.toString()
+    }
+
+    fun removeObserver(pageId: String, ids: List<String>) {
+        val page = getV8Page(pageId)
+        try {
+            page?.executeVoidFunction("__native__removeObserverByIds", V8Array(V8Manager.v8).push(V8Util.toV8Array(V8Manager.v8, ids)))
+        } catch (e: Exception) {
+            Logger.printError(e)
+        }
     }
 }

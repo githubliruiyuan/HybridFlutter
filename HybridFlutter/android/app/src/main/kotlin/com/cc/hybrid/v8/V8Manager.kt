@@ -18,9 +18,9 @@ object V8Manager {
     fun initV8(context: Context) {
         v8 = V8.createV8Runtime()
         executeScript("var global = this;")
-        evaluateJsFileFromAsset(context, "framework.js")
         registerObj()
         registerFunc()
+        evaluateJsFileFromAsset(context, "framework.js")
     }
 
     private fun registerObj() {
