@@ -303,6 +303,7 @@ class UIFactory {
                   parentWidget.data.value.children
                       .getRange(size - 1, length)
                       .forEach((it) {
+                        print("remove id = ${it.component.id}");
                     ids.add(it.component.id);
                   });
                   removeObserver(_methodChannel, _pageId, ids);

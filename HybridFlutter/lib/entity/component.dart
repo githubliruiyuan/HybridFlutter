@@ -134,9 +134,12 @@ class Component {
     clone.parent = parent;
     clone.events = events;
     clone.directives = directives;
-    clone.properties = properties;
     clone.isInRepeat = isInRepeat;
     clone.children = [];
+    clone.properties = Map();
+    properties.forEach((k, v){
+      clone.properties[k] = Property(v.property);
+    });
     return clone;
   }
 }

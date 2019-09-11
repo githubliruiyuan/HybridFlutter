@@ -29,7 +29,7 @@ function loadPage(pageId) {
     // __native__ 开头是内部方法，避免与外部冲突
     function RealPage(pageId) {
 
-        this.watchers = {};
+        this.observer = new Observer();
 
         this.pageId = pageId;
 
@@ -46,20 +46,16 @@ function loadPage(pageId) {
         };
 
         this.__native__getExpValue = function (id, type, prefix, script) {
-
-
             let watcher = new Watcher(id, type, prefix, script);
-            if (this.watchers[id] === undefined) {
-                this.watchers[id] = [];
-            }
-            this.watchers[id].push(watcher);
+            this.observer.currentWatcher = watcher;
+            this.observer.addWatcher(watcher);
             let value = getExpValue(this.data, script);
-            watcher.stopCollectMapping();
+            this.observer.currentWatcher = undefined;
             return value;
         };
 
         this.__native__initComplete = function () {
-            new Observer(this.data);
+            this.observer.observe(this.data);
         };
 
         this.setData = function (dataObj) {
@@ -69,7 +65,7 @@ function loadPage(pageId) {
                 eval(str);
             }
             let startTime = Date.now();
-            let needUpdateMapping = getAssemblerSingle().getNeedUpdateMapping();
+            let needUpdateMapping = this.observer.assembler.getNeedUpdateMapping();
             let endTime = Date.now();
             console.log("耗时:" + (endTime - startTime));
             if (needUpdateMapping) {
@@ -78,14 +74,7 @@ function loadPage(pageId) {
         };
 
         this.__native__removeObserverByIds = function (ids) {
-            ids.forEach((id) => {
-                let array = this.watchers[id];
-                if (array) {
-                    array.forEach((watcher) => {
-                        watcher.removeDep();
-                    });
-                }
-            });
+            this.observer.removeWatcher(ids);
         };
 
         function setTimeout(callback, ms, ...args) {
