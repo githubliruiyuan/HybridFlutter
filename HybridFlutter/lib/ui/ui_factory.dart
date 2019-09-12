@@ -134,6 +134,7 @@ class UIFactory {
         clone.isInRepeat = true;
         clone.inRepeatIndex = index;
         clone.inRepeatPrefixExp = getInRepeatPrefixExp(clone);
+
         /// 需要添加 await，否则会出现异步导致children为空
         await _addChildren(clone, component.data, component.styles);
         await handleProperty(_methodChannel, _pageId, clone);
@@ -261,6 +262,16 @@ class UIFactory {
     });
   }
 
+  void _collectRemoveIds(Component component, List<String> ids) {
+    ids.add(component.id);
+    print("remove id = ${component.id}");
+    if (component.children.isNotEmpty) {
+      component.children.forEach((it) {
+        _collectRemoveIds(it, ids);
+      });
+    }
+  }
+
   Future updateTree(List<dynamic> list) async {
     list.forEach((it) async {
       var type = it['type'];
@@ -301,10 +312,9 @@ class UIFactory {
                   var length = parentWidget.data.value.children.length;
                   List<String> ids = [];
                   parentWidget.data.value.children
-                      .getRange(size - 1, length)
+                      .getRange(size, length)
                       .forEach((it) {
-                        print("remove id = ${it.component.id}");
-                    ids.add(it.component.id);
+                    _collectRemoveIds(it.component, ids);
                   });
                   removeObserver(_methodChannel, _pageId, ids);
                 }

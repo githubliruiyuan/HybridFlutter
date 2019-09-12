@@ -27,7 +27,7 @@ class VisibilityStateless extends BaseWidget {
               key: ObjectKey(component),
               visible: visible,
               child: data.children.length > 0 ? data.children[0] : null,
-              replacement: data.children.length > 1 ? data.children[1] : null);
+              replacement: data.children.length > 1 ? data.children[1] : const SizedBox.shrink());
         },
         valueListenable: this.data);
   }

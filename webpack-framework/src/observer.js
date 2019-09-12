@@ -84,18 +84,20 @@ class Observer {
     }
 
     removeWatcher(ids) {
-        let keys = [];
-        ids.forEach((id) => {
-            this.watchers[id].forEach((watcher) => {
-                keys.push(watcher.key());
+        if (ids) {
+            let keys = [];
+            ids.forEach((id) => {
+                this.watchers[id].forEach((watcher) => {
+                    keys.push(watcher.key());
+                });
+                this.watchers[id] = undefined;
             });
-            this.watchers[id] = undefined;
-        });
-        this.collectors.forEach((collector) => {
-            keys.forEach((key) => {
-                collector.removeWatcher(key)
+            this.collectors.forEach((collector) => {
+                keys.forEach((key) => {
+                    collector.removeWatcher(key)
+                });
             });
-        });
+        }
     }
 }
 
