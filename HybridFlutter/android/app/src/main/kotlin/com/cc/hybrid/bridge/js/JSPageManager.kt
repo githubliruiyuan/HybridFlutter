@@ -244,7 +244,11 @@ object JSPageManager {
     }
 
     fun callback(callbackId: String) {
-        V8Manager.v8.executeVoidFunction("callback", V8Array(V8Manager.v8).push(callbackId))
+        try {
+            V8Manager.v8.executeVoidFunction("callback", V8Array(V8Manager.v8).push(callbackId))
+        } catch (e: Exception) {
+            Logger.printError(e)
+        }
     }
 
     fun onInitComplete(pageId: String) {

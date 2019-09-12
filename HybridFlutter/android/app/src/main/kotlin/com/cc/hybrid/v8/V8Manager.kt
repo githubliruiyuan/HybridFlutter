@@ -46,6 +46,20 @@ object V8Manager {
             TimerManager.delTimer(timerId)
             receiver as Any
         }, "__native__clearTimeout")
+        v8.registerJavaMethod(JavaCallback { receiver, parameters ->
+            val pageId = parameters.getString(0)
+            val timerId = parameters.getString(1)
+            val delayed = parameters?.getInteger(2)
+            if (null != delayed) {
+                TimerManager.setInterval(pageId, timerId, delayed)
+            }
+            receiver as Any
+        }, "__native__setInterval")
+        v8.registerJavaMethod(JavaCallback { receiver, parameters ->
+            val timerId = parameters.getString(0)
+            TimerManager.delTimer(timerId)
+            receiver as Any
+        }, "__native__clearInterval")
     }
 
     @Throws(IOException::class)

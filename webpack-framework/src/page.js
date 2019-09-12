@@ -93,6 +93,23 @@ function loadPage(pageId) {
             }
             __native__clearTimeout(timerId);
         }
+
+        function setInterval(callback, ms, ...args) {
+            let timerId = guid();
+            callbacks[timerId] = callback;
+            callbackArgs[timerId] = args;
+            __native__setInterval(pageId, timerId, ms);
+            return timerId;
+        }
+
+        function clearInterval(timerId) {
+            let callback = callbacks[timerId];
+            if (callback) {
+                callbacks[timerId] = undefined;
+                callbackArgs[timerId] = undefined;
+            }
+            __native__clearInterval(timerId);
+        }
     }
 
     let pageObj = new RealPage(pageId);

@@ -37,6 +37,15 @@ object TimerManager {
         addTimer(pageId, timerId)
     }
 
+    fun setInterval(pageId: String, timerId: String, delayed: Int) {
+        val msg = intervalHandler?.obtainMessage()
+        msg?.what = timerId.hashCode()
+        val intervalEvent = IntervalEvent(timerId, TYPE_TICK, delayed)
+        msg?.obj = intervalEvent
+        intervalHandler?.sendMessageDelayed(msg, delayed.toLong())
+        addTimer(pageId, timerId)
+    }
+
     fun delTimer(timerId: String) {
         intervalHandler?.removeMessages(timerId.hashCode())
         timers.remove(timerId)
@@ -49,7 +58,7 @@ object TimerManager {
         }
     }
 
-    internal class IntervalEvent constructor(val timerId: String, val type: Int, millis: Int)
+    internal class IntervalEvent constructor(val timerId: String, val type: Int, val millis: Int)
 
     internal class MHandler : Handler() {
         override fun handleMessage(msg: Message) {
@@ -61,7 +70,8 @@ object TimerManager {
                         timers.remove(intervalEvent.timerId)
                     }
                     TYPE_TICK -> {
-//                        onTick(intervalEvent)
+                        JSPageManager.callback(intervalEvent.timerId)
+                        onTick(intervalEvent)
                     }
                 }
             }
@@ -72,11 +82,12 @@ object TimerManager {
             return timers.contains(intervalEvent.timerId)
         }
 
-//        private fun onTick(intervalEvent: IntervalEvent) {
-//            val msg = this.obtainMessage((intervalEvent.pageId + intervalEvent.timerId).hashCode())
-//            msg.obj = intervalEvent
-//            this.sendMessageDelayed(msg, intervalEvent.millis)
-//        }
+        private fun onTick(intervalEvent: IntervalEvent) {
+            val msg = this.obtainMessage()
+            msg?.what = intervalEvent.timerId.hashCode()
+            msg.obj = intervalEvent
+            this.sendMessageDelayed(msg, intervalEvent.millis.toLong())
+        }
     }
 
 }

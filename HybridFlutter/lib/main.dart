@@ -170,6 +170,10 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
   void _socket(Map<String, dynamic> map) {
     if (null == context) return;
+    if (null != _factory) {
+      _factory.clear();
+      _callOnUnload();
+    }
     var jsonObject = jsonDecode(map['message']);
     var pageCode = jsonObject['pageCode'];
     var content = jsonObject['content'];
