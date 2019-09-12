@@ -107,6 +107,10 @@ function cachePage(pageId, page) {
     }
 }
 
+function removePage(pageId) {
+    pages[pageId] = undefined;
+}
+
 function callback(callbackId) {
     let callback = callbacks[callbackId];
     if (callback) {
@@ -128,3 +132,4 @@ global.Page = function (obj) {
 
 global.loadPage = loadPage;
 global.callback = callback;
+global.removePage = removePage;

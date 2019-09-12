@@ -285,4 +285,12 @@ object JSPageManager {
             Logger.printError(e)
         }
     }
+
+    fun removePage(pageId: String) {
+        try {
+            V8Manager.executeScript("global.removePage('$pageId')")
+        } catch (e: Exception) {
+            Logger.printError(e)
+        }
+    }
 }

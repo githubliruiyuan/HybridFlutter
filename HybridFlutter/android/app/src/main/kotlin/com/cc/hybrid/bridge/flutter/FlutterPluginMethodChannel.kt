@@ -45,6 +45,7 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     val pageId = methodCall.argument<String>("pageId")
                     TimerManager.delTimerByPageId(pageId!!)
                     JSPageManager.callMethodInPage(pageId, Methods.ON_UNLOAD)
+                    JSPageManager.removePage(pageId)
                     result.success("success")
                 }
             }
