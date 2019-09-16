@@ -49,7 +49,7 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     result.success("success")
                 }
             }
-            Methods.ONCLICK -> {
+            Methods.EVENT -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("event") && methodCall.hasArgument("data")) {
                     val pageId = methodCall.argument<String>("pageId")
                     val event = methodCall.argument<String>("event")

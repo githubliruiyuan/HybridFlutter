@@ -1,7 +1,7 @@
 package com.cc.hybrid.bridge.flutter
 
 object Methods {
-    const val ONCLICK = "onclick"
+    const val EVENT = "event"
     const val ON_LOAD = "onLoad"
     const val ON_UNLOAD = "onUnload"
     const val INIT_COMPLETE = "initComplete"

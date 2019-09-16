@@ -32,9 +32,10 @@ class RaisedButtonStateless extends BaseWidget {
 
           return RaisedButton(
               onPressed: () {
-                if (null != component.events['onclick']) {
-                  onclickEvent(methodChannel, pageId, this.hashCode.toString(),
-                      data.map, component.events);
+                var bindTap = component.events['bindtap'];
+                if (null != bindTap) {
+                  onTapEvent(methodChannel, pageId, this.hashCode.toString(),
+                      data.map, bindTap);
                 }
               },
               key: ObjectKey(component),

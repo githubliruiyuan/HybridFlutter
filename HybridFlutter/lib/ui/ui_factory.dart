@@ -275,6 +275,8 @@ class UIFactory {
     if (component.children.isNotEmpty) {
       component.children.forEach((it) {
         _collectRemoveIds(it, ids);
+        _componentMap.remove(it.id);
+        _widgetMap.remove(it.id);
       });
     }
   }

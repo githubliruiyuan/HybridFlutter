@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/data.dart';
+import 'package:hybrid_flutter/util/event_util.dart';
 
 import 'base_widget.dart';
 import 'basic.dart';
 
 class ListViewStateless extends BaseWidget {
-
   ScrollController _scrollController;
 
   ListViewStateless(BaseWidget parent, String pageId,
@@ -24,6 +24,11 @@ class ListViewStateless extends BaseWidget {
 
   void _scrollChangeListener() {
 //    print("offset : ${_scrollController.offset}");
+    var bindScroll = component.events["bindscroll"];
+    if (null != bindScroll) {
+      onScrollEvent(methodChannel, pageId, component.id, bindScroll,
+          _scrollController.offset);
+    }
   }
 
   @override

@@ -155,7 +155,7 @@ class CCParser {
             node[name] = value;
         } else if (name === 'class') {//class
             node['className'] = value;
-        } else if (name.indexOf('on') == 0) {//events
+        } else if (name.indexOf('bind') == 0) {//events
             node['events'][name] = value;
         } else if (name.indexOf('cc:') == 0) {//directives
             if (!node['repeatDirective']) {
