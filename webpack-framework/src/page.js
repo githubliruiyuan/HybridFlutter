@@ -45,12 +45,16 @@ function loadPage(pageId) {
             eval(jsContent);
         };
 
-        this.__native__getExpValue = function (id, type, prefix, script) {
-            let watcher = new Watcher(id, type, prefix, script);
-            this.observer.currentWatcher = watcher;
-            this.observer.addWatcher(watcher);
+        this.__native__getExpValue = function (id, type, prefix, watch, script) {
+            if (watch === true) {
+                let watcher = new Watcher(id, type, prefix, script);
+                this.observer.currentWatcher = watcher;
+                this.observer.addWatcher(watcher);
+            }
             let value = getExpValue(this.data, script);
-            this.observer.currentWatcher = undefined;
+            if (watch === true) {
+                this.observer.currentWatcher = undefined;
+            }
             return value;
         };
 
@@ -69,7 +73,7 @@ function loadPage(pageId) {
             let endTime = Date.now();
             console.log("耗时:" + (endTime - startTime));
             if (needUpdateMapping) {
-                this.__native__refresh(JSON.stringify(needUpdateMapping));
+                this.__native__refresh(needUpdateMapping);
             }
         };
 

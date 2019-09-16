@@ -32,21 +32,24 @@ require('./page');
 //     "        color1:\"red\",\n" +
 //     "        color2:\"green\",\n" +
 //     "        color3:\"blue\",\n" +
-//     "        list: [3,4],\n" +
-//     "        list2: [3,4]\n" +
+//     "        list: [{n:3, m:4},{n:4, m:5}],\n" +
+//     "        list2: [{n:3, m:4},{n:4, m:5}],\n" +
+//     "        list3: [{n:4, m:4},{n:5, m:5},{n:6, m:6}]\n" +
 //     "    },\n" +
 //     "    onLoad() {\n" +
+//     "        let list = this.data.list3;\n" +
 //     "        this.setData({\n" +
 //     "            color1:\"black\",\n" +
 //     "            color2:\"black\",\n" +
-//     "            list: [1,2]\n" +
+//     "            list: list\n" +
 //     "        });\n" +
 //     "    },\n" +
 //     "    onLoadT() {\n" +
+//     "        let list = this.data.list2;\n" +
 //     "        this.setData({\n" +
 //     "            color1:\"red\",\n" +
 //     "            color2:\"red\",\n" +
-//     "            list: [1,2]\n" +
+//     "            list: list\n" +
 //     "        });\n" +
 //     "    }\n" +
 //     "});";
@@ -62,12 +65,15 @@ require('./page');
 //     // console.log(page.data);
 //     page.__native__initComplete();
 //     // console.log(page.data);
-//     page.__native__getExpValue("x1", "t1", "color", "return color1");
-//     let x = page.__native__getExpValue("x1", "t1", "visible", "return 'x' + color1");
-//     let y = page.__native__getExpValue('x4', "t1", "for", "return list.length");
+//     // page.__native__getExpValue("x1", "t1", "color", true, "return color1");
+//     // let x = page.__native__getExpValue("x1", "t1", "visible", true, "return 'x' + color1");
+//     // let y = page.__native__getExpValue('x4', "t1", "for", "return list.length");
 //     // console.log("x = " + x);
-//     page.__native__getExpValue("x2", "t1", "color", "return color2");
-//     page.__native__getExpValue("x3", "t1", "color", "return color3");
+//     // page.__native__getExpValue("x2", "t1", "color", true, "return color2");
+//     // page.__native__getExpValue("x3", "t1", "color", true, "return color3");
+//     // page.__native__getExpValue("x5", "t1", "innerHTML", true, "var index = 0; var item = list[index]; return item.n");
+//     // page.__native__getExpValue("x6", "t1", "innerHTML", true, "var index = 0; var item = list[index]; return item.m");
+//     page.__native__getExpValue("x6", "t1", "innerHTML", true, "return list[1].m");
 //     // console.log("y = " + y);
 //     page.onLoad();
 //

@@ -4,7 +4,7 @@ import 'package:hybrid_flutter/entity/component.dart';
 const String TYPE_PROPERTY = "property";
 const String TYPE_DIRECTIVE = "directive";
 
-//在双花括号中获取表达式
+///在双花括号中获取表达式
 String getExpression(String dataSource) {
   var trim = dataSource?.trim();
   if (trim.length <= 4) return "";
@@ -40,51 +40,70 @@ String getInRepeatPrefixExp(Component component) {
 ///处理property以及innerHTML
 Future<void> handleProperty(
     MethodChannel methodChannel, String pageId, Component component) async {
-  var pros = component.properties.entries.toList();
-  for (var i = 0; i < pros.length; i++) {
-    var entry = pros[i];
+  for (var entry in component.properties.entries.toList()) {
     var exp = entry.value.property;
     if (entry.value.containExpression) {
       exp = getExpression(exp);
+      var watch = true;
       if (component.isInRepeat) {
         exp = getInRepeatExp(component, exp);
+        watch = false;
       } else {
         exp = 'return $exp';
       }
-      var result = await calcExpression(
-          methodChannel, pageId, component.id, TYPE_PROPERTY, entry.key, exp);
+      var result = await _calcExpression(methodChannel, pageId, component.id,
+          TYPE_PROPERTY, entry.key, watch, exp);
 //      print("$exp = $result");
       entry.value.setValue(result);
     }
   }
 }
 
+/// pageId: 页面ID
+/// componentId ：组件ID
+/// type ：TYPE_PROPERTY（属性）， TYPE_DIRECTIVE（指令）
+/// key ： properties对应的key，方便结果回调查找
+/// expression ： 表达式
 Future<dynamic> calcRepeatSize(MethodChannel methodChannel, String pageId,
     String componentId, String type, String key, String expression) async {
-  return await methodChannel.invokeMethod(
-      'handleRepeat', {
+  return await methodChannel.invokeMethod('handleRepeat', {
     'pageId': pageId,
     'id': componentId,
     'type': type,
     'key': key,
+    'watch': true,
     'expression': '$expression.length'
   });
 }
 
-Future<dynamic> calcExpression(MethodChannel methodChannel, String pageId,
-    String componentId, String type, String key, String expression) async {
+/// pageId: 页面ID
+/// componentId ：组件ID
+/// type ：TYPE_PROPERTY（属性）， TYPE_DIRECTIVE（指令）
+/// key ： properties对应的key，方便结果回调查找
+/// watch： 是否监听表达式进行局部刷新
+/// expression ： 表达式
+Future<dynamic> _calcExpression(
+    MethodChannel methodChannel,
+    String pageId,
+    String componentId,
+    String type,
+    String key,
+    bool watch,
+    String expression) async {
   return await methodChannel.invokeMethod('handleExpression', {
     'pageId': pageId,
     'id': componentId,
     'type': type,
     'key': key,
+    'watch': watch,
     'expression': expression
   });
 }
 
-Future<void> removeObserver(MethodChannel methodChannel, String pageId, List<String> ids) async {
-  await methodChannel.invokeMethod('removeObserver', {
-    'pageId': pageId,
-    'ids': ids
-  });
+/// 组件移除监听
+/// ids 组件id集合
+Future<void> removeObserver(
+    MethodChannel methodChannel, String pageId, List<String> ids) async {
+  await methodChannel
+      .invokeMethod('removeObserver', {'pageId': pageId, 'ids': ids});
 }

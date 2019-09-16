@@ -260,20 +260,20 @@ object JSPageManager {
         }
     }
 
-    fun handleRepeat(pageId: String, componentId: String, type: String, key: String, expression: String): Int? {
+    fun handleRepeat(pageId: String, componentId: String, type: String, key: String, watch: Boolean, expression: String): Int? {
         val page = getV8Page(pageId)
         return try {
-            page?.executeIntegerFunction("__native__getExpValue", V8Array(V8Manager.v8).push(componentId).push(type).push(key).push(expression))
+            page?.executeIntegerFunction("__native__getExpValue", V8Array(V8Manager.v8).push(componentId).push(type).push(key).push(watch).push(expression))
         } catch (e: Exception) {
             Logger.printError(e)
             0
         }
     }
 
-    fun handleExpression(pageId: String, componentId: String, type: String, key: String, expression: String): String? {
+    fun handleExpression(pageId: String, componentId: String, type: String, key: String, watch: Boolean, expression: String): String? {
         val page = getV8Page(pageId)
         val result: Any? = try {
-            page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(componentId).push(type).push(key).push(expression))
+            page?.executeFunction("__native__getExpValue", V8Array(V8Manager.v8).push(componentId).push(type).push(key).push(watch).push(expression))
         } catch (e: Exception) {
             Logger.printError(e)
             ""

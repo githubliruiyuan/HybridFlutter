@@ -246,3 +246,14 @@ class MAlignment {
     return result;
   }
 }
+
+class MBool {
+  static bool parse(Property value,
+      {bool defaultValue = false}) {
+    bool result = defaultValue;
+    if (null != value) {
+      result = 'false' == value.getValue();
+    }
+    return result;
+  }
+}

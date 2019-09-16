@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/ui/list_view.dart';
 import 'package:hybrid_flutter/ui/raised_button.dart';
 import 'package:hybrid_flutter/ui/row.dart';
 import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
@@ -200,6 +201,9 @@ class UIFactory {
         widget = SingleChildScrollViewStateless(
             parent, _pageId, _methodChannel, component);
         break;
+      case "listview":
+        widget = ListViewStateless(parent, _pageId, _methodChannel, component);
+        break;
 //      case "nestedscrollview":
 //        widget = _createNestedScrollView(component.properties, child);
 //        break;
@@ -255,11 +259,14 @@ class UIFactory {
     _widgetMap.clear();
   }
 
-  void _updateChildren(BaseWidget widget) {
-    widget.data.value.children.forEach((it) async {
+  Future _updateChildren(BaseWidget widget) async {
+    for (var it in widget.data.value.children) {
       await handleProperty(_methodChannel, _pageId, it.component);
-      it.updateProperty(it.component.properties);
-    });
+      it.updateProperties(it.component.properties);
+      if (it.data.value.children.isNotEmpty) {
+        _updateChildren(it);
+      }
+    }
   }
 
   void _collectRemoveIds(Component component, List<String> ids) {
@@ -273,10 +280,10 @@ class UIFactory {
   }
 
   Future updateTree(List<dynamic> list) async {
-    list.forEach((it) async {
+    for (var it in list) {
       var type = it['type'];
       var id = it['id'];
-      print("updateTree type = $type");
+//      print("updateTree type = $type");
       switch (type) {
         case TYPE_DIRECTIVE:
           if (_componentMap.containsKey(id)) {
@@ -284,14 +291,13 @@ class UIFactory {
             var parentId = component.parent.id;
             if (_widgetMap.containsKey(parentId)) {
               var parentWidget = _widgetMap[parentId];
-
               /// for 出来的children复用
               var start = parentWidget.data.value.children.length;
               var size = it['value'];
               if (start < size) {
                 /// size 由少变多
                 if (start > 0) {
-                  _updateChildren(parentWidget);
+                  await _updateChildren(parentWidget);
                 }
                 var tree = await _createRepeatComponent(component, start, size);
                 List<BaseWidget> children = [];
@@ -302,7 +308,7 @@ class UIFactory {
                 parentWidget.addChildren(children);
               } else if (start == size) {
                 /// size 相等，只更新属性
-                _updateChildren(parentWidget);
+                await _updateChildren(parentWidget);
               } else {
                 /// size 由多变少
                 List<BaseWidget> children = [];
@@ -320,7 +326,7 @@ class UIFactory {
                 }
                 parentWidget.updateChildren(children);
                 if (size > 0) {
-                  _updateChildren(parentWidget);
+                  await _updateChildren(parentWidget);
                 }
               }
             }
@@ -333,6 +339,6 @@ class UIFactory {
           }
           break;
       }
-    });
+    }
   }
 }

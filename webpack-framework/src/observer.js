@@ -5,7 +5,7 @@
  */
 class Observer {
 
-    constructor () {
+    constructor() {
         this.currentWatcher = undefined;
         this.collectors = [];
         this.watchers = {};
@@ -27,9 +27,9 @@ class Observer {
             }
             // console.log("key = " + key + " value = " + value);
             this.defineReactive(data, key, value);
-            if (Array.isArray(value) || typeof(value) === "object") {
-                this.observe(value);
-            }
+            // if (Array.isArray(value) || typeof(value) === "object") {
+            //     this.observe(value);
+            // }
         }
     }
 
@@ -70,7 +70,7 @@ class Observer {
                     val = newVal;
                 }
                 // 新值如果是object或数组的话，也要进行监听
-                that.observe(newVal);
+                // that.observe(newVal);
                 collector.notify(data);
             }
         });
@@ -87,16 +87,20 @@ class Observer {
         if (ids) {
             let keys = [];
             ids.forEach((id) => {
-                this.watchers[id].forEach((watcher) => {
-                    keys.push(watcher.key());
-                });
-                this.watchers[id] = undefined;
+                if (this.watchers[id]) {
+                    this.watchers[id].forEach((watcher) => {
+                        keys.push(watcher.key());
+                    });
+                    this.watchers[id] = undefined;
+                }
             });
-            this.collectors.forEach((collector) => {
-                keys.forEach((key) => {
-                    collector.removeWatcher(key)
+            if (this.collectors) {
+                this.collectors.forEach((collector) => {
+                    keys.forEach((key) => {
+                        collector.removeWatcher(key)
+                    });
                 });
-            });
+            }
         }
     }
 }
@@ -195,8 +199,9 @@ class Assembler {
      * @returns [] 组装结果
      */
     packing() {
-        console.log("组装映射结果:" + JSON.stringify(this.packagingArray));
-        return this.packagingArray;
+        let result = JSON.stringify(this.packagingArray);
+        console.log("组装映射结果:" + result);
+        return result;
     }
 }
 

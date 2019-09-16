@@ -36,6 +36,3 @@ String removePx(String pxString) {
   }
   return pxString;
 }
-
-
-

@@ -79,8 +79,9 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     val id = methodCall.argument<String>("id")
                     val type = methodCall.argument<String>("type")
                     val key = methodCall.argument<String>("key")
+                    val watch = methodCall.argument<Boolean>("watch")
                     val expression = methodCall.argument<String>("expression")
-                    val obj = JSPageManager.handleExpression(pageId!!, id!!, type!!, key!!, expression!!)
+                    val obj = JSPageManager.handleExpression(pageId!!, id!!, type!!, key!!, watch!!, expression!!)
                     result.success(obj)
                 }
             }
@@ -90,13 +91,9 @@ class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallH
                     val id = methodCall.argument<String>("id")
                     val type = methodCall.argument<String>("type")
                     val key = methodCall.argument<String>("key")
+                    val watch = methodCall.argument<Boolean>("watch")
                     val expression = methodCall.argument<String>("expression")
-                    val obj = try {
-                        JSPageManager.handleRepeat(pageId!!, id!!, type!!, key!!, expression!!)
-                    } catch (e: Exception) {
-                        Logger.printError(e)
-                        0
-                    }
+                    val obj = JSPageManager.handleRepeat(pageId!!, id!!, type!!, key!!, watch!!, expression!!)
                     result.success(obj)
                 }
             }
