@@ -7,7 +7,10 @@ import com.cc.hybrid.util.SpUtil
 import com.cc.hybrid.util.ToastUtil
 import com.cc.hybrid.v8.V8Manager
 import com.cc.hybrid.v8.V8Util
-import com.eclipsesource.v8.*
+import com.eclipsesource.v8.JavaCallback
+import com.eclipsesource.v8.V8Array
+import com.eclipsesource.v8.V8Function
+import com.eclipsesource.v8.V8Object
 import org.json.JSONObject
 import java.util.*
 
@@ -189,7 +192,8 @@ object JSPageManager {
     @Synchronized
     fun onRefresh(pageId: String, json: String?) {
 //        Logger.d("JSPageManager", "onRefresh pageId = $pageId")
-        EventManager.instance.sendMessage(what = EventManager.TYPE_REFRESH, pageId = pageId, obj = json ?: "")
+        EventManager.instance.sendMessage(what = EventManager.TYPE_REFRESH, pageId = pageId, obj = json
+                ?: "")
     }
 
     private fun getV8Page(pageId: String): V8Object? {
@@ -214,11 +218,12 @@ object JSPageManager {
 
     fun callMethodInPage(pageId: String, method: String, vararg args: String?, executeListener: ((Throwable?) -> Unit)? = null) {
         try {
-            if (method.isNotEmpty()) {
-                val page = getV8Page(pageId)
-                if (null != page && !page.isUndefined) {
-                    val params = V8Array(page.runtime)
-                    args.forEach {
+            val page = getV8Page(pageId)
+            if (method.isNotEmpty() && null != page && !page.isUndefined && page.contains(method)) {
+                val params = V8Array(page.runtime)
+
+                args.forEach {
+                    if (!it.isNullOrEmpty()) {
                         val json = V8Manager.v8.getObject("JSON")
                         val param = json.executeJSFunction("parse", it)
                         when (param) {
@@ -230,10 +235,8 @@ object JSPageManager {
                             is Boolean -> params.push(param)
                         }
                     }
-                    if (page.contains(method)) {
-                        (page.get(method) as V8Function).call(page, params)
-                    }
                 }
+                (page.get(method) as V8Function).call(page, params)
             }
             if (executeListener != null) {
                 executeListener(null)

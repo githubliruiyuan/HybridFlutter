@@ -42,7 +42,7 @@ onTapEvent(MethodChannel methodChannel, String pageId, String id,
   });
   var func = event.replaceAll('()', '');
   String json = _createTapEvent(id, dataSet, TYPE_TAP);
-  print('json = $json');
+//  print('json = $json');
   methodChannel
       .invokeMethod('event', {'pageId': pageId, 'event': func, 'data': json});
 }
@@ -51,7 +51,14 @@ onScrollEvent(MethodChannel methodChannel, String pageId, String id,
     String event, double offset) {
   var func = event.replaceAll('()', '');
   String json = _createScrollEvent(id, offset, TYPE_SCROLL);
-  print('json = $json');
+//  print('json = $json');
   methodChannel
       .invokeMethod('event', {'pageId': pageId, 'event': func, 'data': json});
+}
+
+onScrollLimitEvent(
+    MethodChannel methodChannel, String pageId, String id, String event) {
+  var func = event.replaceAll('()', '');
+  methodChannel
+      .invokeMethod('event', {'pageId': pageId, 'event': func, 'data': ""});
 }

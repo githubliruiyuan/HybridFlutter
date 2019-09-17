@@ -99,8 +99,7 @@ class MCrossAxisAlignment {
 }
 
 class MTextBaseline {
-  static TextBaseline parse(Property value,
-      {TextBaseline defaultValue}) {
+  static TextBaseline parse(Property value, {TextBaseline defaultValue}) {
     TextBaseline result = defaultValue;
     if (null == value) return result;
     switch (value.getValue()) {
@@ -136,10 +135,8 @@ class MVerticalDirection {
   }
 }
 
-
 class MTextDirection {
-  static TextDirection parse(Property value,
-      {TextDirection defaultValue }) {
+  static TextDirection parse(Property value, {TextDirection defaultValue}) {
     TextDirection result = defaultValue;
     if (null == value) return result;
     switch (value.getValue()) {
@@ -210,7 +207,7 @@ class MAlignment {
       {Alignment defaultValue = Alignment.topLeft}) {
     Alignment result = defaultValue;
     if (null == value) return result;
-    switch(value.getValue()) {
+    switch (value.getValue()) {
       case 'top-left':
         result = Alignment.topLeft;
         break;
@@ -248,11 +245,30 @@ class MAlignment {
 }
 
 class MBool {
-  static bool parse(Property value,
-      {bool defaultValue = false}) {
+  static bool parse(Property value, {bool defaultValue}) {
     bool result = defaultValue;
     if (null != value) {
       result = 'false' == value.getValue();
+    }
+    return result;
+  }
+}
+
+class MInt {
+  static int parse(Property value, {int defaultValue}) {
+    int result = defaultValue;
+    if (null != value) {
+      result = int.parse(value.getValue());
+    }
+    return result;
+  }
+}
+
+class MDouble {
+  static double parse(Property value, {double defaultValue}) {
+    double result = defaultValue;
+    if (null != value) {
+      result = double.parse(value.getValue());
     }
     return result;
   }

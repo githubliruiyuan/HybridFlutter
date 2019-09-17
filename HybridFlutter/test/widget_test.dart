@@ -25,16 +25,18 @@ void main() {
 
 //    var b = B("qwer");
 //    print(b.a);
-
 //    var url = "home?a=1&b=2";
 //    var uri = Uri.parse(url);
 //    print("uri = ${uri.toString()}");
 
-    var list = [1,2,3,4,5];
+//    var list = [1,2,3,4,5];
+//    print(list.getRange(0, 3));
+//    print(list.getRange(3, 5));
 
-    print(list.getRange(0, 3));
-    print(list.getRange(3, 5));
 
+    double v;
+    print(v);
+    print(v ?? 1);
 
   });
 }
