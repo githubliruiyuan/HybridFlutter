@@ -29,14 +29,16 @@ void main() {
 //    var uri = Uri.parse(url);
 //    print("uri = ${uri.toString()}");
 
-//    var list = [1,2,3,4,5];
-//    print(list.getRange(0, 3));
-//    print(list.getRange(3, 5));
+    var list = [0,1,2,3,4,5];
+    print(list.getRange(0, 3));
+    print(list.getRange(3, 5));
+    list.removeRange(3, 5);
+    print(list);
 
 
-    double v;
-    print(v);
-    print(v ?? 1);
+//    double v;
+//    print(v);
+//    print(v ?? 1);
 
   });
 }

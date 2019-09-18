@@ -7,10 +7,6 @@ import 'package:hybrid_flutter/ui/ui_factory.dart';
 import 'package:hybrid_flutter/util/base64.dart';
 import 'package:hybrid_flutter/util/color_util.dart';
 
-import 'entity/component.dart';
-import 'entity/data.dart';
-import 'entity/property.dart';
-
 var _methodChannel = MethodChannel("com.cc.hybrid/method");
 var _basicChannel =
     BasicMessageChannel<String>('com.cc.hybrid/basic', StringCodec());
@@ -68,8 +64,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: _MainPage({}));
-//    return MaterialApp(home: _TestPage());
+//    return MaterialApp(home: _MainPage({}));
+    return MaterialApp(home: _TestPage());
   }
 }
 
@@ -83,43 +79,11 @@ class _TestPage extends StatefulWidget {
 class _TestPageState extends State<_TestPage> {
   @override
   Widget build(BuildContext context) {
-    Component component = Component();
-    component.id = "x1";
-    var text = Property('未实现控件');
-    var font = Property('14');
-    var color = Property('red');
-    component.properties = Map();
-    component.properties.putIfAbsent('font-size', () => font);
-    component.properties.putIfAbsent('color', () => color);
-    component.properties.putIfAbsent('innerHTML', () => text);
-    ValueNotifier<Data> valueNotifier =
-        ValueNotifier(Data(component.properties));
-
-    var textView =
-        Text("text", style: TextStyle(color: Colors.red, fontSize: 18));
-    var container1 = Container(
-        width: 100, height: 200, color: Colors.green, child: textView);
-    var listView = ListView(
-      scrollDirection: Axis.vertical,
-      children: [
-        container1,
-        container1,
-        container1,
-        container1,
-        container1,
-        container1
-      ],
-    );
-
-    var textW = ValueListenableBuilder(
-        builder: (BuildContext context, Data data, Widget child) {
-          return Text(data.map['innerHTML'].getValue(),
-              style: TextStyle(color: Colors.white, fontSize: 18));
-        },
-        valueListenable: valueNotifier);
-
-    var container =
-        Container(width: 100, height: 100, color: Colors.green, child: textW);
+    var container = Container(
+        width: 100,
+        height: 100,
+        color: Colors.green,
+        child: CircularProgressIndicator());
 
     return Scaffold(
       appBar: AppBar(
@@ -129,11 +93,9 @@ class _TestPageState extends State<_TestPage> {
         return FloatingActionButton(onPressed: () {
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => _MainPage({})));
-//          component.properties['innerHTML'].setValue("1111");
-//          valueNotifier.value = Data(component.properties);
         });
       }),
-      body: listView,
+      body: container,
     );
   }
 }

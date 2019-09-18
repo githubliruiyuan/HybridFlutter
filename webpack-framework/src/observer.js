@@ -27,9 +27,6 @@ class Observer {
             }
             // console.log("key = " + key + " value = " + value);
             this.defineReactive(data, key, value);
-            // if (Array.isArray(value) || typeof(value) === "object") {
-            //     this.observe(value);
-            // }
         }
     }
 
@@ -69,8 +66,6 @@ class Observer {
                 } else {
                     val = newVal;
                 }
-                // 新值如果是object或数组的话，也要进行监听
-                // that.observe(newVal);
                 collector.notify(data);
             }
         });
@@ -162,6 +157,7 @@ class Watcher {
         let obj = {};
         obj.id = this.id;
         obj.type = this.type;
+        // obj.script = this.script;
         obj.key = this.prefix;
         obj.value = this.value;
         return obj;

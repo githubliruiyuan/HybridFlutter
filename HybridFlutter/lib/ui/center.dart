@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/ui/base_widget.dart';
-import 'package:hybrid_flutter/util/widget_util.dart';
+
+import 'basic.dart';
 
 class CenterStateless extends BaseWidget {
   CenterStateless(BaseWidget parent, String pageId, MethodChannel methodChannel,
@@ -21,10 +22,8 @@ class CenterStateless extends BaseWidget {
         builder: (BuildContext context, Data data, Widget child) {
           return Center(
               key: ObjectKey(component),
-              widthFactor:
-                  dealDoubleDefZero(data.map['width-factor']),
-              heightFactor:
-                  dealDoubleDefZero(data.map['height-factor']),
+              widthFactor: MDouble.parse(data.map['width-factor']),
+              heightFactor: MDouble.parse(data.map['height-factor']),
               child: data.children.isNotEmpty ? data.children[0] : null);
         },
         valueListenable: this.data);

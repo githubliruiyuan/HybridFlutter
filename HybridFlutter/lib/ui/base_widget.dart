@@ -43,4 +43,11 @@ abstract class BaseWidget extends StatelessWidget {
     newData.children.addAll(children);
     data.value = newData;
   }
+
+  void insertChildren(int index, List<BaseWidget> children) {
+    var newData = Data(data.value.map);
+    newData.children = data.value.children;
+    newData.children.insertAll(index, children);
+    data.value = newData;
+  }
 }

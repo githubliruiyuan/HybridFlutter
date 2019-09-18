@@ -45,7 +45,6 @@ class ListViewStateless extends BaseWidget {
       key: ObjectKey(component),
       child: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification notification) {
-//            print("runtimeType: ${notification.runtimeType}");
             if (notification is ScrollEndNotification) {
               if (notification.metrics.pixels ==
                   notification.metrics.minScrollExtent) {
@@ -62,30 +61,30 @@ class ListViewStateless extends BaseWidget {
               builder: (BuildContext context, Data data, Widget child) {
                 return ListView(
                     key: UniqueKey(),
-                    scrollDirection: MAxis.parse(data.map["scrollDirection"],
+                    scrollDirection: MAxis.parse(data.map["scroll-direction"],
                         defaultValue: Axis.vertical),
                     reverse:
                         MBool.parse(data.map["reverse"], defaultValue: false),
 //              controller: _scrollController,
                     primary: MBool.parse(data.map["primary"]),
 //                  physics: data.map["physics"],
-                    shrinkWrap: MBool.parse(data.map["shrinkWrap"],
+                    shrinkWrap: MBool.parse(data.map["shrink-wrap"],
                         defaultValue: false),
                     padding: MPadding.parse(data.map),
-                    itemExtent: MDouble.parse(data.map["itemExtent"]),
+                    itemExtent: MDouble.parse(data.map["item-extent"]),
                     addAutomaticKeepAlives: MBool.parse(
-                        data.map["addAutomaticKeepAlives"],
+                        data.map["add-automatic-keep-alives"],
                         defaultValue: true),
                     addRepaintBoundaries: MBool.parse(
-                        data.map["addRepaintBoundaries"],
+                        data.map["add-repaint-boundaries"],
                         defaultValue: true),
                     addSemanticIndexes: MBool.parse(
-                        data.map["addSemanticIndexes"],
+                        data.map["add-semantic-indexes"],
                         defaultValue: true),
-                    cacheExtent: MDouble.parse(data.map["cacheExtent"]),
+                    cacheExtent: MDouble.parse(data.map["cache-extent"]),
                     children: data.children,
                     semanticChildCount:
-                        MInt.parse(data.map["semanticChildCount"]));
+                        MInt.parse(data.map["semantic-child-count"]));
               },
               valueListenable: this.data)),
     );

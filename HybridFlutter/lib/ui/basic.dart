@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hybrid_flutter/entity/property.dart';
+import 'package:hybrid_flutter/util/color_util.dart';
 import 'package:hybrid_flutter/util/widget_util.dart';
 
 class MAxis {
@@ -269,6 +270,16 @@ class MDouble {
     double result = defaultValue;
     if (null != value) {
       result = double.parse(value.getValue());
+    }
+    return result;
+  }
+}
+
+class MColor {
+  static Color parse(Property value, {Color defaultValue}) {
+    Color result = defaultValue;
+    if (null != value) {
+      result = parseColor(value.getValue(), defaultValue: null);
     }
     return result;
   }
