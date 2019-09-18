@@ -196,6 +196,7 @@ class UIFactory {
   }
 
   Future _updateRangeChildren(BaseWidget widget, int start, int end) async {
+    if (widget.data.value.children.isEmpty) return;
     for (int i = start; i <= end; i++) {
       var it = widget.data.value.children[i];
       await handleProperty(_methodChannel, _pageId, it.component);
@@ -265,7 +266,8 @@ class UIFactory {
                 tree.forEach((it) {
                   children.add(createWidgetTree(parentWidget, it));
                 });
-                parentWidget.insertChildren(rangeEnd + 1, children);
+                var insertIndex = 0 == rangeEnd ? 0 : rangeEnd + 1;
+                parentWidget.insertChildren(insertIndex, children);
               } else if (oldSize == newSize) {
                 /// size 相等，只更新属性
                 await _updateRangeChildren(parentWidget, rangeStart, rangeEnd);

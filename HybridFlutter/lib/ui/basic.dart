@@ -259,7 +259,7 @@ class MInt {
   static int parse(Property value, {int defaultValue}) {
     int result = defaultValue;
     if (null != value) {
-      result = int.parse(value.getValue());
+      result = int.parse(removePx(value.getValue()));
     }
     return result;
   }
@@ -269,7 +269,7 @@ class MDouble {
   static double parse(Property value, {double defaultValue}) {
     double result = defaultValue;
     if (null != value) {
-      result = double.parse(value.getValue());
+      result = double.parse(removePx(value.getValue()));
     }
     return result;
   }

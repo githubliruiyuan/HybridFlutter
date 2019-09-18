@@ -1,0 +1,35 @@
+/* home */
+.btn-container{
+    margin-top:10;
+    margin-left: 10; 
+    margin-right: 10;
+}
+
+.raised-button {
+    color: white;
+}
+
+.image-container {
+    width: 100px; 
+    height:100px; 
+    padding: 5;
+}
+
+.column-text {
+    cross-axis-alignment: start;
+}
+
+.text-title {
+    font-size: 14px;
+    color: black;
+}
+
+.text-publisher {
+    font-size: 12px;
+    color: gray;
+}
+
+.text-summary {
+    font-size: 12px;
+    color: gray;
+}
