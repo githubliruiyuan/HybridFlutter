@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,27 +34,32 @@ class UIFactory {
   Future<dynamic> createComponentTree(Component parent,
       Map<String, dynamic> data, Map<String, dynamic> styles) async {
     var component = Component(parent, data, styles);
-    var repeat = component.getRealForExpression();
     _componentMap.putIfAbsent(component.id, () => component);
+
+    var repeat = component.getRealForExpression();
     if (null != repeat) {
       repeat = getInRepeatExp(component, repeat);
       int size = await calcRepeatSize(_methodChannel, _pageId, component.id,
           TYPE_DIRECTIVE, 'repeat', repeat);
 
       /// 处理for出来的
-      List<Component> list = [];
-      for (var index = 0; index < size; index++) {
-        var clone = (0 == index) ? component : component.clone();
-        clone.isInRepeat = true;
-        clone.setInRepeatIndex(index);
-        clone.inRepeatPrefixExp = getInRepeatPrefixExp(clone);
+      if (size > 0) {
+        List<Component> list = [];
+        for (var index = 0; index < size; index++) {
+          var clone = (0 == index) ? component : component.clone();
+          clone.isInRepeat = true;
+          clone.setInRepeatIndex(index);
+          clone.inRepeatPrefixExp = getInRepeatPrefixExp(clone);
 
-        /// 需要添加 await，否则会出现异步导致children为空
-        await _addChildren(clone, data, styles);
-        await handleProperty(_methodChannel, _pageId, clone);
-        list.add(clone);
+          /// 需要添加 await，否则会出现异步导致children为空
+          await _addChildren(clone, data, styles);
+          await handleProperty(_methodChannel, _pageId, clone);
+          list.add(clone);
+        }
+        return list;
+      } else {
+        return null;
       }
-      return list;
     } else {
       await _addChildren(component, data, styles);
       await handleProperty(_methodChannel, _pageId, component);
@@ -87,10 +94,12 @@ class UIFactory {
     if (null != children) {
       for (var child in children) {
         var result = await createComponentTree(parent, child, styles);
-        if (result is List) {
-          parent.children.addAll(result as List<Component>);
-        } else {
-          parent.children.add(result);
+        if (null != result) {
+          if (result is List) {
+            parent.children.addAll(result as List<Component>);
+          } else {
+            parent.children.add(result);
+          }
         }
       }
     }
@@ -221,6 +230,7 @@ class UIFactory {
   List<int> _calcForRange(id, List<BaseWidget> children) {
     int first;
     int last;
+    int size = 0;
     for (int i = 0; i < children.length; i++) {
       var it = children[i].component;
       if (it.id.startsWith(id)) {
@@ -228,9 +238,10 @@ class UIFactory {
           first = i;
         }
         last = i;
+        size++;
       }
     }
-    return [first ?? 0, last ?? 0];
+    return [first ?? 0, last ?? 0, size];
   }
 
   Future updateTree(List<dynamic> list) async {
@@ -251,8 +262,8 @@ class UIFactory {
               var rangeStart = range[0];
               /// for 的终止下标
               var rangeEnd = range[1];
-              // print("range $range");
-              var oldSize = rangeEnd - rangeStart + 1;
+              /// for 的size
+              var oldSize = range[2];
               var newSize = it['value'];
               if (oldSize < newSize) {
                 /// size 由少变多

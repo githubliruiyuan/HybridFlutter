@@ -36,9 +36,7 @@ class Component {
 
   void setInRepeatIndex(int index) {
     this.inRepeatIndex = index;
-    if (index > 0) {
-      this.id = "$id-$index";
-    }
+    this.id = "$id-$index";
   }
 
   Map<String, Property> _initProperties(
