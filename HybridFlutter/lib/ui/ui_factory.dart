@@ -1,7 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/property.dart';
@@ -31,97 +27,100 @@ class UIFactory {
 
   UIFactory(this._pageId, this._methodChannel);
 
-  Future<dynamic> createComponentTree(Component parent,
-      Map<String, dynamic> data, Map<String, dynamic> styles) async {
-    var component = Component(parent, data, styles);
+  /// 克隆节点id, inRepeatIndex, inRepeatPrefixExp不为空
+  Future<Component> createComponentTree(
+      Component parent, Map<String, dynamic> node, Map<String, dynamic> styles,
+      {id, inRepeatIndex, inRepeatPrefixExp}) async {
+    var component = Component(parent, node, styles,
+        id: id,
+        inRepeatIndex: inRepeatIndex,
+        inRepeatPrefixExp: inRepeatPrefixExp);
     _componentMap.putIfAbsent(component.id, () => component);
-
-    var repeat = component.getRealForExpression();
-    if (null != repeat) {
-      repeat = getInRepeatExp(component, repeat);
-      int size = await calcRepeatSize(_methodChannel, _pageId, component.id,
-          TYPE_DIRECTIVE, 'repeat', repeat);
-
-      /// 处理for出来的
-      if (size > 0) {
-        List<Component> list = [];
-        for (var index = 0; index < size; index++) {
-          var clone = (0 == index) ? component : component.clone();
-          clone.isInRepeat = true;
-          clone.setInRepeatIndex(index);
-          clone.inRepeatPrefixExp = getInRepeatPrefixExp(clone);
-
-          /// 需要添加 await，否则会出现异步导致children为空
-          await _addChildren(clone, data, styles);
-          await handleProperty(_methodChannel, _pageId, clone);
-          list.add(clone);
-        }
-        return list;
-      } else {
-        return null;
-      }
-    } else {
-      await _addChildren(component, data, styles);
-      await handleProperty(_methodChannel, _pageId, component);
-      return component;
-    }
+    await _addChildren(component, node, styles);
+    return component;
   }
 
-  /// e.g. 创建指定length的children
-  Future<List<Component>> _createRepeatComponent(
-      Component component, int start, int size) async {
-    List<Component> list = [];
-    if (size > start) {
-      for (var index = start; index < size; index++) {
-        var clone = (0 == index) ? component : component.clone();
-        clone.isInRepeat = true;
-        clone.setInRepeatIndex(index);
-        clone.inRepeatPrefixExp = getInRepeatPrefixExp(clone);
-
-        /// 需要添加 await，否则会出现异步导致children为空
-        await _addChildren(clone, component.data, component.styles);
-        await handleProperty(_methodChannel, _pageId, clone);
-        list.add(clone);
-      }
-    }
-    return list;
-  }
-
-  ///为Component添加children
+  /// 为Component添加children
   Future _addChildren(Component parent, Map<String, dynamic> data,
       Map<String, dynamic> styles) async {
     var children = data['childNodes'];
     if (null != children) {
       for (var child in children) {
         var result = await createComponentTree(parent, child, styles);
-        if (null != result) {
-          if (result is List) {
-            parent.children.addAll(result as List<Component>);
-          } else {
-            parent.children.add(result);
-          }
-        }
+        parent.children.add(result);
       }
     }
   }
 
-  Widget _createClipOval(Map<String, Property> properties, Widget child) {
-    return ClipOval(child: child);
-  }
-
-  List<BaseWidget> _getChildren(BaseWidget parent, Component component) {
+  Future<List<BaseWidget>> _getChildren(
+      BaseWidget parent, Component component) async {
     List<BaseWidget> children = [];
-    if (null == component) {
-      return children;
+    for (var it in component?.children) {
+      var child = await createWidgetTree(parent, it);
+      if (null != child) {
+        if (child is List<BaseWidget>) {
+          children.addAll(child);
+        } else {
+          children.add(child);
+        }
+      }
     }
-    component.children?.forEach((it) {
-      children.add(createWidgetTree(parent, it));
-    });
     return children;
   }
 
-  BaseWidget createWidgetTree(BaseWidget parent, Component component) {
-//    print("createChild tag ${component.tag}");
+  Future<dynamic> createWidgetTree(BaseWidget parent, Component component,
+      {newSize}) async {
+    var repeat = component.getRealForExpression();
+    if (null != repeat) {
+      repeat = getInRepeatExp(component, repeat);
+      var id = component.id;
+      int size = newSize ??
+          await calcRepeatSize(
+              _methodChannel, _pageId, id, TYPE_DIRECTIVE, 'repeat', repeat);
+
+      if (size > 0) {
+        var indexName = component.getForIndexName();
+        var itemName = component.getForItemName();
+        var exp = component.getRealForExpression();
+        var parentInRepeatPrefixExp = component.parent?.inRepeatPrefixExp;
+        List<BaseWidget> widgets = [];
+        for (var index = 0; index < size; index++) {
+          var inRepeatPrefixExp = getInRepeatPrefixExp(
+              indexName, itemName, exp, index, parentInRepeatPrefixExp);
+          var inRepeatId = "$id-$index";
+          var clone = _componentMap[inRepeatId];
+          if (null == clone) {
+            clone = await createComponentTree(
+                component.parent, component.node, component.styles,
+                id: inRepeatId,
+                inRepeatIndex: index,
+                inRepeatPrefixExp: inRepeatPrefixExp);
+          }
+          await handleProperty(_methodChannel, _pageId, clone);
+          var widget = _widgetMap[inRepeatId];
+          if (null == widget) {
+            widget = _createWidget(parent, clone);
+            widget.setChildren(await _getChildren(widget, clone));
+            _widgetMap.putIfAbsent(clone.id, () => widget);
+          } else {
+            widget.updateProperties(clone.properties);
+          }
+          widgets.add(widget);
+        }
+        return widgets;
+      } else {
+        return null;
+      }
+    } else {
+      await handleProperty(_methodChannel, _pageId, component);
+      BaseWidget widget = _createWidget(parent, component);
+      widget.setChildren(await _getChildren(widget, component));
+      _widgetMap.putIfAbsent(component.id, () => widget);
+      return widget;
+    }
+  }
+
+  BaseWidget _createWidget(BaseWidget parent, Component component) {
     BaseWidget widget;
     switch (component.tag) {
       case "body":
@@ -194,8 +193,6 @@ class UIFactory {
         widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;
     }
-    widget.setChildren(_getChildren(widget, component));
-    _widgetMap.putIfAbsent(component.id, () => widget);
     return widget;
   }
 
@@ -204,44 +201,33 @@ class UIFactory {
     _widgetMap.clear();
   }
 
-  Future _updateRangeChildren(BaseWidget widget, int start, int end) async {
-    if (widget.data.value.children.isEmpty) return;
-    for (int i = start; i <= end; i++) {
-      var it = widget.data.value.children[i];
-      await handleProperty(_methodChannel, _pageId, it.component);
-      it.updateProperties(it.component.properties);
-      if (it.data.value.children.isNotEmpty) {
-        _updateChildren(it);
-      }
-    }
-  }
-
-  Future _updateChildren(BaseWidget widget) async {
-    for (var it in widget.data.value.children) {
-      await handleProperty(_methodChannel, _pageId, it.component);
-      it.updateProperties(it.component.properties);
-      if (it.data.value.children.isNotEmpty) {
-        _updateChildren(it);
-      }
-    }
-  }
-
-  /// 计算对应id的for列表的size
-  List<int> _calcForRange(id, List<BaseWidget> children) {
-    int first;
-    int last;
-    int size = 0;
-    for (int i = 0; i < children.length; i++) {
-      var it = children[i].component;
-      if (it.id.startsWith(id)) {
-        if (null == first) {
-          first = i;
+  Future<List<BaseWidget>> _getNewChildren(Component parent,
+      Component component, BaseWidget parentWidget, int size) async {
+    List<BaseWidget> children = [];
+    for (var it in parent.children) {
+      if (it == component) {
+        List<BaseWidget> result =
+            await createWidgetTree(parentWidget, component, newSize: size);
+        if (null != result) {
+          children.addAll(result);
         }
-        last = i;
-        size++;
+      } else {
+        /// 如果是for节点需要把原来的children迁移过来
+        if (null != it.getForExpression()) {
+          parentWidget.data.value.children.forEach((child) {
+            if (child.component.id.startsWith(it.id)) {
+              children.add(child);
+            }
+          });
+        } else {
+          var widget = _widgetMap[it.id];
+          if (null != widget) {
+            children.add(widget);
+          }
+        }
       }
     }
-    return [first ?? 0, last ?? 0, size];
+    return children;
   }
 
   Future updateTree(List<dynamic> list) async {
@@ -250,53 +236,19 @@ class UIFactory {
       var id = it['id'];
       switch (type) {
         case TYPE_DIRECTIVE:
+
+          /// 更新for需要将parentComponent的children重新检查更新一遍
           if (_componentMap.containsKey(id)) {
             var component = _componentMap[id];
             var parentId = component.parent.id;
-            if (_widgetMap.containsKey(parentId)) {
+            if (_componentMap.containsKey(parentId) &&
+                _widgetMap.containsKey(parentId)) {
+              var parentComponent = _componentMap[parentId];
               var parentWidget = _widgetMap[parentId];
-
-              /// for 出来的children复用
-              var range = _calcForRange(id, parentWidget.data.value.children);
-              /// for 的起始下标
-              var rangeStart = range[0];
-              /// for 的终止下标
-              var rangeEnd = range[1];
-              /// for 的size
-              var oldSize = range[2];
               var newSize = it['value'];
-              if (oldSize < newSize) {
-                /// size 由少变多
-                /// 由于for的每个item不单独监听，所以每次改动需要更新已有的item
-                if (oldSize > 0) {
-                  await _updateRangeChildren(parentWidget, rangeStart, rangeEnd);
-                }
-                var tree =
-                    await _createRepeatComponent(component, oldSize, newSize);
-                List<BaseWidget> children = [];
-                tree.forEach((it) {
-                  children.add(createWidgetTree(parentWidget, it));
-                });
-                var insertIndex = 0 == rangeEnd ? 0 : rangeEnd + 1;
-                parentWidget.insertChildren(insertIndex, children);
-              } else if (oldSize == newSize) {
-                /// size 相等，只更新属性
-                await _updateRangeChildren(parentWidget, rangeStart, rangeEnd);
-              } else {
-                /// size 由多变少
-                var diff = oldSize - newSize;
-                var diffStart = rangeEnd - diff;
-                var diffEnd = rangeEnd + 1;
-
-                /// 更新for列表
-                parentWidget.data.value.children
-                    .removeRange(diffStart + 1, diffEnd);
-                parentWidget.updateChildren(parentWidget.data.value.children);
-                if (newSize > 0) {
-                  await _updateRangeChildren(
-                      parentWidget, rangeStart, rangeStart + newSize - 1);
-                }
-              }
+              var children = await _getNewChildren(
+                  parentComponent, component, parentWidget, newSize);
+              parentWidget.updateChildren(children);
             }
           }
           break;

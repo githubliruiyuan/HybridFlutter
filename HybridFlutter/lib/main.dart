@@ -132,7 +132,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
       _pageCode = _args['pageCode'];
       _args = _args['args'];
     } else {
-      _pageCode = 'home';
+      _pageCode = 'example';
     }
     _appBarColor = Colors.blue;
     _backgroundColor = Colors.grey[200];
@@ -160,7 +160,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
 
   Future _update(Map<String, dynamic> map) async {
     var jsonObject = jsonDecode(map['message']);
-    _factory.updateTree(jsonObject);
+    await _factory.updateTree(jsonObject);
   }
 
   void _updateTitle(Map<String, dynamic> map) {
@@ -212,8 +212,9 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
     _initScript(script);
     _callOnLoad();
     var component = await _factory.createComponentTree(null, body, styles);
+    var tree = await _factory.createWidgetTree(null, component);
     setState(() {
-      _tree = _factory.createWidgetTree(null, component);
+      _tree = tree;
     });
   }
 

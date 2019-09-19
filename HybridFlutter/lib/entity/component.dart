@@ -3,14 +3,31 @@ import 'package:hybrid_flutter/util/base64.dart';
 import 'package:hybrid_flutter/util/expression_util.dart';
 
 class Component {
+  /// 唯一id
   String id;
+
+  /// 标签类型
   String tag;
+
+  /// 父节点
   Component parent;
-  Map<String, dynamic> data;
+
+  /// 节点
+  Map<String, dynamic> node;
+
+  /// 样式
   Map<String, dynamic> styles;
+
+  /// 事件
   Map<String, dynamic> events;
+
+  /// 指令
   Map<String, dynamic> directives;
+
+  /// 属性
   Map<String, Property> properties;
+
+  /// 子节点
   List<Component> children = [];
 
   /// 是否在for里面
@@ -22,69 +39,82 @@ class Component {
   /// 在for里面的表达式前缀
   String inRepeatPrefixExp;
 
-  Component(this.parent, this.data, this.styles, {id}) {
-    this.tag = data["tag"];
+  /// 克隆节点id, inRepeatIndex, inRepeatPrefixExp不为空
+  Component(this.parent, this.node, this.styles,
+      {id, inRepeatIndex, inRepeatPrefixExp}) {
+    this.tag = node["tag"];
     this.id = id ?? "$tag-$hashCode";
-    this.properties = _initProperties(data, styles);
-    this.directives = _initDirectives(data);
-    this.events = _initEvents(data);
-    this.isInRepeat = null == parent ? false : parent?.isInRepeat;
-    this.inRepeatIndex = parent?.inRepeatIndex;
-    this.inRepeatPrefixExp = parent?.inRepeatPrefixExp;
+    this.properties = _initProperties(node, styles);
+    this.directives = _initDirectives(node);
+    this.events = _initEvents(node);
+    this.isInRepeat = _isInRepeat();
+    this.inRepeatIndex = inRepeatIndex ?? parent?.inRepeatIndex;
+    this.inRepeatPrefixExp = inRepeatPrefixExp ?? parent?.inRepeatPrefixExp;
     this.parent = parent;
   }
 
-  void setInRepeatIndex(int index) {
-    this.inRepeatIndex = index;
-    this.id = "$id-$index";
+  bool _isInRepeat() {
+    if (null != getForExpression()) {
+      return true;
+    } else {
+      return null == parent ? false : parent?.isInRepeat;
+    }
+  }
+
+  void insertChildren(int index, List<Component> children) {
+    this.children.insertAll(index, children);
+  }
+
+  void removeRangeChildren(int start, int end) {
+    this.children.removeRange(start, end);
   }
 
   Map<String, Property> _initProperties(
-      Map<String, dynamic> data, Map<String, dynamic> styles) {
-    if (null == data) {
+      Map<String, dynamic> node, Map<String, dynamic> styles) {
+    if (null == node) {
       return null;
     }
     Map properties = new Map<String, Property>();
-    if (null != data['id'] && data['id'] != '') {
-      Map<String, dynamic> idStyles = styles['.' + data['id']];
+    if (null != node['id'] && node['id'] != '') {
+      Map<String, dynamic> idStyles = styles['.' + node['id']];
       if (idStyles != null) {
         idStyles.forEach((k, v) {
           properties.putIfAbsent(k, () => Property(v));
         });
       }
     }
-    var attr = data['attrib'];
+    var attr = node['attrib'];
     if (null != attr) {
       attr.forEach((k, v) {
         properties.putIfAbsent(k, () => Property(v));
       });
     }
-    var attrStyle = data['attribStyle'];
+    var attrStyle = node['attribStyle'];
     if (null != attrStyle) {
       attrStyle.forEach((k, v) {
         properties.putIfAbsent(k, () => Property(v));
       });
     }
 
-    if (null != data["innerHTML"]) {
+    if (null != node["innerHTML"]) {
       properties.putIfAbsent(
-          "innerHTML", () => Property(decodeBase64(data["innerHTML"])));
+          "innerHTML", () => Property(decodeBase64(node["innerHTML"])));
     }
     return properties;
   }
 
-  Map<String, dynamic> _initEvents(Map<String, dynamic> data) {
-    if (null == data) {
+  Map<String, dynamic> _initEvents(Map<String, dynamic> node) {
+    if (null == node) {
       return null;
     }
-    return data['events'];
+    return node['events'];
   }
 
-  Map<String, dynamic> _initDirectives(Map<String, dynamic> data) {
-    if (null == data) {
+  Map<String, dynamic> _initDirectives(Map<String, dynamic> node) {
+    if (null == node) {
       return null;
     }
-    return data['directives'];
+    return node['directives'];
   }
 
   String getIfExpression() {
@@ -193,7 +223,7 @@ class Component {
     return getExpression(repeat["expression"]);
   }
 
-  Component clone() {
-    return Component(parent, data, styles, id: this.id);
-  }
+//  Component clone() {
+//    return Component(parent, node, styles, id: this.id);
+//  }
 }

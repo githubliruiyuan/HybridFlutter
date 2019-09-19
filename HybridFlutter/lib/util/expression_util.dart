@@ -24,13 +24,10 @@ String getInRepeatExp(Component component, String exp) {
 ///获取在for里面的表达前缀，判断父层级是否有前缀，有则需要在拼接在前面
 ///e.g.：var index = 0; var item = list[index];
 ///e.g.; var index = 0; var item = list[index]; var idx = 0; var it = item[idx];
-String getInRepeatPrefixExp(Component component) {
-  var indexName = component.getForIndexName();
-  var itemName = component.getForItemName();
-  var exp = component.getRealForExpression();
+String getInRepeatPrefixExp(
+    indexName, itemName, exp, inRepeatIndex, parentInRepeatPrefixExp) {
   var prefix =
-      'var $indexName = ${component.inRepeatIndex}; var $itemName = $exp[$indexName];';
-  var parentInRepeatPrefixExp = component.parent?.inRepeatPrefixExp;
+      'var $indexName = $inRepeatIndex; var $itemName = $exp[$indexName];';
   if (null != parentInRepeatPrefixExp && parentInRepeatPrefixExp.isNotEmpty) {
     prefix = '$parentInRepeatPrefixExp $prefix';
   }
