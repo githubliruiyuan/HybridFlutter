@@ -60,8 +60,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-//    return MaterialApp(home: _MainPage({}));
-    return MaterialApp(home: _TestPage());
+    return MaterialApp(home: _MainPage({}));
+//    return MaterialApp(home: _TestPage());
   }
 }
 
@@ -132,7 +132,7 @@ class _MainPageState extends State<_MainPage> with MessageHandler {
       _pageCode = _args['pageCode'];
       _args = _args['args'];
     } else {
-      _pageCode = 'example';
+      _pageCode = 'home';
     }
     _appBarColor = Colors.blue;
     _backgroundColor = Colors.grey[200];
