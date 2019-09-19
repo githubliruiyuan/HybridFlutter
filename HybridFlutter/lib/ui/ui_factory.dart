@@ -68,6 +68,16 @@ class UIFactory {
     return children;
   }
 
+  Future _updateChildren(BaseWidget widget) async {
+    for (var it in widget.data.value.children) {
+      await handleProperty(_methodChannel, _pageId, it.component);
+      it.updateProperties(it.component.properties);
+      if (it.data.value.children.isNotEmpty) {
+        _updateChildren(it);
+      }
+    }
+  }
+
   Future<dynamic> createWidgetTree(BaseWidget parent, Component component,
       {newSize}) async {
     var repeat = component.getRealForExpression();
@@ -88,6 +98,7 @@ class UIFactory {
           var inRepeatPrefixExp = getInRepeatPrefixExp(
               indexName, itemName, exp, index, parentInRepeatPrefixExp);
           var inRepeatId = "$id-$index";
+          /// 缓存复用
           var clone = _componentMap[inRepeatId];
           if (null == clone) {
             clone = await createComponentTree(
@@ -96,14 +107,18 @@ class UIFactory {
                 inRepeatIndex: index,
                 inRepeatPrefixExp: inRepeatPrefixExp);
           }
+          /// 处理表达式
           await handleProperty(_methodChannel, _pageId, clone);
+          /// 缓存复用
           var widget = _widgetMap[inRepeatId];
           if (null == widget) {
             widget = _createWidget(parent, clone);
             widget.setChildren(await _getChildren(widget, clone));
             _widgetMap.putIfAbsent(clone.id, () => widget);
           } else {
+            /// 此处复用需要更新复用的属性及children的属性的表达式值
             widget.updateProperties(clone.properties);
+            await _updateChildren(widget);
           }
           widgets.add(widget);
         }
