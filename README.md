@@ -4,12 +4,20 @@ Flutter + V8/JsCore 开发小程序引擎
 众所周知，小程序是由HTML标签来开发原生组件，那么首先需要将HTML做解析，这里我们将HTML通过node脚本解析成JSON字符串，再用Dart来解析JSON，映射对应的标签到flutter的组件。
 
 # 一、HTML部分
-由于目前还没有将HTML的flex属性解析成flutter的样式，所有决定直接用flutter的组件名在HTML文件上开发
+为了高效解析，直接用flutter的组件名在HTML文件上开发
 
 * 文件目录如下：
 
-![文件结构](https://user-gold-cdn.xitu.io/2019/8/30/16ce13a3738de73d?w=360&h=97&f=png&s=4132)
+![](https://user-gold-cdn.xitu.io/2019/9/20/16d4de1ed3be0c3a?w=322&h=109&f=png&s=5750)
 
+- config
+``` json
+{
+  "navigationBarTitleText": "",
+  "backgroundColor": "#eeeeee",
+  "enablePullDownRefresh": true  
+}
+```
 - HTML
 ```
 <!DOCTYPE html>
@@ -26,7 +34,7 @@ Flutter + V8/JsCore 开发小程序引擎
     <singlechildscrollview>  
         <column>   
             <container id="btn-container" cc:for="{{list}}"> 
-                <raisedbutton id="raised-button" onclick="onItemClick" data-index="{{index}}">
+                <raisedbutton id="raised-button" bindtap="onItemClick" data-index="{{index}}">
                     <row>
                         <container id="image-container">
                             <image src="{{item.image}}" />  
@@ -106,14 +114,15 @@ Page({
     onLoad(e) {
         cc.setNavigationBarTitle({
             title: 'Python系列丛书'
-        });
+        }); 
+        cc.showLoading({});
+        this.doRequest(true);  
+    },
 
-        cc.showLoading({
-            message: '正在玩命加载...'
-        });
+    doRequest(isOnload) {
         let that = this;
         cc.request({
-            url: 'https://www.easy-mock.com/mock/5ab46236e1c17b3b2cc55843/example/books',
+            url: 'https://douban.uieee.com/v2/book/search?q=python', 
             data: {},
             header: {},
             method: 'get',
@@ -121,23 +130,38 @@ Page({
                 that.setData({
                     list: response.body.books
                 });
+                cc.showToast({
+                    title: '加载成功'
+                });
             },
             fail: function (error) {
                 console.log('request error:' + JSON.stringify(error));
+                cc.showToast({
+                    title: '加载失败'
+                });
             },
             complete: function () {
                 console.log('request complete');
-                cc.hideLoading();
+                if (isOnload) {
+                    cc.hideLoading(); 
+                } else {
+                    cc.stopPullDownRefresh();
+                }
             } 
         });
     },
 
     onItemClick(e) {
-        var item = this.data.list[e.target.dataset.index];
+        var item = this.data.list[e.target.dataset.index];  
         cc.navigateTo({ 
             url: "detail?item=" + JSON.stringify(item)
         });
     },   
+
+    onPullDownRefresh() { 
+        console.log("onPullDownRefresh");
+        this.doRequest(false);
+    },
 
     /**
     * 页面卸载时触发。如cc.redirectTo或cc.navigateBack到其他页面时。
@@ -150,31 +174,37 @@ Page({
 
 # 二、渲染效果
 
-
 ![](https://user-gold-cdn.xitu.io/2019/8/30/16ce13c82d12943c?w=415&h=865&f=gif&s=2690414)
-
-
-![](https://user-gold-cdn.xitu.io/2019/9/3/16cf718aecb4bf3f?w=415&h=865&f=gif&s=403181)
-
 
 # 三、组件部分
 直接使用flutter的组件
 
 ## 1、组件
-### a、容器
-- column
-- row
-- container
-- singlechildscrollview
-- ...
+### a、布局类组件
+- 线性布局（row和column）
+- 弹性布局（flex）
+- 流式布局（wrap、flow）
+- 层叠布局（stack、positioned）
+- 对齐与相对定位（align）
 
-### b、基础内容
+### b、基础组件
 - text
 - image
-- ...
-### c、表单组件
-- 待完善
+- raisedbutton
+- circularprogressindicator
 
+### c、容器类组件
+- 填充（padding）
+- 尺寸限制类容器（constrainedbox等）
+- 装饰容器（decoratedbox）
+- 变换（transform）
+- container容器
+- 剪裁（clip）
+
+### d、可滚动组件
+- singlechildscrollview
+- listview
+- gridview
 
 # 四、Api
 模仿微信小程序的Api，cc对应是微信小程序的wx
@@ -186,9 +216,16 @@ Page({
 - cc.hideLoading
 - ...
 
-### b、导航栏
+### b、背景 
+- cc.setBackgroundColor
+
+### c、导航栏
 - cc.setNavigationBarTitle
 - cc.setNavigationBarColor
+
+### e、下拉刷新 
+- cc.startPullDownRefresh
+- cc.stopPullDownRefresh
 
 ## 2、网络
 ### a、cc.request
@@ -266,7 +303,20 @@ Page({
 })
 
 ```
-# 六、实时调试
+# 六、API 演示
+![](https://user-gold-cdn.xitu.io/2019/9/3/16cf718aecb4bf3f?w=415&h=865&f=gif&s=403181)
+
+# 七、实时调试
 
 
 ![](https://user-gold-cdn.xitu.io/2019/9/3/16cf7195023303b3?w=1547&h=885&f=gif&s=1961142)
+
+
+- 系列文章：
+
+[《使用Flutter + V8开发小程序引擎（一）》](https://juejin.im/post/5d68c2046fb9a06aca3833a2)
+
+[《使用Flutter + V8开发小程序引擎（二）》](https://juejin.im/post/5d68f1b36fb9a06ad0058541)
+
+[《使用Flutter + V8开发小程序引擎（三）》](https://juejin.im/post/5d70af6ee51d456206115a6f)
+
