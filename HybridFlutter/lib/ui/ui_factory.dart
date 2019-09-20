@@ -3,9 +3,11 @@ import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/property.dart';
 import 'package:hybrid_flutter/ui/circular_progress_indicator.dart';
 import 'package:hybrid_flutter/ui/list_view.dart';
+import 'package:hybrid_flutter/ui/positioned.dart';
 import 'package:hybrid_flutter/ui/raised_button.dart';
 import 'package:hybrid_flutter/ui/row.dart';
 import 'package:hybrid_flutter/ui/single_child_scrollview.dart';
+import 'package:hybrid_flutter/ui/stack.dart';
 import 'package:hybrid_flutter/ui/text.dart';
 import 'package:hybrid_flutter/ui/visibility.dart';
 import 'package:hybrid_flutter/util/expression_util.dart';
@@ -98,6 +100,7 @@ class UIFactory {
           var inRepeatPrefixExp = getInRepeatPrefixExp(
               indexName, itemName, exp, index, parentInRepeatPrefixExp);
           var inRepeatId = "$id-$index";
+
           /// 缓存复用
           var clone = _componentMap[inRepeatId];
           if (null == clone) {
@@ -107,8 +110,10 @@ class UIFactory {
                 inRepeatIndex: index,
                 inRepeatPrefixExp: inRepeatPrefixExp);
           }
+
           /// 处理表达式
           await handleProperty(_methodChannel, _pageId, clone);
+
           /// 缓存复用
           var widget = _widgetMap[inRepeatId];
           if (null == widget) {
@@ -151,6 +156,13 @@ class UIFactory {
         break;
       case "row":
         widget = RowStateless(parent, _pageId, _methodChannel, component);
+        break;
+      case "stack":
+        widget = StackStateless(parent, _pageId, _methodChannel, component);
+        break;
+      case "positioned":
+        widget =
+            PositionedStateless(parent, _pageId, _methodChannel, component);
         break;
       case "singlechildscrollview":
         widget = SingleChildScrollViewStateless(

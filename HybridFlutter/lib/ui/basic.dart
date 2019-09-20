@@ -245,6 +245,88 @@ class MAlignment {
   }
 }
 
+class MAlignmentDirectional {
+  static AlignmentDirectional parse(Property value,
+      {AlignmentDirectional defaultValue = AlignmentDirectional.topStart}) {
+    AlignmentDirectional result = defaultValue;
+    if (null == value) return result;
+    switch (value.getValue()) {
+      case 'top-start':
+        result = AlignmentDirectional.topStart;
+        break;
+      case 'top-center':
+        result = AlignmentDirectional.topCenter;
+        break;
+      case 'top-end':
+        result = AlignmentDirectional.topEnd;
+        break;
+      case 'center-start':
+        result = AlignmentDirectional.centerStart;
+        break;
+      case 'center':
+        result = AlignmentDirectional.center;
+        break;
+      case 'center-end':
+        result = AlignmentDirectional.centerEnd;
+        break;
+      case 'bottom-start':
+        result = AlignmentDirectional.bottomStart;
+        break;
+      case 'bottom-center':
+        result = AlignmentDirectional.bottomCenter;
+        break;
+      case 'bottom-end':
+        result = AlignmentDirectional.bottomEnd;
+        break;
+      default:
+        result = defaultValue;
+        break;
+    }
+    return result;
+  }
+}
+
+class MOverflow {
+  static Overflow parse(Property value, {Overflow defaultValue}) {
+    Overflow result = defaultValue;
+    if (null == value) return result;
+    switch (value.getValue()) {
+      case 'clip':
+        result = Overflow.clip;
+        break;
+      case 'visible':
+        result = Overflow.visible;
+        break;
+      default:
+        result = defaultValue;
+        break;
+    }
+    return result;
+  }
+}
+
+class MStackFit {
+  static StackFit parse(Property value, {StackFit defaultValue}) {
+    StackFit result = defaultValue;
+    if (null == value) return result;
+    switch (value.getValue()) {
+      case 'loose':
+        result = StackFit.loose;
+        break;
+      case 'expand':
+        result = StackFit.expand;
+        break;
+      case 'passthrough':
+        result = StackFit.passthrough;
+        break;
+      default:
+        result = defaultValue;
+        break;
+    }
+    return result;
+  }
+}
+
 class MBool {
   static bool parse(Property value, {bool defaultValue}) {
     bool result = defaultValue;
