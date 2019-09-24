@@ -4,6 +4,7 @@ import 'package:hybrid_flutter/entity/component.dart';
 import 'package:hybrid_flutter/entity/data.dart';
 
 import 'base_widget.dart';
+import 'basic.dart';
 
 class VisibilityStateless extends BaseWidget {
   VisibilityStateless(BaseWidget parent, String pageId,
@@ -19,15 +20,13 @@ class VisibilityStateless extends BaseWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         builder: (BuildContext context, Data data, Widget child) {
-          var visiblePro = data.map['visible'];
-          var visible = (null != visiblePro && "false" == visiblePro.getValue())
-              ? false
-              : true;
           return Visibility(
               key: ObjectKey(component),
-              visible: visible,
+              visible: MBool.parse(data.map['visible'], defaultValue: true),
               child: data.children.length > 0 ? data.children[0] : null,
-              replacement: data.children.length > 1 ? data.children[1] : const SizedBox.shrink());
+              replacement: data.children.length > 1
+                  ? data.children[1]
+                  : const SizedBox.shrink());
         },
         valueListenable: this.data);
   }

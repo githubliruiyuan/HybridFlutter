@@ -22,7 +22,7 @@ class SingleChildScrollViewStateless extends BaseWidget {
         builder: (BuildContext context, Data data, Widget child) {
           return SingleChildScrollView(
               key: ObjectKey(component),
-              scrollDirection: MAxis.parse(data.map["scrollDirection"],
+              scrollDirection: MAxis.parse(data.map["scroll-direction"],
                   defaultValue: Axis.vertical),
               child: data.children.isNotEmpty ? data.children[0] : null);
         },
