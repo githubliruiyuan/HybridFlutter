@@ -312,6 +312,15 @@ Page({
 ![](https://user-gold-cdn.xitu.io/2019/9/3/16cf7195023303b3?w=1547&h=885&f=gif&s=1961142)
 
 
+# 八、代码运行
+
+- 1、目前只实现了Android版，需要使用Android Studio导入项目，路径如下图所示；
+- 2、将main.dart中的_pageCode值改为“home”，如下图所示。
+
+![](https://user-gold-cdn.xitu.io/2019/10/11/16db8b9afc9f6eac?w=1212&h=738&f=png&s=143747)
+
+
+
 - 系列文章：
 
 [《使用Flutter + V8开发小程序引擎（一）》](https://juejin.im/post/5d68c2046fb9a06aca3833a2)
