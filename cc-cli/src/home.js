@@ -21,7 +21,7 @@ Page({
     doRequest(isOnload) {
         let that = this;
         cc.request({
-            url: 'https://douban.uieee.com/v2/book/search?q=python', 
+            url: 'http://47.107.46.220:10808/query', //'https://douban.uieee.com/v2/book/search?q=python', 
             data: {},
             header: {},
             method: 'get',
