@@ -10,13 +10,13 @@ import 'basic.dart';
 
 class ListViewStateless extends BaseWidget {
   ListViewStateless(BaseWidget parent, String pageId,
-      MethodChannel methodChannel, Component component) {
-    this.parent = parent;
-    this.pageId = pageId;
-    this.methodChannel = methodChannel;
-    this.component = component;
-    this.data = ValueNotifier(Data(component.properties));
-  }
+      MethodChannel methodChannel, Component component)
+      : super(
+            parent: parent,
+            pageId: pageId,
+            methodChannel: methodChannel,
+            component: component,
+            data: ValueNotifier(Data(component.properties)));
 
   void _scrollToUpper() {
     var upper = component.events["bindscrolltoupper"];

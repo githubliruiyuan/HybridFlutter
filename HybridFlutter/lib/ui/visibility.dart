@@ -8,13 +8,13 @@ import 'basic.dart';
 
 class VisibilityStateless extends BaseWidget {
   VisibilityStateless(BaseWidget parent, String pageId,
-      MethodChannel methodChannel, Component component) {
-    this.parent = parent;
-    this.pageId = pageId;
-    this.methodChannel = methodChannel;
-    this.component = component;
-    this.data = ValueNotifier(Data(component.properties));
-  }
+      MethodChannel methodChannel, Component component)
+      : super(
+            parent: parent,
+            pageId: pageId,
+            methodChannel: methodChannel,
+            component: component,
+            data: ValueNotifier(Data(component.properties)));
 
   @override
   Widget build(BuildContext context) {
