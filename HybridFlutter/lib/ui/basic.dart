@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:hybrid_flutter/entity/property.dart';
 import 'package:hybrid_flutter/util/color_util.dart';
-import 'package:hybrid_flutter/util/widget_util.dart';
 
 class MAxis {
   static Axis parse(Property value, {Axis defaultValue = Axis.horizontal}) {
@@ -166,14 +165,15 @@ class MMargin {
         marginRight != null ||
         marginBottom != null) {
       margin = EdgeInsets.fromLTRB(
-          dealDoubleDefZero(marginLeft),
-          dealDoubleDefZero(marginTop),
-          dealDoubleDefZero(marginRight),
-          dealDoubleDefZero(marginBottom));
+          MDouble.parse(marginLeft, defaultValue: 0),
+          MDouble.parse(marginTop, defaultValue: 0),
+          MDouble.parse(marginRight, defaultValue: 0),
+          MDouble.parse(marginBottom, defaultValue: 0));
     }
 
     if (null != properties['margin']) {
-      margin = EdgeInsets.all(dealDoubleDefZero(properties['margin']));
+      margin =
+          EdgeInsets.all(MDouble.parse(properties['margin'], defaultValue: 0));
     }
     return margin;
   }
@@ -191,13 +191,14 @@ class MPadding {
         paddingRight != null ||
         paddingBottom != null) {
       padding = EdgeInsets.fromLTRB(
-          dealDoubleDefZero(paddingLeft),
-          dealDoubleDefZero(paddingTop),
-          dealDoubleDefZero(paddingRight),
-          dealDoubleDefZero(paddingBottom));
+          MDouble.parse(paddingLeft, defaultValue: 0),
+          MDouble.parse(paddingTop, defaultValue: 0),
+          MDouble.parse(paddingRight, defaultValue: 0),
+          MDouble.parse(paddingBottom, defaultValue: 0));
     }
     if (null != properties['padding']) {
-      padding = EdgeInsets.all(dealDoubleDefZero(properties['padding']));
+      padding =
+          EdgeInsets.all(MDouble.parse(properties['padding'], defaultValue: 0));
     }
     return padding;
   }
@@ -341,7 +342,7 @@ class MInt {
   static int parse(Property value, {int defaultValue}) {
     int result = defaultValue;
     if (null != value) {
-      result = int.parse(removePx(value.getValue()));
+      result = int.parse(_removePx(value.getValue()));
     }
     return result;
   }
@@ -351,7 +352,7 @@ class MDouble {
   static double parse(Property value, {double defaultValue}) {
     double result = defaultValue;
     if (null != value) {
-      result = double.parse(removePx(value.getValue()));
+      result = double.parse(_removePx(value.getValue()));
     }
     return result;
   }
@@ -365,4 +366,14 @@ class MColor {
     }
     return result;
   }
+}
+
+String _removePx(String pxString) {
+  if (pxString == null) {
+    return null;
+  }
+  if (pxString.endsWith('px')) {
+    return pxString.replaceAll('px', '');
+  }
+  return pxString;
 }

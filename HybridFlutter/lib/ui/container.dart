@@ -7,24 +7,19 @@ import 'package:hybrid_flutter/ui/base_widget.dart';
 import 'basic.dart';
 
 class ContainerStateless extends BaseWidget {
-  ContainerStateless(
-      BaseWidget parent,
-      String pageId,
-      MethodChannel methodChannel,
-      Component component) {
-    this.parent = parent;
-    this.pageId = pageId;
-    this.methodChannel = methodChannel;
-    this.component = component;
-    this.data = ValueNotifier(Data(component.properties));
-  }
+  ContainerStateless(BaseWidget parent, String pageId,
+      MethodChannel methodChannel, Component component)
+      : super(
+            parent: parent,
+            pageId: pageId,
+            methodChannel: methodChannel,
+            component: component,
+            data: ValueNotifier(Data(component.properties)));
 
   @override
   Widget build(BuildContext context) {
-
     return ValueListenableBuilder(
         builder: (BuildContext context, Data data, Widget child) {
-
           var alignment = MAlignment.parse(data.map['alignment'],
               defaultValue: Alignment.topLeft);
 

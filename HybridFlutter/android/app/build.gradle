@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "com.cc.hybrid"
         minSdkVersion 16
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -70,7 +70,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "com.android.support:appcompat-v7:$supportLib"
-    implementation 'com.eclipsesource.j2v8:j2v8:4.8.2@aar'
+    implementation 'com.eclipsesource.j2v8:j2v8:6.1.0@aar'
     implementation 'com.alibaba:fastjson:1.2.46+'
     implementation 'com.squareup.okhttp3:okhttp:3.4.0+'
     implementation 'com.squareup.okio:okio:1.12.0+'

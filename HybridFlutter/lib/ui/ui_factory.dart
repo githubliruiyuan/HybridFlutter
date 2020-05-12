@@ -213,10 +213,10 @@ class UIFactory {
         var text = Property('未实现控件${component.tag}');
         var font = Property('14');
         var color = Property('red');
-        component.properties = Map();
-        component.properties.putIfAbsent('font-size', () => font);
-        component.properties.putIfAbsent('color', () => color);
-        component.properties.putIfAbsent('innerHTML', () => text);
+        component.properties = Map()
+          ..putIfAbsent('font-size', () => font)
+          ..putIfAbsent('color', () => color)
+          ..putIfAbsent('innerHTML', () => text);
         widget = TextStateless(parent, _pageId, _methodChannel, component);
         break;
     }

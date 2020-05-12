@@ -5,11 +5,18 @@ import 'package:hybrid_flutter/entity/data.dart';
 import 'package:hybrid_flutter/entity/property.dart';
 
 abstract class BaseWidget extends StatelessWidget {
-  String pageId;
-  Component component;
-  MethodChannel methodChannel;
-  BaseWidget parent;
-  ValueNotifier<Data> data;
+  final String pageId;
+  final Component component;
+  final MethodChannel methodChannel;
+  final BaseWidget parent;
+  final ValueNotifier<Data> data;
+
+  BaseWidget(
+      {this.pageId,
+      this.component,
+      this.methodChannel,
+      this.parent,
+      this.data});
 
   void setChildren(List<BaseWidget> children) {
     data.value.children = children;

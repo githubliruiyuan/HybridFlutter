@@ -222,8 +222,4 @@ class Component {
     }
     return getExpression(repeat["expression"]);
   }
-
-//  Component clone() {
-//    return Component(parent, node, styles, id: this.id);
-//  }
 }

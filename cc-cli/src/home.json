@@ -1,1 +1,174 @@
-{"style":{".btn-container":{"margin-top":"10","margin-left":"10","margin-right":"10"},".raised-button":{"color":"white"},".image-container":{"width":"100px","height":"100px","padding":"5"},".column-text":{"cross-axis-alignment":"start"},".text-title":{"font-size":"14px","color":"black"},".text-publisher":{"font-size":"12px","color":"gray"},".text-summary":{"font-size":"12px","color":"gray"}},"body":{"tag":"body","innerHTML":"","childNodes":[{"tag":"singlechildscrollview","innerHTML":"","childNodes":[{"tag":"column","innerHTML":"","childNodes":[{"tag":"container","innerHTML":"","childNodes":[{"tag":"raisedbutton","innerHTML":"","childNodes":[{"tag":"row","innerHTML":"","childNodes":[{"tag":"container","innerHTML":"","childNodes":[{"tag":"image","innerHTML":"","childNodes":[],"datasets":{},"events":{},"directives":{},"attribStyle":{"src":"{{item.image}}"},"attrib":{}}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{},"id":"image-container"},{"tag":"expanded","innerHTML":"","childNodes":[{"tag":"column","innerHTML":"","childNodes":[{"tag":"text","innerHTML":"e3tpdGVtLnRpdGxlfX0=","childNodes":[],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{},"id":"text-title"},{"tag":"text","innerHTML":"e3tpdGVtLnB1Ymxpc2hlcn19","childNodes":[],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{},"id":"text-publisher"},{"tag":"text","innerHTML":"e3tpdGVtLnN1bW1hcnkuc3Vic3RyaW5nKDAsIDIwKSArICcuLi4nfX0=","childNodes":[],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{},"id":"text-summary"}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{},"id":"column-text"}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{}}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{}}],"datasets":{"ex":"{{index}}"},"events":{"bindtap":"onItemClick"},"directives":{},"attribStyle":{},"attrib":{"data-index":"{{index}}"},"id":"raised-button"}],"datasets":{},"events":{},"directives":{"repeat":{"name":"or","expression":"{{list}}","item":"item","index":"index"}},"attribStyle":{},"attrib":{},"id":"btn-container"}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{}}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{}}],"datasets":{},"events":{},"directives":{},"attribStyle":{},"attrib":{}},"script":"IWZ1bmN0aW9uKGUpe3ZhciB0PXt9O2Z1bmN0aW9uIG8obil7aWYodFtuXSlyZXR1cm4gdFtuXS5leHBvcnRzO3ZhciByPXRbbl09e2k6bixsOiExLGV4cG9ydHM6e319O3JldHVybiBlW25dLmNhbGwoci5leHBvcnRzLHIsci5leHBvcnRzLG8pLHIubD0hMCxyLmV4cG9ydHN9by5tPWUsby5jPXQsby5kPWZ1bmN0aW9uKGUsdCxuKXtvLm8oZSx0KXx8T2JqZWN0LmRlZmluZVByb3BlcnR5KGUsdCx7ZW51bWVyYWJsZTohMCxnZXQ6bn0pfSxvLnI9ZnVuY3Rpb24oZSl7InVuZGVmaW5lZCIhPXR5cGVvZiBTeW1ib2wmJlN5bWJvbC50b1N0cmluZ1RhZyYmT2JqZWN0LmRlZmluZVByb3BlcnR5KGUsU3ltYm9sLnRvU3RyaW5nVGFnLHt2YWx1ZToiTW9kdWxlIn0pLE9iamVjdC5kZWZpbmVQcm9wZXJ0eShlLCJfX2VzTW9kdWxlIix7dmFsdWU6ITB9KX0sby50PWZ1bmN0aW9uKGUsdCl7aWYoMSZ0JiYoZT1vKGUpKSw4JnQpcmV0dXJuIGU7aWYoNCZ0JiYib2JqZWN0Ij09dHlwZW9mIGUmJmUmJmUuX19lc01vZHVsZSlyZXR1cm4gZTt2YXIgbj1PYmplY3QuY3JlYXRlKG51bGwpO2lmKG8ucihuKSxPYmplY3QuZGVmaW5lUHJvcGVydHkobiwiZGVmYXVsdCIse2VudW1lcmFibGU6ITAsdmFsdWU6ZX0pLDImdCYmInN0cmluZyIhPXR5cGVvZiBlKWZvcih2YXIgciBpbiBlKW8uZChuLHIsZnVuY3Rpb24odCl7cmV0dXJuIGVbdF19LmJpbmQobnVsbCxyKSk7cmV0dXJuIG59LG8ubj1mdW5jdGlvbihlKXt2YXIgdD1lJiZlLl9fZXNNb2R1bGU/ZnVuY3Rpb24oKXtyZXR1cm4gZS5kZWZhdWx0fTpmdW5jdGlvbigpe3JldHVybiBlfTtyZXR1cm4gby5kKHQsImEiLHQpLHR9LG8ubz1mdW5jdGlvbihlLHQpe3JldHVybiBPYmplY3QucHJvdG90eXBlLmhhc093blByb3BlcnR5LmNhbGwoZSx0KX0sby5wPSIiLG8oby5zPTIpfSh7MjpmdW5jdGlvbihlLHQpe1BhZ2Uoe2RhdGE6e2xpc3Q6W119LG9uTG9hZChlKXtjYy5zZXROYXZpZ2F0aW9uQmFyVGl0bGUoe3RpdGxlOiJQeXRob27ns7vliJfkuJvkuaYifSksY2Muc2hvd0xvYWRpbmcoe30pLHRoaXMuZG9SZXF1ZXN0KCEwKX0sZG9SZXF1ZXN0KGUpe2xldCB0PXRoaXM7Y2MucmVxdWVzdCh7dXJsOiJodHRwczovL2RvdWJhbi51aWVlZS5jb20vdjIvYm9vay9zZWFyY2g/cT1weXRob24iLGRhdGE6e30saGVhZGVyOnt9LG1ldGhvZDoiZ2V0IixzdWNjZXNzOmZ1bmN0aW9uKGUpe3Quc2V0RGF0YSh7bGlzdDplLmJvZHkuYm9va3N9KSxjYy5zaG93VG9hc3Qoe3RpdGxlOiLliqDovb3miJDlip8ifSl9LGZhaWw6ZnVuY3Rpb24oZSl7Y29uc29sZS5sb2coInJlcXVlc3QgZXJyb3I6IitKU09OLnN0cmluZ2lmeShlKSksY2Muc2hvd1RvYXN0KHt0aXRsZToi5Yqg6L295aSx6LSlIn0pfSxjb21wbGV0ZTpmdW5jdGlvbigpe2NvbnNvbGUubG9nKCJyZXF1ZXN0IGNvbXBsZXRlIiksZT9jYy5oaWRlTG9hZGluZygpOmNjLnN0b3BQdWxsRG93blJlZnJlc2goKX19KX0sb25JdGVtQ2xpY2soZSl7dmFyIHQ9dGhpcy5kYXRhLmxpc3RbZS50YXJnZXQuZGF0YXNldC5pbmRleF07Y2MubmF2aWdhdGVUbyh7dXJsOiJkZXRhaWw/aXRlbT0iK0pTT04uc3RyaW5naWZ5KHQpfSl9LG9uUHVsbERvd25SZWZyZXNoKCl7Y29uc29sZS5sb2coIm9uUHVsbERvd25SZWZyZXNoIiksdGhpcy5kb1JlcXVlc3QoITEpfSxvblVubG9hZCgpe319KX19KTsKLy8jIHNvdXJjZU1hcHBpbmdVUkw9aG9tZS5idW5kbGUuanMubWFw","config":{"navigationBarTitleText":"","backgroundColor":"#eeeeee","enablePullDownRefresh":true}}
+{
+  "style": {
+    ".btn-container": {
+      "margin-top": "10",
+      "margin-left": "10",
+      "margin-right": "10"
+    },
+    ".raised-button": { "color": "white" },
+    ".image-container": { "width": "100px", "height": "100px", "padding": "5" },
+    ".column-text": { "cross-axis-alignment": "start" },
+    ".text-title": { "font-size": "14px", "color": "black" },
+    ".text-publisher": { "font-size": "12px", "color": "gray" },
+    ".text-summary": { "font-size": "12px", "color": "gray" }
+  },
+  "body": {
+    "tag": "body",
+    "innerHTML": "",
+    "childNodes": [
+      {
+        "tag": "singlechildscrollview",
+        "innerHTML": "",
+        "childNodes": [
+          {
+            "tag": "column",
+            "innerHTML": "",
+            "childNodes": [
+              {
+                "tag": "container",
+                "innerHTML": "",
+                "childNodes": [
+                  {
+                    "tag": "raisedbutton",
+                    "innerHTML": "",
+                    "childNodes": [
+                      {
+                        "tag": "row",
+                        "innerHTML": "",
+                        "childNodes": [
+                          {
+                            "tag": "container",
+                            "innerHTML": "",
+                            "childNodes": [
+                              {
+                                "tag": "image",
+                                "innerHTML": "",
+                                "childNodes": [],
+                                "datasets": {},
+                                "events": {},
+                                "directives": {},
+                                "attribStyle": { "src": "{{item.image}}" },
+                                "attrib": {}
+                              }
+                            ],
+                            "datasets": {},
+                            "events": {},
+                            "directives": {},
+                            "attribStyle": {},
+                            "attrib": {},
+                            "id": "image-container"
+                          },
+                          {
+                            "tag": "expanded",
+                            "innerHTML": "",
+                            "childNodes": [
+                              {
+                                "tag": "column",
+                                "innerHTML": "",
+                                "childNodes": [
+                                  {
+                                    "tag": "text",
+                                    "innerHTML": "e3tpdGVtLnRpdGxlfX0=",
+                                    "childNodes": [],
+                                    "datasets": {},
+                                    "events": {},
+                                    "directives": {},
+                                    "attribStyle": {},
+                                    "attrib": {},
+                                    "id": "text-title"
+                                  },
+                                  {
+                                    "tag": "text",
+                                    "innerHTML": "e3tpdGVtLnB1Ymxpc2hlcn19",
+                                    "childNodes": [],
+                                    "datasets": {},
+                                    "events": {},
+                                    "directives": {},
+                                    "attribStyle": {},
+                                    "attrib": {},
+                                    "id": "text-publisher"
+                                  },
+                                  {
+                                    "tag": "text",
+                                    "innerHTML": "e3tpdGVtLnN1bW1hcnkuc3Vic3RyaW5nKDAsIDIwKSArICcuLi4nfX0=",
+                                    "childNodes": [],
+                                    "datasets": {},
+                                    "events": {},
+                                    "directives": {},
+                                    "attribStyle": {},
+                                    "attrib": {},
+                                    "id": "text-summary"
+                                  }
+                                ],
+                                "datasets": {},
+                                "events": {},
+                                "directives": {},
+                                "attribStyle": {},
+                                "attrib": {},
+                                "id": "column-text"
+                              }
+                            ],
+                            "datasets": {},
+                            "events": {},
+                            "directives": {},
+                            "attribStyle": {},
+                            "attrib": {}
+                          }
+                        ],
+                        "datasets": {},
+                        "events": {},
+                        "directives": {},
+                        "attribStyle": {},
+                        "attrib": {}
+                      }
+                    ],
+                    "datasets": { "ex": "{{index}}" },
+                    "events": { "bindtap": "onItemClick" },
+                    "directives": {},
+                    "attribStyle": {},
+                    "attrib": { "data-index": "{{index}}" },
+                    "id": "raised-button"
+                  }
+                ],
+                "datasets": {},
+                "events": {},
+                "directives": {
+                  "repeat": {
+                    "name": "or",
+                    "expression": "{{list}}",
+                    "item": "item",
+                    "index": "index"
+                  }
+                },
+                "attribStyle": {},
+                "attrib": {},
+                "id": "btn-container"
+              }
+            ],
+            "datasets": {},
+            "events": {},
+            "directives": {},
+            "attribStyle": {},
+            "attrib": {}
+          }
+        ],
+        "datasets": {},
+        "events": {},
+        "directives": {},
+        "attribStyle": {},
+        "attrib": {}
+      }
+    ],
+    "datasets": {},
+    "events": {},
+    "directives": {},
+    "attribStyle": {},
+    "attrib": {}
+  },
+  "script": "IWZ1bmN0aW9uKGUpe3ZhciB0PXt9O2Z1bmN0aW9uIG8obil7aWYodFtuXSlyZXR1cm4gdFtuXS5leHBvcnRzO3ZhciByPXRbbl09e2k6bixsOiExLGV4cG9ydHM6e319O3JldHVybiBlW25dLmNhbGwoci5leHBvcnRzLHIsci5leHBvcnRzLG8pLHIubD0hMCxyLmV4cG9ydHN9by5tPWUsby5jPXQsby5kPWZ1bmN0aW9uKGUsdCxuKXtvLm8oZSx0KXx8T2JqZWN0LmRlZmluZVByb3BlcnR5KGUsdCx7ZW51bWVyYWJsZTohMCxnZXQ6bn0pfSxvLnI9ZnVuY3Rpb24oZSl7InVuZGVmaW5lZCIhPXR5cGVvZiBTeW1ib2wmJlN5bWJvbC50b1N0cmluZ1RhZyYmT2JqZWN0LmRlZmluZVByb3BlcnR5KGUsU3ltYm9sLnRvU3RyaW5nVGFnLHt2YWx1ZToiTW9kdWxlIn0pLE9iamVjdC5kZWZpbmVQcm9wZXJ0eShlLCJfX2VzTW9kdWxlIix7dmFsdWU6ITB9KX0sby50PWZ1bmN0aW9uKGUsdCl7aWYoMSZ0JiYoZT1vKGUpKSw4JnQpcmV0dXJuIGU7aWYoNCZ0JiYib2JqZWN0Ij09dHlwZW9mIGUmJmUmJmUuX19lc01vZHVsZSlyZXR1cm4gZTt2YXIgbj1PYmplY3QuY3JlYXRlKG51bGwpO2lmKG8ucihuKSxPYmplY3QuZGVmaW5lUHJvcGVydHkobiwiZGVmYXVsdCIse2VudW1lcmFibGU6ITAsdmFsdWU6ZX0pLDImdCYmInN0cmluZyIhPXR5cGVvZiBlKWZvcih2YXIgciBpbiBlKW8uZChuLHIsZnVuY3Rpb24odCl7cmV0dXJuIGVbdF19LmJpbmQobnVsbCxyKSk7cmV0dXJuIG59LG8ubj1mdW5jdGlvbihlKXt2YXIgdD1lJiZlLl9fZXNNb2R1bGU/ZnVuY3Rpb24oKXtyZXR1cm4gZS5kZWZhdWx0fTpmdW5jdGlvbigpe3JldHVybiBlfTtyZXR1cm4gby5kKHQsImEiLHQpLHR9LG8ubz1mdW5jdGlvbihlLHQpe3JldHVybiBPYmplY3QucHJvdG90eXBlLmhhc093blByb3BlcnR5LmNhbGwoZSx0KX0sby5wPSIiLG8oby5zPTIpfSh7MjpmdW5jdGlvbihlLHQpe1BhZ2Uoe2RhdGE6e2xpc3Q6W119LG9uTG9hZChlKXtjYy5zZXROYXZpZ2F0aW9uQmFyVGl0bGUoe3RpdGxlOiJQeXRob27ns7vliJfkuJvkuaYifSksY2Muc2hvd0xvYWRpbmcoe30pLHRoaXMuZG9SZXF1ZXN0KCEwKX0sZG9SZXF1ZXN0KGUpe2xldCB0PXRoaXM7Y2MucmVxdWVzdCh7dXJsOiJodHRwOi8vNDcuMTA3LjQ2LjIyMDoxMDgwOC9xdWVyeSIsZGF0YTp7fSxoZWFkZXI6e30sbWV0aG9kOiJnZXQiLHN1Y2Nlc3M6ZnVuY3Rpb24oZSl7dC5zZXREYXRhKHtsaXN0OmUuYm9keS5ib29rc30pLGNjLnNob3dUb2FzdCh7dGl0bGU6IuWKoOi9veaIkOWKnyJ9KX0sZmFpbDpmdW5jdGlvbihlKXtjb25zb2xlLmxvZygicmVxdWVzdCBlcnJvcjoiK0pTT04uc3RyaW5naWZ5KGUpKSxjYy5zaG93VG9hc3Qoe3RpdGxlOiLliqDovb3lpLHotKUifSl9LGNvbXBsZXRlOmZ1bmN0aW9uKCl7Y29uc29sZS5sb2coInJlcXVlc3QgY29tcGxldGUiKSxlP2NjLmhpZGVMb2FkaW5nKCk6Y2Muc3RvcFB1bGxEb3duUmVmcmVzaCgpfX0pfSxvbkl0ZW1DbGljayhlKXt2YXIgdD10aGlzLmRhdGEubGlzdFtlLnRhcmdldC5kYXRhc2V0LmluZGV4XTtjYy5uYXZpZ2F0ZVRvKHt1cmw6ImRldGFpbD9pdGVtPSIrSlNPTi5zdHJpbmdpZnkodCl9KX0sb25QdWxsRG93blJlZnJlc2goKXtjb25zb2xlLmxvZygib25QdWxsRG93blJlZnJlc2giKSx0aGlzLmRvUmVxdWVzdCghMSl9LG9uVW5sb2FkKCl7fX0pfX0pOwovLyMgc291cmNlTWFwcGluZ1VSTD1ob21lLmJ1bmRsZS5qcy5tYXA=",
+  "config": {
+    "navigationBarTitleText": "",
+    "backgroundColor": "#eeeeee",
+    "enablePullDownRefresh": true
+  }
+}
