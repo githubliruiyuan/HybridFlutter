@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import com.cc.hybrid.bridge.flutter.FlutterPluginMethodChannel
-import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.debug.Debugger
 import com.cc.hybrid.event.EventManager
+import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.util.SpUtil
 import com.cc.hybrid.util.ToastUtil
 import io.flutter.app.FlutterActivity
@@ -63,6 +63,7 @@ class MainActivity : FlutterActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LoadingUtil.destroy()
+        EventManager.instance.destroy()
         debug.release()
     }
 

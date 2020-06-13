@@ -34,4 +34,10 @@ class EventManager {
         handler?.sendMessage(msg)
     }
 
+    fun destroy(){
+        handler?.removeCallbacksAndMessages(null)
+        handler = null
+    }
+
+
 }
