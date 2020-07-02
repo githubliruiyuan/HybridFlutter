@@ -1,7 +1,9 @@
 # HybridFlutter
-Flutter + V8/JsCore 开发小程序引擎
+Flutter + V8/JsCore 动态化实践
 
-众所周知，小程序是由HTML标签来开发原生组件，那么首先需要将HTML做解析，这里我们将HTML通过node脚本解析成JSON字符串，再用Dart来解析JSON，映射对应的标签到flutter的组件。
+DSL（HTML+CSS+JS）
+
+由HTML标签来开发原生组件，那么首先需要将HTML做解析，这里我们将HTML通过node脚本解析成JSON字符串，再用Dart来解析JSON，映射对应的标签到flutter的组件。
 
 # 一、HTML部分
 为了高效解析，直接用flutter的组件名在HTML文件上开发
