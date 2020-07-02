@@ -15,6 +15,7 @@ Map<String, String> _pages;
 Map<String, MessageHandler> _handlers;
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(new MyApp());
 }
 

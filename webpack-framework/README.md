@@ -1,4 +1,4 @@
-webpack-helloworld
+webpack-cc
 ===================
 
 ## About
