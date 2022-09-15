@@ -10,7 +10,7 @@ DSL（HTML+CSS+JS）
 
 * 文件目录如下：
 
-![](https://github.com/githubliruiyuan/HybridFlutter/image/file-dir.png)
+![](https://github.com/githubliruiyuan/HybridFlutter/blob/master/image/file-dir.png)
 
 - config
 ``` json
@@ -176,7 +176,7 @@ Page({
 
 # 二、渲染效果
 
-![](https://github.com/githubliruiyuan/HybridFlutter/image/total.gif)
+![](https://github.com/githubliruiyuan/HybridFlutter/blob/master/image/total.gif)
 
 # 三、组件部分
 直接使用flutter的组件
@@ -306,12 +306,12 @@ Page({
 
 ```
 # 六、API 演示
-![](https://github.com/githubliruiyuan/HybridFlutter/image/api.gif)
+![](https://github.com/githubliruiyuan/HybridFlutter/blob/master/image/api.gif)
 
 # 七、实时调试
 
 
-![](https://github.com/githubliruiyuan/HybridFlutter/image/real-time.gif)
+![](https://github.com/githubliruiyuan/HybridFlutter/blob/master/image/real-time.gif)
 
 
 # 八、代码运行
