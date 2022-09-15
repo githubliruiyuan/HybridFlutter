@@ -10,7 +10,7 @@ DSL（HTML+CSS+JS）
 
 * 文件目录如下：
 
-![](https://user-gold-cdn.xitu.io/2019/9/20/16d4de1ed3be0c3a?w=322&h=109&f=png&s=5750)
+![](https://github.com/githubliruiyuan/HybridFlutter/image/file-dir.png)
 
 - config
 ``` json
@@ -176,7 +176,7 @@ Page({
 
 # 二、渲染效果
 
-![](https://user-gold-cdn.xitu.io/2019/8/30/16ce13c82d12943c?w=415&h=865&f=gif&s=2690414)
+![](https://github.com/githubliruiyuan/HybridFlutter/image/total.gif)
 
 # 三、组件部分
 直接使用flutter的组件
@@ -306,27 +306,24 @@ Page({
 
 ```
 # 六、API 演示
-![](https://user-gold-cdn.xitu.io/2019/9/3/16cf718aecb4bf3f?w=415&h=865&f=gif&s=403181)
+![](https://github.com/githubliruiyuan/HybridFlutter/image/api.gif)
 
 # 七、实时调试
 
 
-![](https://user-gold-cdn.xitu.io/2019/9/3/16cf7195023303b3?w=1547&h=885&f=gif&s=1961142)
+![](https://github.com/githubliruiyuan/HybridFlutter/image/real-time.gif)
 
 
 # 八、代码运行
 
 - 1、目前只实现了Android版，需要使用Android Studio导入项目，路径如下图所示；
-- 2、将main.dart中的_pageCode值改为“home”，如下图所示。
+- 2、将main.dart中的_pageCode值改为"home"。
 
-![](https://user-gold-cdn.xitu.io/2019/10/11/16db8b9afc9f6eac?w=1212&h=738&f=png&s=143747)
 
 - 3、由于代码直接run出来的debug包里面lib下armabi-v7a没有生成Flutter的so包，所以不能直接在真机上面直接测试
-![](https://user-gold-cdn.xitu.io/2019/11/14/16e67f2065786d11?w=752&h=722&f=png&s=69674)
 
 - 4、真机上面运行需要通过build->Flutter->Build APK方式得到app-release.apk包进行安装
-![](https://user-gold-cdn.xitu.io/2019/11/14/16e67f1dfc895eea?w=857&h=173&f=png&s=45686)
-![](https://user-gold-cdn.xitu.io/2019/11/14/16e67f1f3d73bad4?w=950&h=663&f=png&s=74616)
+
 
 - 系列文章：
 
