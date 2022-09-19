@@ -1,28 +1,16 @@
 package com.cc.hybrid.bridge.flutter
 
-import android.app.Activity
 import com.cc.hybrid.Logger
 import com.cc.hybrid.bridge.js.JSPageManager
 import com.cc.hybrid.util.TimerManager
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.PluginRegistry
 
-class FlutterPluginMethodChannel(activity: Activity) : MethodChannel.MethodCallHandler {
+object FlutterPluginMethodChannel {
 
-    companion object {
+    const val CHANNEL = "com.cc.hybrid/method"
 
-        const val CHANNEL = "com.cc.hybrid/method"
-        private lateinit var channel: MethodChannel
-
-        fun registerWith(registrar: PluginRegistry.Registrar) {
-            channel = MethodChannel(registrar.messenger(), CHANNEL)
-            val instance = FlutterPluginMethodChannel(registrar.activity())
-            channel.setMethodCallHandler(instance)
-        }
-    }
-
-    override fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
+    fun onMethodCall(methodCall: MethodCall, result: MethodChannel.Result) {
         when (methodCall.method) {
             Methods.ATTACH_PAGE -> {
                 if (methodCall.hasArgument("pageId") && methodCall.hasArgument("script")) {

@@ -288,16 +288,16 @@ class MAlignmentDirectional {
 }
 
 class MOverflow {
-  static Overflow parse(Property value, {Overflow defaultValue}) {
-    Overflow result = defaultValue;
+  static MOverflow parse(Property value, {MOverflow defaultValue}) {
+    MOverflow result = defaultValue;
     if (null == value) return result;
     switch (value.getValue()) {
-      case 'clip':
-        result = Overflow.clip;
-        break;
-      case 'visible':
-        result = Overflow.visible;
-        break;
+      // case 'clip':
+      //   result = Overflow.clip;
+      //   break;
+      // case 'visible':
+      //   result = Overflow.visible;
+      //   break;
       default:
         result = defaultValue;
         break;

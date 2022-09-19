@@ -28,8 +28,8 @@ class StackStateless extends BaseWidget {
               textDirection: MTextDirection.parse(data.map['text-direction']),
               fit: MStackFit.parse(data.map['fit'],
                   defaultValue: StackFit.loose),
-              overflow: MOverflow.parse(data.map['overflow'],
-                  defaultValue: Overflow.clip),
+              // overflow: MOverflow.parse(data.map['overflow'],
+              //     defaultValue: Overflow.clip),
               children: data.children);
         },
         valueListenable: this.data);

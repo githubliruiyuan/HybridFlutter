@@ -29,19 +29,19 @@ object TimerManager {
     }
 
     fun setTimeout(pageId: String, timerId: String, delayed: Int) {
-        val msg = intervalHandler?.obtainMessage()
-        msg?.what = timerId.hashCode()
+        val msg = intervalHandler?.obtainMessage() ?: Message()
+        msg.what = timerId.hashCode()
         val intervalEvent = IntervalEvent(timerId, TYPE_SET_TIME_OUT, delayed)
-        msg?.obj = intervalEvent
+        msg.obj = intervalEvent
         intervalHandler?.sendMessageDelayed(msg, delayed.toLong())
         addTimer(pageId, timerId)
     }
 
     fun setInterval(pageId: String, timerId: String, delayed: Int) {
-        val msg = intervalHandler?.obtainMessage()
-        msg?.what = timerId.hashCode()
+        val msg = intervalHandler?.obtainMessage() ?: Message()
+        msg.what = timerId.hashCode()
         val intervalEvent = IntervalEvent(timerId, TYPE_TICK, delayed)
-        msg?.obj = intervalEvent
+        msg.obj = intervalEvent
         intervalHandler?.sendMessageDelayed(msg, delayed.toLong())
         addTimer(pageId, timerId)
     }
@@ -84,7 +84,7 @@ object TimerManager {
 
         private fun onTick(intervalEvent: IntervalEvent) {
             val msg = this.obtainMessage()
-            msg?.what = intervalEvent.timerId.hashCode()
+            msg.what = intervalEvent.timerId.hashCode()
             msg.obj = intervalEvent
             this.sendMessageDelayed(msg, intervalEvent.millis.toLong())
         }

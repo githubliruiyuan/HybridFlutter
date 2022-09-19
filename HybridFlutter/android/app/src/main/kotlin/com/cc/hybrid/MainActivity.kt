@@ -9,9 +9,10 @@ import com.cc.hybrid.event.EventManager
 import com.cc.hybrid.util.LoadingUtil
 import com.cc.hybrid.util.SpUtil
 import com.cc.hybrid.util.ToastUtil
-import io.flutter.app.FlutterActivity
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BasicMessageChannel
-import io.flutter.plugin.common.PluginRegistry
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StringCodec
 import io.flutter.plugins.GeneratedPluginRegistrant
 import org.json.JSONObject
@@ -23,24 +24,22 @@ class MainActivity : FlutterActivity() {
     private lateinit var debug: Debugger
     private lateinit var channel: BasicMessageChannel<String>
 
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, FlutterPluginMethodChannel.CHANNEL)
+            .setMethodCallHandler() {call, result ->
+                FlutterPluginMethodChannel.onMethodCall(call, result)
+            }
+        channel = BasicMessageChannel(flutterEngine.dartExecutor.binaryMessenger, "com.cc.hybrid/basic", StringCodec.INSTANCE)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GeneratedPluginRegistrant.registerWith(this)
-        registerCustomPlugin(this)
-        registerMessageChannel()
         SpUtil.initSp(this)
         ToastUtil.initToast(this)
         LoadingUtil.initDialog(this)
         initHandler()
         debug()
-    }
-
-    private fun registerCustomPlugin(registrar: PluginRegistry) {
-        FlutterPluginMethodChannel.registerWith(registrar.registrarFor(FlutterPluginMethodChannel.CHANNEL))
-    }
-
-    private fun registerMessageChannel() {
-        channel = BasicMessageChannel<String>(flutterView, "com.cc.hybrid/basic", StringCodec.INSTANCE)
     }
 
     private fun initHandler() {
@@ -69,9 +68,8 @@ class MainActivity : FlutterActivity() {
 
     class MHandler(activity: MainActivity) : Handler() {
         private val mActivity: WeakReference<MainActivity> = WeakReference(activity)
-        override fun handleMessage(msg: Message?) {
+        override fun handleMessage(msg: Message) {
             super.handleMessage(msg)
-            if (null == msg) return
             val jsonObject = msg.obj as JSONObject
             val pageId = jsonObject.getString("pageId")
             val json = jsonObject.get("obj").toString()
