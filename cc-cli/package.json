@@ -20,7 +20,7 @@
     "node-watch": "^0.6.0",
     "ora": "^3.2.0",
     "shady-css-parser": "^0.1.0",
-    "shelljs": "^0.8.3",
+    "shelljs": "^0.8.5",
     "yargs": "^13.2.2",
     "@babel/core": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
